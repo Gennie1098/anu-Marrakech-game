@@ -1,6 +1,13 @@
-package comp1110.ass2.gui;
+package comp1110.ass2;
+
 
 public class Gamecaculate {
+    int numberOfDirhmas;
+   //
+    int numberOfRugs;
+    int playerScore;
+    int numberRugs;
+    int amountofDirhmas;
     /**
      * update the state of the playstate
      *  For this method, you should update the player's status
@@ -76,10 +83,6 @@ public static int compareDirhmas(int amountofDirhmas){
 public static void  gameResult(){
 
 }
-
-
-
-
 
 
 
