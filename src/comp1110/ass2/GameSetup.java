@@ -5,12 +5,17 @@ public class GameSetup {
 
     public int numberOfPlayers;
 
+    public String[] playerStrings; // stores player string in an array
+
+
     public GameSetup() {
         // Constructor code
-        numberOfPlayers = countNumberOfPlayers();
-        initialisePlayers();
-        initialiseBoardMatrix();
-        initialiseAssamPosition();
+        /**
+         *numberOfPlayers = countNumberOfPlayers();
+         *initialisePlayers(); --> Will loop for each player
+         *initialiseBoardMatrix();
+         *initialiseAssamPosition();
+         */
     }
     private int countNumberOfPlayers() {
         /**
