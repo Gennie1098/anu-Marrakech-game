@@ -2,8 +2,9 @@ package comp1110.ass2;
 
 
 public class Gamecaculate {
-
+// this is the vairable
     int playerScore;
+
     /**
      * update the state of the playstate
      *  For this method, you should update the player's status
