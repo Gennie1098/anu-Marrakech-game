@@ -5,12 +5,21 @@ public class GameSetup {
 
     public int numberOfPlayers;
 
+    public int numberOfRugs;
+
+    public int numberOfDirhmas;
+
+    public String[] playerStrings; // stores player string in an array
+
+
     public GameSetup() {
         // Constructor code
-        numberOfPlayers = countNumberOfPlayers();
-        initialisePlayers();
-        initialiseBoardMatrix();
-        initialiseAssamPosition();
+        /**
+         *numberOfPlayers = countNumberOfPlayers();
+         *initialisePlayers(); --> Will loop for each player
+         *initialiseBoardMatrix();
+         *initialiseAssamPosition();
+         */
     }
     private int countNumberOfPlayers() {
         /**
@@ -28,7 +37,7 @@ public class GameSetup {
          * playerColour - [C, Y, R, P]
          * numberOfRugs - 15
          * numberOfDirhmas - 030
-         * inGame = i
+         * inGame = i or o
          * Creates player string by concatenating each value to make a player string
          */
 

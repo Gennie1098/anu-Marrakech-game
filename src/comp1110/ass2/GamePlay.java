@@ -4,6 +4,13 @@ import comp1110.ass2.GameSetup;
 // ^ Connects GameSetup java class with GameSetup
 public class GamePlay {
 
+    public int[] assamPosition; // Assam's position as {x, y}
+
+    public int diceValue; // Value rolled on the dice
+
+    public int[] rugPosition; // Placement position of rug.
+
+
     public GamePlay() {
         //Constructor code
     }
@@ -38,14 +45,17 @@ public class GamePlay {
          * facing north --> Rotate right, moves one square, rotate right
          * facing south --> Rotate left, moves one square, rotate left
          * After rotation, runs transformAssam again, with remaining movement
+         *
+         * Sets new position using assamPosition();
          */
     }
 
-    public int[] assamPosition() {
+    public int[] updateAssamPosition() {
         /**
-         * Gets Assam's position
-         * returns new int[]{X, Y};
+         * Gets Assam's new position
+         * returns new value for variable
          */
+        return assamPosition;
     }
 
     public boolean checkOpponentRug(){
