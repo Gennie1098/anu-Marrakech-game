@@ -2,12 +2,10 @@ package comp1110.ass2;
 
 
 public class Gamecaculate {
-    int numberOfDirhmas;
+    int numberDirhmas;
    //
-    int numberOfRugs;
-    int playerScore;
     int numberRugs;
-    int amountofDirhmas;
+    int playerScore;
     /**
      * update the state of the playstate
      *  For this method, you should update the player's status
