@@ -1,3 +1,5 @@
+package comp1110.ass2.gui;
+
 public class Gamecaculate {
     /**
      * update the state of the playstate
