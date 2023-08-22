@@ -11,6 +11,14 @@ public class GameSetup {
 
     public String[] playerStrings; // stores player string in an array
 
+    public int gameBoardWidth = 7;
+
+    public int gameBoardLength = 7;
+
+    public int[][] gameBoardMatrix;
+
+    public int[] assamPosition; // Assam's position as {x, y}
+
 
     public GameSetup() {
         // Constructor code

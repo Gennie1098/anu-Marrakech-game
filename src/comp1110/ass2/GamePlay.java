@@ -4,11 +4,14 @@ import comp1110.ass2.GameSetup;
 // ^ Connects GameSetup java class with GameSetup
 public class GamePlay {
 
-    public int[] assamPosition; // Assam's position as {x, y}
 
-    public int diceValue; // Value rolled on the dice
+    public int diceNumber; // Value rolled on the dice
+
+    public int[] diceValue; // Array of possible dice rolls
 
     public int[] rugPosition; // Placement position of rug.
+
+    public int[] rugRegion; // Possible placement areas for the rug
 
 
     public GamePlay() {
@@ -55,7 +58,6 @@ public class GamePlay {
          * Gets Assam's new position
          * returns new value for variable
          */
-        return assamPosition;
     }
 
     public boolean checkOpponentRug(){
