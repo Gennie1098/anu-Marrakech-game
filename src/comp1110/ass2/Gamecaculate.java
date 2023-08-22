@@ -2,9 +2,7 @@ package comp1110.ass2;
 
 
 public class Gamecaculate {
-    int numberDirhmas;
-   //
-    int numberRugs;
+
     int playerScore;
     /**
      * update the state of the playstate
