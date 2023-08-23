@@ -9,6 +9,7 @@ Everyone: reading ass1 information - meeting 19:00 17 Aug, weekly 20:00 Tuesday
 
 ## Week 5
 
+Add more object oriented classes - i.e Assam class, Rug class. Player class
 
 ## Week 6
 
