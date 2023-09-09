@@ -1,6 +1,37 @@
 package comp1110.ass2;
 
 public class Marrakech {
+    private Assam assam;
+    private Board board;
+    private Player[] players;
+    private Rugs[] rugs;
+
+    // String [] colorGame = {"red", "purple", "yellow", "cyan"};
+    char [] colorGame = {'r', 'p', 'y', 'c'};
+
+    public Marrakech(int numberPlayer) {
+        this.assam = new Assam();
+        this.board = new Board();
+
+        this.players = new Player[numberPlayer];
+        for(int i = 0; i < numberPlayer; i++){
+            this.players[i] = new Player(colorGame[i]);
+        }
+    }
+
+    //testing
+//    public static void main (String []arg){
+//        Marrakech game = new Marrakech(2);
+//
+//        System.out.println(game.players[0].getPlayerState());
+//        System.out.println(game.players[1].getPlayerState());
+////        System.out.println(game.players[2].getPlayerState());
+////        System.out.println(game.players[3].getPlayerState());
+//
+//        System.out.println(game.board.getBoardState());
+//        System.out.println(game.assam.getAssamState());
+
+
 
     /**
      * Determine whether a rug String is valid.
