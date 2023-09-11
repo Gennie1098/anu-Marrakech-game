@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import java.util.Scanner;
+
 public class Marrakech {
     private Assam assam;
     private Board board;
@@ -8,28 +10,40 @@ public class Marrakech {
 
     // String [] colorGame = {"red", "purple", "yellow", "cyan"};
     char [] colorGame = {'r', 'p', 'y', 'c'};
+    Scanner input = new Scanner(System.in);
+    int numberOfPlayers = input.nextInt();
 
-    public Marrakech(int numberPlayer) {
+    public Marrakech(int numberOfPlayers) {
         this.assam = new Assam();
         this.board = new Board();
 
-        this.players = new Player[numberPlayer];
-        for(int i = 0; i < numberPlayer; i++){
+        this.players = new Player[numberOfPlayers];
+        for(int i = 0; i < numberOfPlayers; i++){
             this.players[i] = new Player(colorGame[i]);
         }
     }
 
+
+    public String getGameState(){
+        String gameString = "";
+        for(int i = 0; i < numberOfPlayers; i++) {
+            gameString += players[i].getPlayerState();
+        }
+        return gameString += assam.getAssamState() + board.getBoardState();
+    }
+
     //testing
-//    public static void main (String []arg){
+//    public static void main (String []arg) {
 //        Marrakech game = new Marrakech(2);
 //
 //        System.out.println(game.players[0].getPlayerState());
 //        System.out.println(game.players[1].getPlayerState());
-////        System.out.println(game.players[2].getPlayerState());
-////        System.out.println(game.players[3].getPlayerState());
 //
 //        System.out.println(game.board.getBoardState());
 //        System.out.println(game.assam.getAssamState());
+//
+//        System.out.println(game.getGameState());
+//    }
 
 
 
