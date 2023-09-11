@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Marrakech {
@@ -69,8 +70,53 @@ public class Marrakech {
      */
     public static boolean isRugValid(String gameString, String rug) {
         // FIXME: Task 4
-        return false;
+        // Check if the rug string length is 7
+        if (rug.length() != 7) {
+            return false;
+        }
+
+        // Get carpet color, ID, and coordinate information
+        char color = rug.charAt(0);
+        String idStr = rug.substring(1, 3);
+        int xCoordinate1 = Character.getNumericValue(rug.charAt(3));
+        int yCoordinate1 = Character.getNumericValue(rug.charAt(4));
+        int xCoordinate2 = Character.getNumericValue(rug.charAt(5));
+        int yCoordinate2 = Character.getNumericValue(rug.charAt(6));
+
+        // Verify that the color is valid (C, Y, R, P)
+        if (color != 'c' && color != 'y' && color != 'r' && color != 'p') {
+            return false;
+        }
+
+        try {
+            // Verify that the ID is a valid 2-digit number
+            int id = Integer.parseInt(idStr);
+            if (id < 0 || id > 99) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        // Verify that the coordinates are within the legal range (1-7)
+        if (xCoordinate1 < 0 || xCoordinate1 > 6) {
+            return false;
+        }
+        if (yCoordinate1 < 0 || yCoordinate1 > 6){
+            return false;
+        }
+        if (xCoordinate2 < 0 || xCoordinate2 > 6 ) {
+            return false;
+        }
+        if (yCoordinate2 < 0 || yCoordinate2 > 6){
+            return false;
+        }
+
+        return true;
     }
+
+
+
 
     /**
      * Roll the special Marrakech die and return the result.
@@ -88,8 +134,21 @@ public class Marrakech {
      */
     public static int rollDie() {
         // FIXME: Task 6
-        return -1;
+        Random random = new Random();
+        int randomResult = random.nextInt(6); // Generate a random number between 1 and 6
+
+        // Map the random result to the die's faces
+        if (randomResult == 1) {
+            return 1;
+        } else if (randomResult <= 3 && randomResult >=2) {
+            return 2;
+        } else if (randomResult <= 5 && randomResult >=4) {
+            return 3;
+        } else {
+            return 4;
+        }
     }
+
 
     /**
      * Determine whether a game of Marrakech is over

@@ -92,8 +92,13 @@ public class Player {
         player1.subDirhams(40);
         System.out.println(player1.getPlayerState());
     }
+    public Object Player(char c) {
+        return null;
+    }
 
 }
+
+
 
 
 
