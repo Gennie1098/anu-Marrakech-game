@@ -1,7 +1,5 @@
 package comp1110.ass2;
 
-import java.util.Random;
-
 public class Marrakech {
     private Assam assam;
     private Board board;
@@ -56,52 +54,9 @@ public class Marrakech {
      * @return true if the rug is valid, and false otherwise.
      */
     public static boolean isRugValid(String gameString, String rug) {
-        //
         // FIXME: Task 4
-// Check if the rug string length is 7
-        if (rug.length() != 7) {
-            return false;
-        }
-
-        // Get carpet color, ID, and coordinate information
-        char color = rug.charAt(0);
-        String idStr = rug.substring(1, 3);
-        int xCoordinate1 = Character.getNumericValue(rug.charAt(3));
-        int yCoordinate1 = Character.getNumericValue(rug.charAt(4));
-        int xCoordinate2 = Character.getNumericValue(rug.charAt(5));
-        int yCoordinate2 = Character.getNumericValue(rug.charAt(6));
-
-        // Verify that the color is valid (C, Y, R, P)
-        if (color != 'c' && color != 'y' && color != 'r' && color != 'p') {
-            return false;
-        }
-
-        try {
-            // Verify that the ID is a valid 2-digit number
-            int id = Integer.parseInt(idStr);
-            if (id < 0 || id > 99) {
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-
-        // Verify that the coordinates are within the legal range (1-7)
-        if (xCoordinate1 < 0 || xCoordinate1 > 6 || yCoordinate1 < 0 || yCoordinate1 > 6) {
-            return false;
-        }
-        if (xCoordinate2 < 0 || xCoordinate2 > 6 || yCoordinate2 < 0 || yCoordinate2 > 6) {
-            return false;
-        }
-
-        // Verify that the carpet color and ID are unique
-        if (gameString.contains(color + idStr)==true) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
-
 
     /**
      * Roll the special Marrakech die and return the result.
@@ -118,23 +73,9 @@ public class Marrakech {
      * @return The result of the roll of the die meeting the criteria above
      */
     public static int rollDie() {
-        //
         // FIXME: Task 6
-        Random random = new Random();
-        int randomResult = random.nextInt(6); // Generate a random number between 1 and 6
-
-        // Map the random result to the die's faces
-        if (randomResult == 1) {
-            return 1;
-        } else if (randomResult <= 3 && randomResult >=2) {
-            return 2;
-        } else if (randomResult <= 5 && randomResult >=4) {
-            return 3;
-        } else {
-            return 4;
-        }
+        return -1;
     }
-
 
     /**
      * Determine whether a game of Marrakech is over

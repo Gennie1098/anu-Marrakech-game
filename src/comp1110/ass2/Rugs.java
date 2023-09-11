@@ -77,7 +77,7 @@ public class Rugs {
         return color + String.format("%02d", id);
     }
 
-
+// TODO: nice to have, find rugs string at 15th tile
     public static void main(String[] args) {
         Rugs newRug = new Rugs('y', 15, 4, 4, 4, 5);
         System.out.println(newRug.getRugState());
