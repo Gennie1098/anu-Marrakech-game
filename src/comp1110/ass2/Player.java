@@ -11,12 +11,14 @@ public class Player {
     public String[] playerStrings; // stores player string in an array
 
 
-    public int countNumberOfPlayers() {
+    public int countNumberOfPlayers(int num) {
         /**
          * Asks user for how many players are playing
          * Limited to 2-4 plauers
          * Can take input from scanner
          */
+        return num;
+
     }
 
     private void initialisePlayers() {
@@ -32,18 +34,22 @@ public class Player {
          */
     }
 
-    private boolean outOfRugs {
+    private boolean outOfRugs(){
         /**
          * Checks if the player is out of rugs.
          * returns true/false
          */
+        return false;
+
     }
 
-    private playerOut {
+    private void playerOut() {
         /**
          * Sets leftover inventory rugs to zero
          * Saves the numberOfDirhmas
          */
+
+
     }
 
     public void playerStringUpdates() {

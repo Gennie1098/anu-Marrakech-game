@@ -29,13 +29,13 @@ public class GameSetup {
          *initialiseAssamPosition();
          */
     }
-    private int countNumberOfPlayers() {
-        /**
-         * Asks user for how many players are playing
-         * Limited to 2-4 plauers
-         * Can take input from scanner
-         */
-    }
+//    private int countNumberOfPlayers() {
+//        /**
+//         * Asks user for how many players are playing
+//         * Limited to 2-4 plauers
+//         * Can take input from scanner
+//         */
+//    }
 
     private void initialisePlayers() {
         /**

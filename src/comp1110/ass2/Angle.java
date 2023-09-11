@@ -4,7 +4,7 @@ public class Angle{
     public int angle[];
     int right = 90;
     int back  = 180;
-    int left = 270;,
+    int left = 270;
     int front =360;
 
 //    this is the array contain the angle

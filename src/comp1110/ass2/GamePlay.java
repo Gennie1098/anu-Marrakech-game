@@ -24,11 +24,12 @@ public class GamePlay {
          */
     }
 
-    public int diceRoll() {
+    public int diceRoll(int diceNumber) {
         /**
          * randomly picks an integer from the list
          * diceValue[] = 1, 2, 2, 3, 3, 4
          */
+        return diceNumber;
     }
 
     public void transformAssam(int distance) {
@@ -53,12 +54,12 @@ public class GamePlay {
          */
     }
 
-    public int[] updateAssamPosition() {
-        /**
-         * Gets Assam's new position
-         * returns new value for variable
-         */
-    }
+//    public int[] updateAssamPosition() {
+//        /**
+//         * Gets Assam's new position
+//         * returns new value for variable
+//         */
+//    }
 
     public boolean checkOpponentRug(){
         /**
@@ -67,6 +68,7 @@ public class GamePlay {
          * If on opponent rug, returns true
          * If on no rug, or current players rug, returns false
          */
+        return false;
     }
 
     public void payMoney() {
