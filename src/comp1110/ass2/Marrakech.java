@@ -1,5 +1,6 @@
 package comp1110.ass2;
 
+
 import java.util.Scanner;
 
 public class Marrakech {
@@ -7,23 +8,22 @@ public class Marrakech {
     private Board board;
     private Player[] players;
     private Rugs[] rugs;
+    private static final int MAX_PLAYERS = 4;
 
-    // String [] colorGame = {"red", "purple", "yellow", "cyan"};
     char [] colorGame = {'r', 'p', 'y', 'c'};
-    Scanner input = new Scanner(System.in);
-    int numberOfPlayers = input.nextInt();
+    int numberOfPlayers;
 
-    public Marrakech(int numberOfPlayers) {
+    public Marrakech(int numPlayers) {
+        this.numberOfPlayers = numPlayers;
         this.assam = new Assam();
         this.board = new Board();
-
         this.players = new Player[numberOfPlayers];
-        for(int i = 0; i < numberOfPlayers; i++){
-            this.players[i] = new Player(colorGame[i]);
-        }
+//        for(int i = 0; i < numberOfPlayers; i++){
+//            this.players[i] = new Player();
+//        }
     }
 
-
+    // get String current game state
     public String getGameState(){
         String gameString = "";
         for(int i = 0; i < numberOfPlayers; i++) {
@@ -32,18 +32,41 @@ public class Marrakech {
         return gameString += assam.getAssamState() + board.getBoardState();
     }
 
+    public void getGameInfo(String gameString) {
+        players = new Player[MAX_PLAYERS];
+        final int PLAYER_STRING_LENGTH = 8;
+        final int ASSAM_STRING_LENGTH = 4;
+        final int BOARD_STRING_LENGTH = 49 * 3;
+        int numberOfPlayers = 0;
+
+        for (int i = 2; i <= MAX_PLAYERS; i++) {
+            if (gameString.length() != PLAYER_STRING_LENGTH * i + ASSAM_STRING_LENGTH + BOARD_STRING_LENGTH) {
+                System.err.println("Invalid game string");
+            }
+        }
+
+        //create players from game string
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (gameString.charAt(i + PLAYER_STRING_LENGTH) == 'P') {
+                players[i] = new Player(gameString.substring(i * PLAYER_STRING_LENGTH, (i + 1) * PLAYER_STRING_LENGTH));
+                numberOfPlayers++;
+            }
+        }
+
+        //create assam from game string
+        int assamStart = numberOfPlayers * PLAYER_STRING_LENGTH;
+        assam = new Assam(gameString.substring(assamStart, assamStart + ASSAM_STRING_LENGTH));
+
+        //create board from game string
+        int boardStart = assamStart + 4;
+        board = new Board(gameString.substring(boardStart));
+
+    }
+
     //testing
-//    public static void main (String []arg) {
-//        Marrakech game = new Marrakech(2);
-//
-//        System.out.println(game.players[0].getPlayerState());
-//        System.out.println(game.players[1].getPlayerState());
-//
-//        System.out.println(game.board.getBoardState());
-//        System.out.println(game.assam.getAssamState());
-//
-//        System.out.println(game.getGameState());
-//    }
+    public static void main (String []arg) {
+
+    }
 
 
 
@@ -68,7 +91,7 @@ public class Marrakech {
      * @return true if the rug is valid, and false otherwise.
      */
     public static boolean isRugValid(String gameString, String rug) {
-        // FIXME: Task 4
+        //FIXME: Task 4
         return false;
     }
 
@@ -87,7 +110,7 @@ public class Marrakech {
      * @return The result of the roll of the die meeting the criteria above
      */
     public static int rollDie() {
-        // FIXME: Task 6
+        //FIXME: Task 6
         return -1;
     }
 
@@ -100,7 +123,7 @@ public class Marrakech {
      * @return true if the game is over, or false otherwise.
      */
     public static boolean isGameOver(String currentGame) {
-        // FIXME: Task 8
+        //FIXME: Task 8
         return false;
     }
 
@@ -118,7 +141,7 @@ public class Marrakech {
      * rotation is illegal.
      */
     public static String rotateAssam(String currentAssam, int rotation) {
-        // FIXME: Task 9
+        //FIXME: Task 9
         return "";
     }
 
@@ -134,7 +157,7 @@ public class Marrakech {
      * @return true if the placement is valid, and false otherwise.
      */
     public static boolean isPlacementValid(String gameState, String rug) {
-        // FIXME: Task 10
+        //FIXME: Task 10
         return false;
     }
 
@@ -149,7 +172,7 @@ public class Marrakech {
      * @return The amount of payment due, as an integer.
      */
     public static int getPaymentAmount(String gameString) {
-        // FIXME: Task 11
+        //FIXME: Task 11
         return -1;
     }
 
@@ -168,7 +191,7 @@ public class Marrakech {
      * @return A char representing the winner of the game as described above.
      */
     public static char getWinner(String gameState) {
-        // FIXME: Task 12
+        //FIXME: Task 12
         return '\0';
     }
 
@@ -184,7 +207,7 @@ public class Marrakech {
      * @return A String representing Assam's state after the movement.
      */
     public static String moveAssam(String currentAssam, int dieResult){
-        // FIXME: Task 13
+        //FIXME: Task 13
         return "";
     }
 
@@ -200,7 +223,7 @@ public class Marrakech {
      * or the input currentGame unchanged otherwise.
      */
     public static String makePlacement(String currentGame, String rug) {
-        // FIXME: Task 14
+        //FIXME: Task 14
         return "";
     }
 
