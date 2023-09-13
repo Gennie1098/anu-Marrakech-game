@@ -10,21 +10,37 @@ public class Player {
     final int DEFAULT_DIRHAMS = 30;
     final int MAX_RUGS = 15;
     private char color; // 'c', 'y', 'r', or 'p'
-    private int numberOfDirhams; // a number 0-999, represented with 3 digits
+    private int numberOfDirhams; // a number 0-30, represented with 3 digits
     private int numberOfRugs; // a number 0-15, represented with 2 digits
     private boolean inGame; // 'i' or 'o'
 
-    public Player(char color) {
+
+    public Player(char color, int numberOfDirhams, int numberOfRugs, boolean inGame) {
         this.color = color;
-        this.numberOfDirhams = DEFAULT_DIRHAMS;
-        this.numberOfRugs = MAX_RUGS;
-        this.inGame = true; //'i' , map when print state
+        this.numberOfDirhams = numberOfDirhams;
+        this.numberOfRugs = numberOfRugs;
+        this.inGame = inGame; //'i' , map when print state
+    }
+
+    public Player (String playerString) {
+        this.color = playerString.charAt(1);
+        this.numberOfDirhams = Integer.parseInt(playerString.substring(2, 5));
+        this.numberOfRugs = Integer.parseInt(playerString.substring(5, 7));
+        this.inGame = playerString.charAt(7) == 'i';
     }
 
     public String getPlayerState() {
         return "P" + color + String.format("%03d", numberOfDirhams)
                 + String.format("%02d", numberOfRugs) + (this.inGame ? 'i' : 'o');
     }
+
+    public void setPlayerState (String playerString) {
+        this.color = playerString.charAt(1);
+        this.numberOfDirhams = Integer.parseInt(playerString.substring(2, 5));
+        this.numberOfRugs = Integer.parseInt(playerString.substring(5, 7));
+        this.inGame = playerString.charAt(7) == 'i';
+    }
+
 
     public char getColor() {
         return color;
@@ -65,7 +81,7 @@ public class Player {
 
     //addPlayerRug(int amountOfRugs): int
     public int subPlayerRug(int amountOfRugs) {
-        if (inGame == false) {
+        if (!inGame) { //inGame == false
             return numberOfRugs;
         }
         this.numberOfRugs -= amountOfRugs;
@@ -87,11 +103,11 @@ public class Player {
         this.inGame = inGame;
     }
 
-    public static void main(String[] args) {
-        Player player1 = new Player('p');
-        player1.subDirhams(40);
-        System.out.println(player1.getPlayerState());
-    }
+//    public static void main(String[] args) {
+//        Player player1 = new Player();
+//        player1.subDirhams(40);
+//        System.out.println(player1.getPlayerState());
+//    }
 
 }
 

@@ -24,6 +24,24 @@ public class Rugs {
         return color + String.format("%02d", id) + x1 + y1 + x2 + y2;
     }
 
+    public void setRugState(String rugString) {
+        this.color = rugString.charAt(0);
+        this.id = Integer.parseInt(rugString.substring(1, 3));
+        this.x1 = Character.getNumericValue(rugString.charAt(3));
+        this.y1 = Character.getNumericValue(rugString.charAt(4));
+        this.x2 = Character.getNumericValue(rugString.charAt(5));
+        this.y2 = Character.getNumericValue(rugString.charAt(6));
+    }
+
+//    public String fromAbbToNormalRugString(String abbRugString) {
+//        this.color = abbRugString.charAt(0);
+//        this.id = Integer.parseInt(abbRugString.substring(1));
+//
+//        }
+//        String rugString = "";
+//        return rugString;
+//    }
+
     public char getColor() {
         return color;
     }
@@ -78,16 +96,10 @@ public class Rugs {
     }
 
 // TODO: nice to have, find rugs string at 15th tile
-    public static void main(String[] args) {
-        Rugs newRug = new Rugs('y', 15, 4, 4, 4, 5);
-        System.out.println(newRug.getRugState());
-        System.out.println(newRug.getAbbreviatedRugState());
-    }
 
-
-
-
-
-
-
+//    public static void main(String[] args) {
+//        Rugs newRug = new Rugs('y', 15, 4, 4, 4, 5);
+//        System.out.println(newRug.getRugState());
+//        System.out.println(newRug.getAbbreviatedRugState());
+//    }
 }

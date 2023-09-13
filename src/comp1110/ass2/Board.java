@@ -23,6 +23,17 @@ public class Board {
         }
     }
 
+    public Board (String boardString) {
+        int index = 0;
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            for (int row = 0; row < BOARD_SIZE; row++) {
+                String tile = boardString.substring(index, index + 3);
+                setTile(tile, row, col); //use setTile method below
+                index += 3;
+            }
+        }
+    }
+
     //method getBoardState(), return String to print Board State at the time "n00n00n00n00...n00"
     public String getBoardState() {
         String boardState = "";
@@ -34,10 +45,22 @@ public class Board {
         return boardState;
     }
 
+    public void setBoardState(String boardString) {
+        int index = 0;
+        for (int col = 0; col < BOARD_SIZE; col++) {
+            for (int row = 0; row < BOARD_SIZE; row++) {
+                String tile = boardString.substring(index, index + 3);
+                setTile(tile, row, col); //use setTile method below
+                index += 3;
+            }
+        }
+    }
+
+
     //setTile(int x, int y, String abbreviatedRugState): void
     //change String value at tile(x,y) by Abbreviated Rug String
-    public void setTile(String abbreviatedRugState, int x, int y){
-        boardMatrix[x][y] = abbreviatedRugState; //String
+    public void setTile(String abbreviatedRugState, int row, int col){
+        boardMatrix[row][col] = abbreviatedRugState; //String
     }
 
     //getTile(int x, int y): String
