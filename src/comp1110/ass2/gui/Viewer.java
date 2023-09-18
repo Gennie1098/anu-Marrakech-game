@@ -3,11 +3,12 @@ package comp1110.ass2.gui;
 import comp1110.ass2.Assam;
 import comp1110.ass2.Board;
 import comp1110.ass2.Player;
-import javafx.scene.shape.Polygon;
-import javafx.scene.layout.Pane;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.stage.Stage;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,18 +16,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
+
 
 public class Viewer extends Application {
 
@@ -124,31 +125,38 @@ public class Viewer extends Application {
                     x - 10, y + 10,
                     x + 10, y + 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.BOTTOM_CENTER);
         } else if (orientation == 'S') {
             triangle.getPoints().addAll(
                     x, y + 15,
                     x - 10, y - 10,
                     x + 10, y - 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.TOP_CENTER);
         } else if (orientation == 'E') {
             triangle.getPoints().addAll(
                     x + 15, y,
                     x - 10, y - 10,
                     x - 10, y + 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.CENTER_LEFT);
         } else if (orientation == 'W') {
             triangle.getPoints().addAll(
                     x - 15, y,
                     x + 10, y - 10,
                     x + 10, y + 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.CENTER_RIGHT);
         }
 
-        triangle.setFill(color);
-
-        trianglePane.getChildren().add(triangle);
-
-        trianglePane.setAlignment(Pos.CENTER);
 
         return trianglePane;
     }
@@ -262,10 +270,8 @@ public class Viewer extends Application {
         players.setLayoutX(750);
         players.setLayoutY(50);
 
-
         //stackpane for the board, to allow the icons to go within the gridpane
         StackPane allBoard = new StackPane();
-
 
         //list for the colors of the rugs, to be cycled through
         List<Character> colorList = new ArrayList<>();
@@ -280,6 +286,7 @@ public class Viewer extends Application {
         //Creates the board with the rugs placed in
         GridPane board = createBoard(colorList);
 
+        //Gets board and assam images and sets correct sizing.
         Image boardIcon = boardIcon();
         ImageView boardIconImage = new ImageView(boardIcon);
         boardIconImage.setFitWidth(590);
@@ -290,8 +297,8 @@ public class Viewer extends Application {
         assamIconImage.setFitWidth(40);
         assamIconImage.setFitHeight(60);
 
+        //centres the assam icon within the board square
         StackPane assamIconImageCentre = new StackPane(assamIconImage);
-
         assamIconImageCentre.setAlignment(Pos.CENTER);
 
         //finds the assam string
@@ -368,11 +375,11 @@ public class Viewer extends Application {
         //contains default game string, no players, nothing except assam on the board.
         displayState("A44Ny00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00\n");
 
+        primaryStage.setTitle("Marrakech Board");
+
         root.getChildren().add(controls);
 
         makeControls();
-
-        primaryStage.setTitle("Marrakech Board");
 
         root.getChildren().add(gameLayout);
 
