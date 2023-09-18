@@ -3,13 +3,12 @@ package comp1110.ass2.gui;
 import comp1110.ass2.Assam;
 import comp1110.ass2.Board;
 import comp1110.ass2.Player;
-import javafx.scene.shape.Polygon;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.stage.Stage;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,16 +16,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 public class Viewer extends Application {
 
@@ -77,7 +78,7 @@ public class Viewer extends Application {
                     case 'y' -> r.setFill(Color.YELLOW);
                     default -> r.setFill(Color.TRANSPARENT);
                 }
-                r.setStroke(Color.BLACK);
+                //r.setStroke(Color.BLACK);
                 boardPane.add(r, j, i);
             }
         }
@@ -87,30 +88,17 @@ public class Viewer extends Application {
         return boardPane;
     }
 
-    //Creates the assam figure. Was meant to be an image but couldn't figure out how to make it work :(
-    public static Pane assamIcon() {
-        Pane assamIcon = new Pane();
+    public static Image boardIcon() {
+        Image boardIcon = new Image(Viewer.class.getResourceAsStream("board.png"));
+        return boardIcon;
+    }
 
-        Circle head = new Circle(20, 20, 10);
-        head.setFill(Color.BLACK);
-
-        Line body = new Line(20, 30, 20, 50);
-        body.setStroke(Color.BLACK);
-
-        Line leftArm = new Line(15, 30, 20, 40);
-        leftArm.setStroke(Color.BLACK);
-        Line rightArm = new Line(25, 30, 20, 40);
-        rightArm.setStroke(Color.BLACK);
-
-        Line leftLeg = new Line(20, 50, 15, 60);
-        leftLeg.setStroke(Color.BLACK);
-        Line rightLeg = new Line(20, 50, 25, 60);
-        rightLeg.setStroke(Color.BLACK);
-
-        assamIcon.getChildren().addAll(head, body, leftArm, rightArm, leftLeg, rightLeg);
-
+    //Creates the assam figure
+    public static Image assamIcon() {
+        Image assamIcon = new Image(Viewer.class.getResourceAsStream("Assam.png"));
         return assamIcon;
     }
+
     //Creates a triangle pointing in the direction Assam is facing
     public static Pane assamDirection(char orientation) {
         if (orientation == 'N') {
@@ -126,40 +114,49 @@ public class Viewer extends Application {
     }
 
     //Creation method for the triangle.
-    private static Pane createTriangle(double x, double y, Color color, char orientation){
-        Pane trianglePane = new Pane();
+    private static StackPane createTriangle(double x, double y, Color color, char orientation){
+        StackPane trianglePane = new StackPane();
 
         Polygon triangle = new Polygon();
 
         if (orientation == 'N') {
             triangle.getPoints().addAll(
-                    x, y - 10,
+                    x, y - 15,
                     x - 10, y + 10,
                     x + 10, y + 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.BOTTOM_CENTER);
         } else if (orientation == 'S') {
             triangle.getPoints().addAll(
-                    x, y + 10,
+                    x, y + 15,
                     x - 10, y - 10,
                     x + 10, y - 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.TOP_CENTER);
         } else if (orientation == 'E') {
             triangle.getPoints().addAll(
-                    x + 10, y,
+                    x + 15, y,
                     x - 10, y - 10,
                     x - 10, y + 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.CENTER_LEFT);
         } else if (orientation == 'W') {
             triangle.getPoints().addAll(
-                    x - 10, y,
+                    x - 15, y,
                     x + 10, y - 10,
                     x + 10, y + 10
             );
+            triangle.setFill(color);
+            trianglePane.getChildren().add(triangle);
+            trianglePane.setAlignment(Pos.CENTER_RIGHT);
         }
 
-        triangle.setFill(color);
-
-        trianglePane.getChildren().add(triangle);
 
         return trianglePane;
     }
@@ -270,13 +267,11 @@ public class Viewer extends Application {
         }
 
         //Puts the player tiles into the correct spot.
-        players.setLayoutX(700);
+        players.setLayoutX(750);
         players.setLayoutY(50);
-
 
         //stackpane for the board, to allow the icons to go within the gridpane
         StackPane allBoard = new StackPane();
-
 
         //list for the colors of the rugs, to be cycled through
         List<Character> colorList = new ArrayList<>();
@@ -291,21 +286,36 @@ public class Viewer extends Application {
         //Creates the board with the rugs placed in
         GridPane board = createBoard(colorList);
 
+        //Gets board and assam images and sets correct sizing.
+        Image boardIcon = boardIcon();
+        ImageView boardIconImage = new ImageView(boardIcon);
+        boardIconImage.setFitWidth(590);
+        boardIconImage.setFitHeight(590);
 
-        Pane assamIcon = assamIcon();
+        Image assamIcon = assamIcon();
+        ImageView assamIconImage = new ImageView(assamIcon);
+        assamIconImage.setFitWidth(40);
+        assamIconImage.setFitHeight(60);
+
+        //centres the assam icon within the board square
+        StackPane assamIconImageCentre = new StackPane(assamIconImage);
+        assamIconImageCentre.setAlignment(Pos.CENTER);
+
         //finds the assam string
         String assamString = state.substring((8 * numPlayers), ((8 * numPlayers) + 4));
         Assam Assam = new Assam(assamString);
+
         //finds the position of assam on the board
         int assamY = Assam.getY();
         int assamX = Assam.getX();
 
         //sets the position of assam on the board
-        GridPane.setConstraints(assamIcon, assamY - 1, assamX - 1);
+        GridPane.setConstraints(assamIconImageCentre, assamY - 1, assamX - 1);
 
         //figures out the direction assam is facing
         char assamOrientation = Assam.getOrientation();
-        Pane assamDirection = assamDirection(assamOrientation);
+        StackPane assamDirection = new StackPane(assamDirection(assamOrientation));
+        assamDirection.setAlignment(Pos.CENTER);
 
         int directionX = assamX - 1;
         int directionY = assamY - 1;
@@ -327,12 +337,12 @@ public class Viewer extends Application {
         GridPane.setConstraints(assamDirection, directionY, directionX);
 
         //populates the board with the assam direction triangle and the figure
-        board.getChildren().addAll(assamDirection, assamIcon);
+        board.getChildren().addAll(assamDirection, assamIconImageCentre);
 
         //puts everything together and puts it in a reasonable spot
-        allBoard.getChildren().addAll(board);
+        allBoard.getChildren().addAll(boardIconImage, board);
         allBoard.setLayoutX(130);
-        allBoard.setLayoutY(30);
+        allBoard.setLayoutY(0);
 
         gameLayout.getChildren().addAll(allBoard, players);
     }
@@ -365,11 +375,11 @@ public class Viewer extends Application {
         //contains default game string, no players, nothing except assam on the board.
         displayState("A44Ny00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00\n");
 
+        primaryStage.setTitle("Marrakech Board");
+
         root.getChildren().add(controls);
 
         makeControls();
-
-        primaryStage.setTitle("Marrakech Board");
 
         root.getChildren().add(gameLayout);
 
