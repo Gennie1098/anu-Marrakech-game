@@ -77,7 +77,7 @@ public class Viewer extends Application {
                     case 'y' -> r.setFill(Color.YELLOW);
                     default -> r.setFill(Color.TRANSPARENT);
                 }
-                r.setStroke(Color.BLACK);
+                //r.setStroke(Color.BLACK);
                 boardPane.add(r, j, i);
             }
         }
@@ -87,10 +87,15 @@ public class Viewer extends Application {
         return boardPane;
     }
 
+    public static Image boardIcon() {
+        Image boardIcon = new Image(Viewer.class.getResourceAsStream("board.png"));
+        return boardIcon;
+    }
+
     //Creates the assam figure
     public static Image assamIcon() {
-    Image assamIcon = new Image(Viewer.class.getResourceAsStream("Assam.png"));
-    return assamIcon;
+        Image assamIcon = new Image(Viewer.class.getResourceAsStream("Assam.png"));
+        return assamIcon;
     }
 
     //Creates a triangle pointing in the direction Assam is facing
@@ -254,7 +259,7 @@ public class Viewer extends Application {
         }
 
         //Puts the player tiles into the correct spot.
-        players.setLayoutX(700);
+        players.setLayoutX(750);
         players.setLayoutY(50);
 
 
@@ -275,6 +280,10 @@ public class Viewer extends Application {
         //Creates the board with the rugs placed in
         GridPane board = createBoard(colorList);
 
+        Image boardIcon = boardIcon();
+        ImageView boardIconImage = new ImageView(boardIcon);
+        boardIconImage.setFitWidth(590);
+        boardIconImage.setFitHeight(590);
 
         Image assamIcon = assamIcon();
         ImageView assamIconImage = new ImageView(assamIcon);
@@ -324,9 +333,9 @@ public class Viewer extends Application {
         board.getChildren().addAll(assamDirection, assamIconImageCentre);
 
         //puts everything together and puts it in a reasonable spot
-        allBoard.getChildren().addAll(board);
+        allBoard.getChildren().addAll(boardIconImage, board);
         allBoard.setLayoutX(130);
-        allBoard.setLayoutY(30);
+        allBoard.setLayoutY(0);
 
         gameLayout.getChildren().addAll(allBoard, players);
     }
