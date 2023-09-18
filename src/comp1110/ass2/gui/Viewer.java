@@ -87,33 +87,7 @@ public class Viewer extends Application {
         return boardPane;
     }
 
-    //Creates the assam figure. Was meant to be an image but couldn't figure out how to make it work :(
-    /**
-     * public static Pane assamIcon() {
-     * Pane assamIcon = new Pane();
-     * <p>
-     * Circle head = new Circle(20, 20, 10);
-     * head.setFill(Color.BLACK);
-     * <p>
-     * Line body = new Line(20, 30, 20, 50);
-     * body.setStroke(Color.BLACK);
-     * <p>
-     * Line leftArm = new Line(15, 30, 20, 40);
-     * leftArm.setStroke(Color.BLACK);
-     * Line rightArm = new Line(25, 30, 20, 40);
-     * rightArm.setStroke(Color.BLACK);
-     * <p>
-     * Line leftLeg = new Line(20, 50, 15, 60);
-     * leftLeg.setStroke(Color.BLACK);
-     * Line rightLeg = new Line(20, 50, 25, 60);
-     * rightLeg.setStroke(Color.BLACK);
-     * <p>
-     * assamIcon.getChildren().addAll(head, body, leftArm, rightArm, leftLeg, rightLeg);
-     * <p>
-     * return assamIcon;
-     * }
-     **/
-
+    //Creates the assam figure
     public static Image assamIcon() {
     Image assamIcon = new Image(Viewer.class.getResourceAsStream("Assam.png"));
     return assamIcon;
