@@ -5,8 +5,6 @@ import comp1110.ass2.Board;
 import comp1110.ass2.Player;
 import javafx.scene.shape.Polygon;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -27,6 +25,8 @@ import javafx.scene.layout.StackPane;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 
 public class Viewer extends Application {
 
@@ -88,29 +88,37 @@ public class Viewer extends Application {
     }
 
     //Creates the assam figure. Was meant to be an image but couldn't figure out how to make it work :(
-    public static Pane assamIcon() {
-        Pane assamIcon = new Pane();
+    /**
+     * public static Pane assamIcon() {
+     * Pane assamIcon = new Pane();
+     * <p>
+     * Circle head = new Circle(20, 20, 10);
+     * head.setFill(Color.BLACK);
+     * <p>
+     * Line body = new Line(20, 30, 20, 50);
+     * body.setStroke(Color.BLACK);
+     * <p>
+     * Line leftArm = new Line(15, 30, 20, 40);
+     * leftArm.setStroke(Color.BLACK);
+     * Line rightArm = new Line(25, 30, 20, 40);
+     * rightArm.setStroke(Color.BLACK);
+     * <p>
+     * Line leftLeg = new Line(20, 50, 15, 60);
+     * leftLeg.setStroke(Color.BLACK);
+     * Line rightLeg = new Line(20, 50, 25, 60);
+     * rightLeg.setStroke(Color.BLACK);
+     * <p>
+     * assamIcon.getChildren().addAll(head, body, leftArm, rightArm, leftLeg, rightLeg);
+     * <p>
+     * return assamIcon;
+     * }
+     **/
 
-        Circle head = new Circle(20, 20, 10);
-        head.setFill(Color.BLACK);
-
-        Line body = new Line(20, 30, 20, 50);
-        body.setStroke(Color.BLACK);
-
-        Line leftArm = new Line(15, 30, 20, 40);
-        leftArm.setStroke(Color.BLACK);
-        Line rightArm = new Line(25, 30, 20, 40);
-        rightArm.setStroke(Color.BLACK);
-
-        Line leftLeg = new Line(20, 50, 15, 60);
-        leftLeg.setStroke(Color.BLACK);
-        Line rightLeg = new Line(20, 50, 25, 60);
-        rightLeg.setStroke(Color.BLACK);
-
-        assamIcon.getChildren().addAll(head, body, leftArm, rightArm, leftLeg, rightLeg);
-
-        return assamIcon;
+    public static Image assamIcon() {
+    Image assamIcon = new Image(Viewer.class.getResourceAsStream("Assam.png"));
+    return assamIcon;
     }
+
     //Creates a triangle pointing in the direction Assam is facing
     public static Pane assamDirection(char orientation) {
         if (orientation == 'N') {
@@ -126,32 +134,32 @@ public class Viewer extends Application {
     }
 
     //Creation method for the triangle.
-    private static Pane createTriangle(double x, double y, Color color, char orientation){
-        Pane trianglePane = new Pane();
+    private static StackPane createTriangle(double x, double y, Color color, char orientation){
+        StackPane trianglePane = new StackPane();
 
         Polygon triangle = new Polygon();
 
         if (orientation == 'N') {
             triangle.getPoints().addAll(
-                    x, y - 10,
+                    x, y - 15,
                     x - 10, y + 10,
                     x + 10, y + 10
             );
         } else if (orientation == 'S') {
             triangle.getPoints().addAll(
-                    x, y + 10,
+                    x, y + 15,
                     x - 10, y - 10,
                     x + 10, y - 10
             );
         } else if (orientation == 'E') {
             triangle.getPoints().addAll(
-                    x + 10, y,
+                    x + 15, y,
                     x - 10, y - 10,
                     x - 10, y + 10
             );
         } else if (orientation == 'W') {
             triangle.getPoints().addAll(
-                    x - 10, y,
+                    x - 15, y,
                     x + 10, y - 10,
                     x + 10, y + 10
             );
@@ -160,6 +168,8 @@ public class Viewer extends Application {
         triangle.setFill(color);
 
         trianglePane.getChildren().add(triangle);
+
+        trianglePane.setAlignment(Pos.CENTER);
 
         return trianglePane;
     }
@@ -292,20 +302,30 @@ public class Viewer extends Application {
         GridPane board = createBoard(colorList);
 
 
-        Pane assamIcon = assamIcon();
+        Image assamIcon = assamIcon();
+        ImageView assamIconImage = new ImageView(assamIcon);
+        assamIconImage.setFitWidth(40);
+        assamIconImage.setFitHeight(60);
+
+        StackPane assamIconImageCentre = new StackPane(assamIconImage);
+
+        assamIconImageCentre.setAlignment(Pos.CENTER);
+
         //finds the assam string
         String assamString = state.substring((8 * numPlayers), ((8 * numPlayers) + 4));
         Assam Assam = new Assam(assamString);
+
         //finds the position of assam on the board
         int assamY = Assam.getY();
         int assamX = Assam.getX();
 
         //sets the position of assam on the board
-        GridPane.setConstraints(assamIcon, assamY - 1, assamX - 1);
+        GridPane.setConstraints(assamIconImageCentre, assamY - 1, assamX - 1);
 
         //figures out the direction assam is facing
         char assamOrientation = Assam.getOrientation();
-        Pane assamDirection = assamDirection(assamOrientation);
+        StackPane assamDirection = new StackPane(assamDirection(assamOrientation));
+        assamDirection.setAlignment(Pos.CENTER);
 
         int directionX = assamX - 1;
         int directionY = assamY - 1;
@@ -327,7 +347,7 @@ public class Viewer extends Application {
         GridPane.setConstraints(assamDirection, directionY, directionX);
 
         //populates the board with the assam direction triangle and the figure
-        board.getChildren().addAll(assamDirection, assamIcon);
+        board.getChildren().addAll(assamDirection, assamIconImageCentre);
 
         //puts everything together and puts it in a reasonable spot
         allBoard.getChildren().addAll(board);
@@ -391,7 +411,7 @@ public class Viewer extends Application {
 }
 
 /** Test game strings (not properly generated, can end up with weird values)
- * Pc00913iPy00714oA53NBn00n00y08n00n00n00n00r97n00n00n00n00y44n00r01n00n00r78r22n00n00n00c03y86c04r12n00n00n00n00n00n00y66r08c76r24n00n00n00y22y00r20n00n00n00y82r74n00n00
+ *Pc00913iPy00714oA53NBn00n00y08n00n00n00n00r97n00n00n00n00y44n00r01n00n00r78r22n00n00n00c03y86c04r12n00n00n00n00n00n00y66r08c76r24n00n00n00y22y00r20n00n00n00y82r74n00n00
  *Pc01313oPy00915iPr01409iA24WBn00n00n00y87n00n00n00n00r53c69c79c80n00n00r88c82y18c75n00r63n00c37c94y40y23n00n00n00n00n00y79n00y72n00c86r34n00n00c18r47c59r07r92y65n00n00c24n00r53
  *Pc01510iPy01103iPr00411oA36EBy86n00r83n00y62r18y75y63c26n00r71n00n00c24y98y36r57r22n00n00n00n00c82r09c65n00n00y72r98n00n00n00y80r25n00r86n00n00c83y96n00c26n00c71n00n00r44n00c53
  */
