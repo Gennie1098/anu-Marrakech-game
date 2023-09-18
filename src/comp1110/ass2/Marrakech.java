@@ -115,6 +115,7 @@ public class Marrakech {
 
         try {
             // Verify that the ID is a valid 2-digit number
+            // And to get the id number
             int id = Integer.parseInt(idStr);
             if (id < 0 || id > 99) {
                 return false;
