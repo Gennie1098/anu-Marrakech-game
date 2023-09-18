@@ -1,7 +1,5 @@
-package comp1110.ass2;
+package comp1110.ass2.model;
 
-
-import java.util.Scanner;
 
 public class Marrakech {
     private Assam assam;
@@ -23,6 +21,10 @@ public class Marrakech {
 //        }
     }
 
+    public Marrakech(String gameString) {
+        this.setGameInfo(gameString);
+    }
+
     // get String current game state
     public String getGameState(){
         String gameString = "";
@@ -32,18 +34,22 @@ public class Marrakech {
         return gameString += assam.getAssamState() + board.getBoardState();
     }
 
-    public void getGameInfo(String gameString) {
+    public void setGameInfo(String gameString) {
         players = new Player[MAX_PLAYERS];
         final int PLAYER_STRING_LENGTH = 8;
         final int ASSAM_STRING_LENGTH = 4;
         final int BOARD_STRING_LENGTH = 49 * 3;
         int numberOfPlayers = 0;
 
+
+        // TODO : CHECK
         for (int i = 2; i <= MAX_PLAYERS; i++) {
             if (gameString.length() != PLAYER_STRING_LENGTH * i + ASSAM_STRING_LENGTH + BOARD_STRING_LENGTH) {
                 System.err.println("Invalid game string");
+
             }
         }
+
 
         //create players from game string
         for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -52,6 +58,15 @@ public class Marrakech {
                 numberOfPlayers++;
             }
         }
+
+//        int numberPlayers = gameString.indexOf("A")/PLAYER_STRING_LENGTH;
+//        players = new Player[numberPlayers];
+//
+//
+//
+//        for (int i = 0; i < numberPlayers; i++) {
+//                players[i] =  new Player(gameString.substring(i * PLAYER_STRING_LENGTH, (i + 1) * PLAYER_STRING_LENGTH));
+//        }
 
         //create assam from game string
         int assamStart = numberOfPlayers * PLAYER_STRING_LENGTH;

@@ -1,4 +1,4 @@
-package comp1110.ass2;
+package comp1110.ass2.model;
 
 public class Player {
     //4 players max

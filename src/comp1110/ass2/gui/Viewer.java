@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.model.Marrakech;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 
 public class Viewer extends Application {
 
+    private Marrakech marrakech;
     private static final int VIEWER_WIDTH = 1200;
     private static final int VIEWER_HEIGHT = 700;
 
@@ -27,6 +29,7 @@ public class Viewer extends Application {
      * @param state an array of two strings, representing the current game state
      */
     void displayState(String state) {
+        marrakech = new Marrakech(state);
         // FIXME Task 5: implement the simple state viewer
     }
 
