@@ -34,13 +34,6 @@ public class Player {
                 + String.format("%02d", numberOfRugs) + (this.inGame ? 'i' : 'o');
     }
 
-    public void setPlayerState (String playerString) {
-        this.color = playerString.charAt(1);
-        this.numberOfDirhams = Integer.parseInt(playerString.substring(2, 5));
-        this.numberOfRugs = Integer.parseInt(playerString.substring(5, 7));
-        this.inGame = playerString.charAt(7) == 'i';
-    }
-
 
     public char getColor() {
         return color;

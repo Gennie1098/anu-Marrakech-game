@@ -29,13 +29,6 @@ public class Assam {
         return "A" + x + y + orientation;
     }
 
-    public void setAssamState (String assamString) {
-        this.x = Character.getNumericValue(assamString.charAt(1));
-        this.y = Character.getNumericValue(assamString.charAt(2));
-        this.orientation = assamString.charAt(3);
-    }
-
-
     public int getX() {
         return x;
     }
