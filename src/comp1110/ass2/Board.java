@@ -45,16 +45,7 @@ public class Board {
         return boardState;
     }
 
-    public void setBoardState(String boardString) {
-        int index = 0;
-        for (int col = 0; col < BOARD_SIZE; col++) {
-            for (int row = 0; row < BOARD_SIZE; row++) {
-                String tile = boardString.substring(index, index + 3);
-                setTile(tile, row, col); //use setTile method below
-                index += 3;
-            }
-        }
-    }
+
 
 
     //setTile(int x, int y, String abbreviatedRugState): void

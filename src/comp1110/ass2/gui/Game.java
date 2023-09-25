@@ -1,11 +1,14 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.Marrakech;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+
 public class Game extends Application {
+    private Marrakech newGame;
 
     private final Group root = new Group();
     private static final int WINDOW_WIDTH = 1200;
@@ -18,4 +21,9 @@ public class Game extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    // TODO: constructor game with arg String gameString;
+
+
+
 }

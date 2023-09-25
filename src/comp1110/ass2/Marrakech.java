@@ -4,7 +4,6 @@ package comp1110.ass2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Marrakech {
     private Assam assam;
@@ -26,6 +25,10 @@ public class Marrakech {
 //        }
     }
 
+    public Marrakech(String gameString) {
+        this.setGameInfo(gameString);
+    }
+
     // get String current game state
     public String getGameState(){
         String gameString = "";
@@ -35,25 +38,25 @@ public class Marrakech {
         return gameString += assam.getAssamState() + board.getBoardState();
     }
 
-    public void getGameInfo(String gameString) {
-        players = new Player[MAX_PLAYERS];
+    public void setGameInfo(String gameString) {
         final int PLAYER_STRING_LENGTH = 8;
         final int ASSAM_STRING_LENGTH = 4;
         final int BOARD_STRING_LENGTH = 49 * 3;
         int numberOfPlayers = 0;
 
-        for (int i = 2; i <= MAX_PLAYERS; i++) {
-            if (gameString.length() != PLAYER_STRING_LENGTH * i + ASSAM_STRING_LENGTH + BOARD_STRING_LENGTH) {
-                System.err.println("Invalid game string");
-            }
+        numberOfPlayers = gameString.indexOf("A")/PLAYER_STRING_LENGTH;
+        players = new Player[numberOfPlayers];
+
+
+        if (gameString.length() != PLAYER_STRING_LENGTH * numberOfPlayers + ASSAM_STRING_LENGTH + BOARD_STRING_LENGTH) {
+            System.err.println("Invalid game string");
+
         }
 
+
         //create players from game string
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (gameString.charAt(i + PLAYER_STRING_LENGTH) == 'P') {
-                players[i] = new Player(gameString.substring(i * PLAYER_STRING_LENGTH, (i + 1) * PLAYER_STRING_LENGTH));
-                numberOfPlayers++;
-            }
+        for (int i = 0; i < numberOfPlayers; i++) {
+            players[i] =  new Player(gameString.substring(i * PLAYER_STRING_LENGTH, (i + 1) * PLAYER_STRING_LENGTH));
         }
 
         //create assam from game string
@@ -94,7 +97,6 @@ public class Marrakech {
      * @return true if the rug is valid, and false otherwise.
      */
     public static boolean isRugValid(String gameString, String rug) {
-        // FIXME: Task 4
         // Check if the rug string length is 7
         if (rug.length() != 7) {
             return false;
@@ -123,7 +125,6 @@ public class Marrakech {
         } catch (NumberFormatException e) {
             return false;
         }
-
         // Verify that the coordinates are within the legal range (1-7)
         if (xCoordinate1 < 0 || xCoordinate1 > 6) {
             return false;
@@ -141,8 +142,6 @@ public class Marrakech {
         return true;
     }
 
-
-
     /**
      * Roll the special Marrakech die and return the result.
      * Note that the die in Marrakech is not a regular 6-sided die, since there
@@ -158,7 +157,6 @@ public class Marrakech {
      * @return The result of the roll of the die meeting the criteria above
      */
     public static int rollDie() {
-        //FIXME: Task 6
         Random random = new Random();
         int randomResult = random.nextInt(6); // Generate a random number between 1 and 6
 
@@ -173,8 +171,6 @@ public class Marrakech {
             return 4;
         }
     }
-
-
 
     /**
      * Determine whether a game of Marrakech is over
