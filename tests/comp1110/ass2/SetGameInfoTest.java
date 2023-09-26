@@ -15,7 +15,7 @@ public class SetGameInfoTest {
     public void testSetGameInfo() {
         BufferedReader fr1;
         BufferedReader fr2;
-        fr1 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("testdata/set_game_info1.txt")));
+        fr1 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("testdata/set_game_info2.txt")));
 //        fr1 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("testdata/set_game_info2.txt")));
         Stream<String> testLines1 = fr1.lines();
 //        fr2 = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("testdata/set_game_info2.txt")));
