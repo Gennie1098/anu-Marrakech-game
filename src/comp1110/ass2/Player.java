@@ -74,12 +74,16 @@ public class Player {
 
     //addPlayerRug(int amountOfRugs): int
     public int subPlayerRug(int amountOfRugs) {
+        if (amountOfRugs < 0) {
+            throw new IllegalArgumentException("Amount of rugs can't be negative");
+        }
         if (!inGame) { //inGame == false
             return numberOfRugs;
         }
         this.numberOfRugs -= amountOfRugs;
-        if (numberOfRugs == 0) {
+        if (numberOfRugs <= 0) {
             inGame = false; //if numberOfRugs = 0 (player put all his rug on the board), player is out of game
+            numberOfRugs = 0;
         }
         return numberOfRugs;
     }
