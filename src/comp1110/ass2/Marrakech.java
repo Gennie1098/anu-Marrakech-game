@@ -1,6 +1,8 @@
 package comp1110.ass2;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Marrakech {
@@ -180,7 +182,24 @@ public class Marrakech {
      */
     public static boolean isGameOver(String currentGame) {
         //FIXME: Task 8
-        return false;
+        char player1 = currentGame.charAt(7);
+        char player2 = currentGame.charAt(15);
+        char player3 = currentGame.charAt(23);
+        char player4 = currentGame.charAt(31);
+        char[] playerstate = new char[4];
+        playerstate[0]= player1;
+        playerstate[1]= player2;
+        playerstate[2]= player3;
+        playerstate[3]= player4;
+        for ( int i = 0; i < playerstate.length; i++){
+            if ( playerstate[i] == 'i' ){
+                if (Integer.parseInt(currentGame.substring(5+i*8, 7+i*8))>=1) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
     }
 
     /**
