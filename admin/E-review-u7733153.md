@@ -4,6 +4,7 @@ Reviewed by: tong yuan xiong, u7733153
 
 Reviewing code written by: Gennie Nguyen, u7616055
 
+
 Component: <Player class>
 ```java
 public class Player {
