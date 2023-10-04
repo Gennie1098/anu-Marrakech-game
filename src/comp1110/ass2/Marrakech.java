@@ -97,6 +97,8 @@ public class Marrakech {
      * @return true if the rug is valid, and false otherwise.
      */
     public static boolean isRugValid(String gameString, String rug) {
+        //FIXME: Task 4
+
         // Check if the rug string length is 7
         if (rug.length() != 7) {
             return false;
@@ -157,6 +159,9 @@ public class Marrakech {
      * @return The result of the roll of the die meeting the criteria above
      */
     public static int rollDie() {
+        //FIXME: Task 6
+
+
         Random random = new Random();
         int randomResult = random.nextInt(6); // Generate a random number between 1 and 6
 
