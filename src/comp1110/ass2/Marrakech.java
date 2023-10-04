@@ -161,6 +161,7 @@ public class Marrakech {
     public static int rollDie() {
         //FIXME: Task 6
 
+
         Random random = new Random();
         int randomResult = random.nextInt(6); // Generate a random number between 1 and 6
 
