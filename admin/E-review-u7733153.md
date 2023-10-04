@@ -6,6 +6,7 @@ Reviewing code written by: Gennie Nguyen, u7616055
 
 Component: <Player class>
 
+
 ```java
 public class Player {
 //4 players max
