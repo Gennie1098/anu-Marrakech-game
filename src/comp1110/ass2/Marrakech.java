@@ -140,6 +140,10 @@ public class Marrakech {
         if (yCoordinate2 < 0 || yCoordinate2 > 6){
             return false;
         }
+        String boardString = gameString.substring(32, 183);
+        if (boardString.contains(color + idStr)) {
+            return false;
+        }
 
         return true;
     }
