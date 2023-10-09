@@ -102,4 +102,5 @@ public class Rugs {
 //        System.out.println(newRug.getRugState());
 //        System.out.println(newRug.getAbbreviatedRugState());
 //    }
+
 }
