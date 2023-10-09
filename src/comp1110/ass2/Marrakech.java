@@ -290,12 +290,18 @@ public class Marrakech {
         int assamY = Character.getNumericValue(gameState.charAt(34)); // 假设阿萨姆的Y坐标是3
         boolean isAsssamNeighbor = false;
         // 检查地毯的起始坐标是否与阿萨姆相邻
-        if (Math.abs(startx1 - assamX) + Math.abs(starty1 - assamY) == 1
-                || Math.abs(startx2 - assamX) + Math.abs(starty2 - assamY) == 1) {
-            isAsssamNeighbor = true; // 地毯不与阿萨姆相邻，无效
-        }
+        int d1 = Math.abs(startx1 - assamX) + Math.abs(starty1 - assamY);
+        int d2 = Math.abs(startx2 - assamX) + Math.abs(starty2 - assamY);
+
+        if (d1*d1+d2*d2<=5&&d1*d1+d2*d2>=3){
+                isAsssamNeighbor = true;
+            }
+
+
         if (!isAsssamNeighbor)
             return false;
+
+
         String rugString1 = gameState.substring(37+3*(7*startx1+starty1),37+3*(7*startx1+starty1)+3);
 
         String rugString2 = gameState.substring(37+3*(7*startx2+starty2), 37+3*(7*startx2+starty2)+3);// 获取棋盘字符串
