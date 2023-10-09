@@ -69,11 +69,6 @@ public class Marrakech {
 
     }
 
-    //testing
-    public static void main (String []arg) {
-
-    }
-
 
 
     /**
@@ -98,6 +93,7 @@ public class Marrakech {
      */
     public static boolean isRugValid(String gameString, String rug) {
         //FIXME: Task 4
+//       tong yuan xiong
 
         // Check if the rug string length is 7
         if (rug.length() != 7) {
@@ -225,8 +221,47 @@ public class Marrakech {
      * rotation is illegal.
      */
     public static String rotateAssam(String currentAssam, int rotation) {
-        //FIXME: Task 9
-        return "";
+        // Verify that the input is valid
+        if (currentAssam.length() != 4 || rotation % 90 != 0 ) {
+            return currentAssam; // get back the currentAssam
+        }
+
+        // get the current Assam direction
+        char currentDirection = currentAssam.charAt(3);
+
+        // def the new direction
+        char newDirection;
+
+        // Calculate the new orientation based on the rotation angle
+        if (rotation == 90) {
+            switch (currentDirection) {
+                case 'N':
+                    newDirection = 'E'; // From North to East
+                    break;
+                case 'E':
+                    newDirection = 'S'; // From East to South
+                    break;
+                case 'S':
+                    newDirection = 'W'; // From South to West
+                    break;
+                case 'W':
+                    newDirection = 'N'; // From West to North
+                    break;
+                default:
+                    return currentAssam;
+            }
+        } else if (rotation == 270) {
+            // Counterclockwise rotation is equal to three clockwise rotations.
+            for (int i = 0; i < 3; i++) {
+                currentAssam = rotateAssam(currentAssam, 90);
+            }
+            return currentAssam;
+        } else {
+            return currentAssam; // Unsupported rotation angle, return to original state
+        }
+
+        // Building new Assam strings
+        return currentAssam.substring(0,3)+newDirection;
     }
 
     /**
@@ -241,8 +276,37 @@ public class Marrakech {
      * @return true if the placement is valid, and false otherwise.
      */
     public static boolean isPlacementValid(String gameState, String rug) {
-        //FIXME: Task 10
-        return false;
+
+        // 解析 rug 获取待放置地毯的信息
+        char color = rug.charAt(0); // 地毯颜色
+        int startx1 = Character.getNumericValue(rug.charAt(3));
+        int starty1 = Character.getNumericValue(rug.charAt(4));
+        int startx2 = Character.getNumericValue(rug.charAt(5));
+        int starty2 = Character.getNumericValue(rug.charAt(6));
+
+        // 检查地毯的起始坐标是否与阿萨姆所在的方格相邻
+        // 根据游戏状态解析出阿萨姆的坐标
+        int assamX = Character.getNumericValue(gameState.charAt(33));
+        int assamY = Character.getNumericValue(gameState.charAt(34)); // 假设阿萨姆的Y坐标是3
+        boolean isAsssamNeighbor = false;
+        // 检查地毯的起始坐标是否与阿萨姆相邻
+        if (Math.abs(startx1 - assamX) + Math.abs(starty1 - assamY) == 1
+                || Math.abs(startx2 - assamX) + Math.abs(starty2 - assamY) == 1) {
+            isAsssamNeighbor = true; // 地毯不与阿萨姆相邻，无效
+        }
+        if (!isAsssamNeighbor)
+            return false;
+        String rugString1 = gameState.substring(37+3*(7*startx1+starty1),37+3*(7*startx1+starty1)+3);
+
+        String rugString2 = gameState.substring(37+3*(7*startx2+starty2), 37+3*(7*startx2+starty2)+3);// 获取棋盘字符串
+
+        if(!rugString1.equals("n00") && !rugString2.equals("n00")){
+            if(rugString1.equals(rugString2)){
+                    return false;
+            }
+        }
+
+        return true; // 符合所有条件，地毯放置有效
     }
 
     /**
@@ -309,6 +373,13 @@ public class Marrakech {
     public static String makePlacement(String currentGame, String rug) {
         //FIXME: Task 14
         return "";
+    }
+
+
+    public static void main(String[] args) {
+        String game = "Pc03015iPy03015iPp03015iPr03015iA03WBn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
+        String rug = "c000203";
+        isPlacementValid(game, rug);
     }
 
 }
