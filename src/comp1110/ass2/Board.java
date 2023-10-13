@@ -33,7 +33,7 @@ public class Board {
             }
         }
     }
-
+    //Gennie
     //method getBoardState(), return String to print Board State at the time "n00n00n00n00...n00"
     public String getBoardState() {
         String boardState = "";

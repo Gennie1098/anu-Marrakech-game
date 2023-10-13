@@ -22,6 +22,10 @@ public class GetPaymentAmountTest {
         }
     }
 
+    /**
+     * Authoriy by who
+     * it does what
+     */
     @Test
     public void checkMediumPayments() {
         BufferedReader fr;

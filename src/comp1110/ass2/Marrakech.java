@@ -181,7 +181,6 @@ public class Marrakech {
      * @return true if the game is over, or false otherwise.
      */
     public static boolean isGameOver(String currentGame) {
-        //FIXME: Task 8
         char player1 = currentGame.charAt(7);
         char player2 = currentGame.charAt(15);
         char player3 = currentGame.charAt(23);
@@ -216,7 +215,7 @@ public class Marrakech {
      * rotation is illegal.
      */
     public static String rotateAssam(String currentAssam, int rotation) {
-        //FIXME: Task 9
+        //FIXME: Task 9 - Terry
         return "";
     }
 
@@ -232,7 +231,7 @@ public class Marrakech {
      * @return true if the placement is valid, and false otherwise.
      */
     public static boolean isPlacementValid(String gameState, String rug) {
-        //FIXME: Task 10
+        //FIXME: Task 10 - Terry
         return false;
     }
 
@@ -247,7 +246,7 @@ public class Marrakech {
      * @return The amount of payment due, as an integer.
      */
     public static int getPaymentAmount(String gameString) {
-        //FIXME: Task 11
+        //FIXME: Task 11 - Gennie
         return -1;
     }
 
@@ -282,7 +281,7 @@ public class Marrakech {
      * @return A String representing Assam's state after the movement.
      */
     public static String moveAssam(String currentAssam, int dieResult){
-        //FIXME: Task 13
+        //FIXME: Task 13 - Terry
         return "";
     }
 

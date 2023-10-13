@@ -237,7 +237,6 @@ public class Viewer extends Application {
      * @param state an array of two strings, representing the current game state
      */
     void displayState(String state) {
-        // FIXME Task 5: implement the simple state viewer
 
         //clears the game layout to prevent overlapping
         gameLayout.getChildren().clear();
