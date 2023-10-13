@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Rugs {
 
     /**normal rug string, must be something like "p014445"
@@ -17,13 +20,19 @@ public class Rugs {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
+
+        List<Character> colorList = Arrays.asList('c', 'r', 'p', 'y');
+
+        if (!colorList.contains(color)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     //+ getRugState(): String, must be something like "p014445"
     public String getRugState() {
         return color + String.format("%02d", id) + x1 + y1 + x2 + y2;
     }
-
+/**
     public void setRugState(String rugString) {
         this.color = rugString.charAt(0);
         this.id = Integer.parseInt(rugString.substring(1, 3));
@@ -32,7 +41,7 @@ public class Rugs {
         this.x2 = Character.getNumericValue(rugString.charAt(5));
         this.y2 = Character.getNumericValue(rugString.charAt(6));
     }
-
+*/
 //    public String fromAbbToNormalRugString(String abbRugString) {
 //        this.color = abbRugString.charAt(0);
 //        this.id = Integer.parseInt(abbRugString.substring(1));

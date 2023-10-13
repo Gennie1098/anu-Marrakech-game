@@ -1,6 +1,7 @@
 package comp1110.ass2;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class Board {
     //7x7 grid
@@ -24,9 +25,17 @@ public class Board {
     }
 
     public Board (String boardString) {
+        List<String> validChar = Arrays.asList("B", "c", "r", "y", "p", "n", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+
+        for (char value : boardString.toCharArray()) {
+            String str = String.valueOf(value);
+            if (!validChar.contains(str)) {
+                throw new IllegalArgumentException();
+            }
+        }
         int index = 0;
-        for (int col = 0; col < BOARD_SIZE; col++) {
-            for (int row = 0; row < BOARD_SIZE; row++) {
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
                 String tile = boardString.substring(index, index + 3);
                 setTile(tile, row, col); //use setTile method below
                 index += 3;
@@ -56,7 +65,7 @@ public class Board {
 
     //getTile(int x, int y): String
     //return String represent Tile state, "n00" for empty, "p01" (example) for occupied
-    public String getTile (int x, int y){
+    public String getTile(int x, int y){
         return boardMatrix[x][y];
     }
 
