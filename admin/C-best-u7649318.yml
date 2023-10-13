@@ -27,7 +27,8 @@ method: playerInfo() & createPlayerRectangle()
   - on a roll essentially. Although they don't look too amazing, it definitely helped me get the assignment finished
   - quicker.
 
-method: fair amount of displayState()
+method:
+  - fair amount of displayState()
   - Although I will admit it's a bit hectic within it, I feel pretty good about how I did it and got everything working
   - together.
 
