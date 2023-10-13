@@ -27,13 +27,11 @@ code:
 # you want to just submit methods):
 class:
    - Marrakech
-   - 
 
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
    - isRugValid()and rollDie()
-   - 
 
 # sign *your* name and uid here
 name: tong yuan xiong
