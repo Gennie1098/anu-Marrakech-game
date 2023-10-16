@@ -291,7 +291,7 @@ public class Game extends Application {
          * display all player information (color, name, dirhams, rug)
          */
         GridPane playersSection = new GridPane(); //2x2
-        playersSection.setMaxHeight(Double.MAX_VALUE);
+        playersSection.setPrefHeight(288);
         RowConstraints row1 = new RowConstraints();
         row1.setPercentHeight(50); // 50% of the height
         RowConstraints row2 = new RowConstraints();
