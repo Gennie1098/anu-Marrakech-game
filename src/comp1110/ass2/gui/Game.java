@@ -24,6 +24,7 @@ import javafx.geometry.Insets;
 import java.io.FileInputStream;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
 
 
 public class Game extends Application {
@@ -255,8 +256,8 @@ public class Game extends Application {
         //group of (rotate to the left, rotate to the right)
         VBox rotateRugButtons = new VBox(15);
 
-        Button rotateToLeftButton = createGraphicButtonImg("file:assets/rotateToLeft.png","#E66F51", "#AB513A");
-        Button rotateToRightButton = createGraphicButtonImg("file:assets/rotateToRight.png", "#E66F51", "#AB513A");
+        Button rotateToLeftButton = createButtonImg("assets/rotateToLeft.png","#E66F51", "#AB513A");
+        Button rotateToRightButton = createButtonImg("assets/rotateToRight.png", "#E66F51", "#AB513A");
 
         rotateRugButtons.getChildren().addAll(rotateToLeftButton, rotateToRightButton);
         rotateRugButtons.setAlignment(Pos.CENTER);
@@ -402,13 +403,15 @@ public class Game extends Application {
         return button;
     }
 
-    private Button createGraphicButtonImg(String imagePath, String buttonColor, String shadowColor) {
-        Image image = new Image(getClass().getResourceAsStream(imagePath));
-        ImageView imageView = new ImageView(image);
+    private Button createButtonImg(String imagePath, String buttonColor, String shadowColor) throws FileNotFoundException {
+        FileInputStream input= new FileInputStream(imagePath);
+        Image image = new Image(input);
+        ImageView img =new ImageView(image);
 
         Button buttonImg = new Button();
-        buttonImg.setGraphic(imageView);
+        buttonImg.setGraphic(img);
         buttonImg.setPadding(new Insets(0, 10, 0, 10));
+        buttonImg.setPrefSize(40, 40);
 
         String colorStyle = String.format("-fx-background-color: %s", buttonColor);
         buttonImg.setStyle(colorStyle + "; " + "-fx-background-radius: 7; -fx-border-radius: 7;");
@@ -494,6 +497,21 @@ public class Game extends Application {
         return diceFace;
     }
 
+    private VBox createPlayerBox (String playerNameInput, char playerColor, int numberOfDirhams, int numberOfRugs) {
+        VBox playerBox = new VBox(5);
+
+        Label playerName = new Label(playerNameInput);
+        HBox playerAsset = new HBox(10);
+
+        Font fontMedium = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 24);
+        HBox playerDirham = new HBox();
+        Label amountOfDirhamsDisplayed = new Label("000");
+
+        amountOfDirhamsDisplayed.setFont(fontMedium);
+        amountOfDirhamsDisplayed.setTextFill(Color.web("1F1F1F"));
+
+        return playerBox;
+    }
 
 }
 
