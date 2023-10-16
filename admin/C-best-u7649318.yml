@@ -13,21 +13,15 @@ declaration: >-
   I submit the work below for assessment as my best work. I declare that this
   is entirely my own work, with the following documented exceptions:
 
-
-# I wish to submit the following classes as entirely my own (remove this if
-# you want to just submit methods):
-class:
-  -
-  -
-
-    # I wish to submit the following methods as entirely my own (remove this if
+  # I wish to submit the following methods as entirely my own (remove this if
   # you want to just submit classes):
 method: playerInfo() & createPlayerRectangle()
   - Pretty happy with how these turned out as these were pretty much the first parts of the viewer I did and they put me
   - on a roll essentially. Although they don't look too amazing, it definitely helped me get the assignment finished
   - quicker.
 
-method: fair amount of displayState()
+method:
+  - fair amount of displayState()
   - Although I will admit it's a bit hectic within it, I feel pretty good about how I did it and got everything working
   - together.
 

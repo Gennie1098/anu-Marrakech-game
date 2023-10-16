@@ -40,7 +40,7 @@ public class SubPlayerRugTest {
     @Test
     /**
      * Tests if the player has no rugs left
-     * Tests if the player is correctly set to out of the game if they don't have any rugs.
+     * Tests if the player is correctly set to out of the game
      */
     public void testNoRugsLeft() {
         Player player = new Player("Pc00900i");

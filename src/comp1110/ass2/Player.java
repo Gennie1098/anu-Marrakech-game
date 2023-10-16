@@ -1,5 +1,8 @@
 package comp1110.ass2;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Player {
     //4 players max
 
@@ -23,11 +26,21 @@ public class Player {
     }
 
     public Player (String playerString) {
+        if (playerString.length() != 8) {
+            throw new IllegalArgumentException();
+        }
         this.color = playerString.charAt(1);
         this.numberOfDirhams = Integer.parseInt(playerString.substring(2, 5));
         this.numberOfRugs = Integer.parseInt(playerString.substring(5, 7));
         this.inGame = playerString.charAt(7) == 'i';
+
+        List<Character> colorList = Arrays.asList('c', 'r', 'p', 'y');
+
+        if (!colorList.contains(color)) {
+            throw new IllegalArgumentException();
+        }
     }
+
 
     public String getPlayerState() {
         return "P" + color + String.format("%03d", numberOfDirhams)
@@ -49,12 +62,21 @@ public class Player {
 
     //+ addDirhams(int amountOfDirhams): int
     public int addDirhams(int amountOfDirhams){
+        if (amountOfDirhams >= 1000 - getNumberOfDirhams()) { //exceeds the 3 digit threshold
+            throw new IllegalArgumentException("Too many dirhams added");
+        }
+        if (amountOfDirhams < 0) {
+            throw new IllegalArgumentException("Can't add a negative amount of Dirhams");
+        }
         this.numberOfDirhams += amountOfDirhams;
         return numberOfDirhams;
     }
 
     //+ subDirhams(int amountOfDirhams): int
     public int subDirhams(int amountOfDirhams){
+        if (amountOfDirhams < 0) {
+            throw new IllegalArgumentException("Can't add a negative amount of Dirhams");
+        }
         if (numberOfDirhams < amountOfDirhams){
             numberOfDirhams = 0;
             inGame = false; //if numberOfDirhams = 0, player is out of game

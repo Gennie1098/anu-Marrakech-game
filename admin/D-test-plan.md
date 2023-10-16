@@ -34,7 +34,6 @@
 
 **Methods Tested in Isolation:**
 - `getAssamState()`
-- `setAssamState(String assamString)`
 
 **Conditions Tested Beyond Isolation:**
 - //TODO
@@ -43,7 +42,7 @@
    ```java
    ```
 
-#### **4. Class: Playker**
+#### **4. Class: Player**
 
 **Methods Tested in Isolation:**
 - `getPlayerState()`

@@ -277,19 +277,18 @@ public class Marrakech {
      */
     public static boolean isPlacementValid(String gameState, String rug) {
 
-        // 解析 rug 获取待放置地毯的信息
-        char color = rug.charAt(0); // 地毯颜色
+        // Parse Rugs Get information about carpets to be placed
         int startx1 = Character.getNumericValue(rug.charAt(3));
         int starty1 = Character.getNumericValue(rug.charAt(4));
         int startx2 = Character.getNumericValue(rug.charAt(5));
         int starty2 = Character.getNumericValue(rug.charAt(6));
 
-        // 检查地毯的起始坐标是否与阿萨姆所在的方格相邻
-        // 根据游戏状态解析出阿萨姆的坐标
+        // Check that the starting coordinates of the carpet are adjacent to the square where Assam is located
+        // Analyze Assam's coordinates based on the game state
         int assamX = Character.getNumericValue(gameState.charAt(33));
-        int assamY = Character.getNumericValue(gameState.charAt(34)); // 假设阿萨姆的Y坐标是3
+        int assamY = Character.getNumericValue(gameState.charAt(34)); // get the String of Assam
         boolean isAsssamNeighbor = false;
-        // 检查地毯的起始坐标是否与阿萨姆相邻
+        // Check that the starting coordinates of the carpet are adjacent to Assam
         int d1 = Math.abs(startx1 - assamX) + Math.abs(starty1 - assamY);
         int d2 = Math.abs(startx2 - assamX) + Math.abs(starty2 - assamY);
 
@@ -304,7 +303,7 @@ public class Marrakech {
 
         String rugString1 = gameState.substring(37+3*(7*startx1+starty1),37+3*(7*startx1+starty1)+3);
 
-        String rugString2 = gameState.substring(37+3*(7*startx2+starty2), 37+3*(7*startx2+starty2)+3);// 获取棋盘字符串
+        String rugString2 = gameState.substring(37+3*(7*startx2+starty2), 37+3*(7*startx2+starty2)+3);//Get checkerboard string
 
         if(!rugString1.equals("n00") && !rugString2.equals("n00")){
             if(rugString1.equals(rugString2)){
@@ -312,7 +311,7 @@ public class Marrakech {
             }
         }
 
-        return true; // 符合所有条件，地毯放置有效
+        return true; // rug placement valid if all conditions are met
     }
 
     /**
@@ -327,8 +326,46 @@ public class Marrakech {
      */
     public static int getPaymentAmount(String gameString) {
         //FIXME: Task 11
-        return -1;
+        String boardString = gameString.substring(37, 184);
+        // // Parse the current game state to get player and board information
+
+        // Parse the position of Assam and the color of the current square
+        int assamX = Character.getNumericValue(gameString.charAt(33));
+        int assamY = Character.getNumericValue(gameString.charAt(34)); // get the String of Assam
+        char assamColor = boardString.charAt(3*(assamX*7 + assamY));
+
+        // Use depth-first search (DFS) to find the number of connected blocks
+        boolean[][] visited = new boolean[7][7];
+        int paymentAmount = dfs(boardString, assamX, assamY, assamColor, visited);
+        return paymentAmount;
     }
+
+    private static int dfs(String boardString, int x, int y, char targetColor, boolean[][] visited) {
+        // Check that the current grid is legitimate and has not been accessed
+        if (x < 0 || x >=7 || y < 0 || y >=7 || visited[x][y]) {
+            return 0;
+        }
+
+        // Mark the current grid as visited
+        visited[x][y] = true;
+
+        // Gets the color of the current square
+        char currentColor = boardString.charAt((x*7 + y)*3);
+
+        // If the current square color is the same as the target color, the search for adjacent squares continues
+        if (currentColor == targetColor) {
+            int paymentAmount = 1; // The current square counts towards the payment amount
+            // Keep searching in four directions: N, W, S and E
+            paymentAmount += dfs(boardString, x - 1, y, targetColor, visited);
+            paymentAmount += dfs(boardString, x + 1, y, targetColor, visited);
+            paymentAmount += dfs(boardString, x, y - 1, targetColor, visited);
+            paymentAmount += dfs(boardString, x, y + 1, targetColor, visited);
+            return paymentAmount;
+        }
+
+        return 0; // The current square color does not match, the payment amount is 0
+    }
+
 
     /**
      * Determine the winner of a game of Marrakech.
@@ -346,8 +383,85 @@ public class Marrakech {
      */
     public static char getWinner(String gameState) {
         //FIXME: Task 12
-        return '\0';
+
+        // Parse the game state to get player and board information
+        String player1 = gameState.substring(0,8);
+        String player2 = gameState.substring(8,16);
+        String player3 = gameState.substring(16,24);
+        String player4 = gameState.substring(24,32);
+        String[] players = new String[4];
+        players[0]= player1;
+        players[1]= player2;
+        players[2]= player3;
+        players[3]= player4;
+        String boardString = gameState.substring(32, 183);
+
+        // Initialize variables to keep track of player scores
+        int cyanScore = 0;
+        int yellowScore = 0;
+        int redScore = 0;
+        int purpleScore = 0;
+
+        // Calculate player scores based on their dirhams
+        // Player strings are in the format: P<color><dirhams><remaining rugs>i
+        for (int i = 0; i < 4; i++) {
+            String playerString = players[i];
+            char color = playerString.charAt(1);
+            int dirhams = Integer.parseInt(playerString.substring(2, 5));
+
+            switch (color) {
+                case 'c':
+                    cyanScore = dirhams;
+                    break;
+                case 'y':
+                    yellowScore = dirhams;
+                    break;
+                case 'r':
+                    redScore = dirhams;
+                    break;
+                case 'p':
+                    purpleScore = dirhams;
+                    break;
+            }
+        }
+
+        // Calculate player scores based on the board information
+        // Board string is in the format: "n00<board_data>"
+        // Each character in <board_data> represents a square on the board
+        for (char square : boardString.toCharArray()) {
+            switch (square) {
+                case 'c':
+                    cyanScore++;
+                    break;
+                case 'y':
+                    yellowScore++;
+                    break;
+                case 'r':
+                    redScore++;
+                    break;
+                case 'p':
+                    purpleScore++;
+                    break;
+            }
+        }
+
+        // Find the player with the highest score
+        char winner = 'n'; // Default: No winner
+        int maxScore = Math.max(Math.max(cyanScore, yellowScore), Math.max(redScore, purpleScore));
+
+        if (cyanScore == maxScore) {
+            winner = 'c';
+        } else if (yellowScore == maxScore) {
+            winner = 'y';
+        } else if (redScore == maxScore) {
+            winner = 'r';
+        } else if (purpleScore == maxScore) {
+            winner = 'p';
+        }
+
+        return winner;
     }
+
 
     /**
      * Implement Assam's movement.
@@ -362,7 +476,102 @@ public class Marrakech {
      */
     public static String moveAssam(String currentAssam, int dieResult){
         //FIXME: Task 13
-        return "";
+
+        // Parse the status of the current Assam
+        char direction = currentAssam.charAt(3); // Get current orientation
+        int x = Character.getNumericValue(currentAssam.charAt(1)); // Gets the current x coordinate
+        int y = Character.getNumericValue(currentAssam.charAt(2)); // Gets the current y coordinate
+
+        // New coordinates are calculated based on the current orientation and dice result
+        int newX = x;
+        int newY = y;
+
+        for(int i = 1; i <= dieResult; i++){// Update coordinates based on current orientation and dice result
+            switch (direction) {
+                case 'N':
+                    newY -= 1;
+                    break;
+                case 'E':
+                    newX += 1;
+                    break;
+                case 'S':
+                    newY += 1;
+                    break;
+                case 'W':
+                    newX -= 1;
+                    break;
+            }
+            // Check whether the checkerboard boundary has been stepped out,
+            // and if so, calculate the new coordinates according to the Mosaic orbit rules
+            if (newY < 0 && newX%2==0 && newX!=6) {
+                newX = newX+1;
+                direction ='S';
+                newY= 0;
+            }
+            if (newY < 0 && newX == 6 ) {
+                direction ='W';
+                newY= 0;
+            }
+            if(newY < 0 && newX % 2== 1 ){
+                newX = newX - 1;
+                direction ='S';
+                newY= 0;
+            }
+            if(newX < 0 && newY%2 == 0 && newY != 6){
+                newY = newY + 1;
+                direction ='E';
+                newX= 0;
+            }
+            if (newX < 0 && newY == 6) {
+                direction ='N';
+                newX= 0;
+            }
+            if(newX < 0 && newY % 2 == 1 ){
+                newY = newY - 1;
+                direction ='E';
+                newX= 0;
+            }
+
+            if (newY > 6 && newX%2==0 && newX!=0) {
+                newX = newX - 1;
+                direction ='N';
+                newY = 6;
+
+            }
+            if (newY > 6 && newX == 0 ) {
+                direction ='E';
+                newY = 6;
+            }
+            if(newY > 6 && newX % 2 == 1 ){
+                newX = newX + 1;
+                direction ='N';
+                newY = 6;
+            }
+
+            if (newX > 6 && newY%2==0 && newY!=0) {
+                newY = newY - 1;
+                direction ='W';
+                newX = 6;
+            }
+            if (newX > 6 && newY == 0 ) {
+                direction ='S';
+                newX = 6;
+            }
+            if(newX > 6 && newY % 2 == 1 ){
+                newY = newY + 1;
+                direction ='W';
+                newX = 6;
+            }
+
+        }
+
+
+
+
+        // Builds a new Assam string based on the new coordinates and current orientation
+        String newAssam = ("A" + newX + newY + direction);
+
+        return newAssam;
     }
 
     /**
@@ -378,14 +587,69 @@ public class Marrakech {
      */
     public static String makePlacement(String currentGame, String rug) {
         //FIXME: Task 14
-        return "";
+        char player1 = currentGame.charAt(1);
+        char player2 = currentGame.charAt(9);
+        char player3 = currentGame.charAt(17);
+        char player4 = currentGame.charAt(25);
+        char[] playersSting = new char[4];
+        playersSting[0]= player1;
+        playersSting[1]= player2;
+        playersSting[2]= player3;
+        playersSting[3]= player4;
+        // Parse the current game state
+        String players = currentGame.substring(0,32);
+        String assamString = currentGame.substring(32,36);
+        String boardString = currentGame.substring(37, 184);
+
+        // // Verify that the rug is legal
+        if (!isPlacementValid(currentGame, rug)) {
+            return currentGame; // If not, return directly to the original game state
+        }
+        if(!isRugValid(currentGame,rug)){
+            return currentGame;
+        }
+        // Parsing rug strings
+        char rugColor = rug.charAt(0);
+        String rugID = rug.substring(1, 3);
+        int rugx1 = Character.getNumericValue(rug.charAt(3));
+        int rugy1 = Character.getNumericValue(rug.charAt(4));
+        int rugx2 = Character.getNumericValue(rug.charAt(5));
+        int rugy2 = Character.getNumericValue(rug.charAt(6));
+
+        // Update checkerboard string
+        StringBuilder newBoardString = new StringBuilder(boardString);
+        newBoardString.replace((rugx1*7 + rugy1)*3 , 3*(rugx1*7 + rugy1)+3, rugColor+rugID);
+        newBoardString.replace((rugx2*7 + rugy2)*3 , 3*(rugx2*7 + rugy2)+3, rugColor+rugID);
+        // Create a player string
+        StringBuilder newPlayerString = new StringBuilder(players);
+        // Deduct the amount of carpet left by the player who placed the carpet
+        for(int i = 0 ; i < playersSting.length ; i++){
+            //   Check which player the rug is from
+            if (String.valueOf(playersSting[i]).contains(String.valueOf(rugColor))){
+                // get the number of rug
+                String numberofRugs = players.substring(5 + i*8, 7 + i*8);
+                int num = Integer.parseInt(numberofRugs);
+                String newnum  = Integer.toString(num-1);
+                if(num>=11){
+                    newPlayerString.replace(5 + i*8, 7 + i*8 , newnum);
+                }
+                if(num<11){
+                    newPlayerString.replace(5 + i*8, 7 + i*8 , "0"+newnum);
+                }
+
+            }
+        }
+
+        // Update the player string
+        // Build a new game status string
+        String newGameString = newPlayerString + assamString  + "B" + newBoardString;
+
+        return newGameString;
     }
 
 
     public static void main(String[] args) {
-        String game = "Pc03015iPy03015iPp03015iPr03015iA03WBn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00";
-        String rug = "c000203";
-        isPlacementValid(game, rug);
+
     }
 
 }

@@ -15,25 +15,16 @@ declaration: >-
 
 # Use this to list names of people who you collaborated with, and a
 # comment about what you collaborated on.
-#
-# Add as many "name+comment" entries as necessary
-# (or remove it altogether if you haven't collaborated with anyone)
-code:
-  - comment:
-    url:
-    licence:
 
 # I wish to submit the following classes as entirely my own (remove this if
 # you want to just submit methods):
 class:
    - Marrakech
-   - 
 
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
    - isRugValid()and rollDie()
-   - 
 
 # sign *your* name and uid here
 name: tong yuan xiong
