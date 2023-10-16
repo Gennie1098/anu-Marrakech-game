@@ -35,8 +35,9 @@ public class Game extends Application {
     private static final int LEFT_PANE_SIZE = 700;
     private static final double TILE_SIZE = 70;
     private static final int BOARD_SIZE = 7;
+    private static Font font32 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 32);
 
-    private static  Font font = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 28); //"Jockey One" font from Google Font
+
     private Insets layoutPadding = new Insets(0, 40, 0, 40);
 
     public static void main(String[] args) {
@@ -197,8 +198,8 @@ public class Game extends Application {
         dice.getChildren().addAll(dice1, dice2, dice3, dice4);
 
         Label amountOfSteps = new Label("ASSAM WILL MOVE \"4\" STEPS");
-        Font fontSmall = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 18);
-        amountOfSteps.setFont(fontSmall);
+        Font font18 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 18);
+        amountOfSteps.setFont(font18);
         amountOfSteps.setTextFill(Color.web("064B72"));
 //      TODO: insert roll dice method to return a number
 //      int result = rollDiceFunction();
@@ -223,8 +224,7 @@ public class Game extends Application {
         HBox amountOfDirhamsToPay = new HBox(10);
 
         Label amountOfDirhamsDisplayed = new Label("000");
-        Font fontLarge = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 32);
-        amountOfDirhamsDisplayed.setFont(fontLarge);
+        amountOfDirhamsDisplayed.setFont(font32);
         amountOfDirhamsDisplayed.setTextFill(Color.web("1F1F1F"));
         //TODO: a method for amountOfDirhamsDisplayed changed by the amount player need to pay
 
@@ -290,32 +290,43 @@ public class Game extends Application {
          * "Players" section
          * display all player information (color, name, dirhams, rug)
          */
-        GridPane playersSection = new GridPane();
-        playersSection.setMaxWidth(Double.MAX_VALUE);
+        GridPane playersSection = new GridPane(); //2x2
+        playersSection.setMaxHeight(Double.MAX_VALUE);
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(50); // 50% of the height
+        RowConstraints row2 = new RowConstraints();
+        row2.setPercentHeight(50); // 50% of the height
+        playersSection.getRowConstraints().addAll(row1, row2);
 
-        // Tạo một style cho minh hoạ
-        String style = "-fx-border-color: black; -fx-background-color: #D3D3D3; -fx-padding: 10;";
+        VBox player1 = createPlayerBox("Gennie", 'c', 30, 15);
+        VBox player2 = createPlayerBox("Gennie", 'y', 30, 15);
+        VBox player3 = createPlayerBox("Gennie", 'r', 30, 15);
+        VBox player4 = createPlayerBox("Gennie", 'p', 30, 15);
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                VBox playerBox = new VBox(); // khoảng cách giữa các phần tử trong VBox là 10
-                playerBox.setStyle(style); // set style cho VBox
+        playersSection.add(player1, 0, 0); // column 0, row 0
+        playersSection.add(player2, 1, 0); // column 1, row 0
+        playersSection.add(player3, 0, 1); // column 0, row 1
+        playersSection.add(player4, 1, 1); // column 1, row 1
 
-                Label playerName = new Label("Player " + (i*2 + j + 1));
-                Label playerInfo = new Label("Info..."); // Thay "Info..." bằng thông tin thực tế của người chơi
+//        GridPane.setVgrow(player1, Priority.ALWAYS);
+//        GridPane.setVgrow(player2, Priority.ALWAYS);
+//        GridPane.setVgrow(player3, Priority.ALWAYS);
+//        GridPane.setVgrow(player4, Priority.ALWAYS);
 
-                playerBox.getChildren().addAll();
-
-                playersSection.add(playerBox, i, j); // Thêm hình chữ nhật vào GridPane ở vị trí (i, j)
-            }
-        }
+        //TODO: method to create players by number of player, Name, color, dirhams, rug
+        // if it's possible, I prefer the order of player color always be c, y, r, p for beautiful design :)
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 2; j++) {
+//                VBox playerBox = new VBox();
+//                playersSection.add(playerBox, i, j); // Thêm hình chữ nhật vào GridPane ở vị trí (i, j)
+//            }
+//        }
 
         rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection,placeRugSection, playersSection);
 
 
         /**
          * Whole game layout
-         *
          */
         HBox mainLayout = new HBox(0, leftPane, rightPane);
         root.getChildren().add(mainLayout);
@@ -397,7 +408,8 @@ public class Game extends Application {
         String colorStyle = String.format("-fx-background-color: %s", buttonColor);
         button.setStyle(colorStyle + "; " + "-fx-background-radius: 7; -fx-border-radius: 7;");
 
-        button.setFont(font);
+        Font font28 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 28);
+        button.setFont(font28);
         button.setTextFill(Color.web("#FFFCE1"));
         button.setEffect(createDropShadowEffect(shadowColor));
         return button;
@@ -498,18 +510,63 @@ public class Game extends Application {
     }
 
     private VBox createPlayerBox (String playerNameInput, char playerColor, int numberOfDirhams, int numberOfRugs) {
-        VBox playerBox = new VBox(5);
+        VBox playerBox = new VBox(0);
+        playerBox.setAlignment(Pos.CENTER);
+        playerBox.setPrefWidth((WINDOW_WIDTH - LEFT_PANE_SIZE)/2);
 
         Label playerName = new Label(playerNameInput);
+        playerName.setFont(font32);
+        playerName.setTextFill(Color.WHITE);
+
         HBox playerAsset = new HBox(10);
+        Font font24 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 24);
 
-        Font fontMedium = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 24);
-        HBox playerDirham = new HBox();
-        Label amountOfDirhamsDisplayed = new Label("000");
+        HBox playerDirham = new HBox(0);
 
-        amountOfDirhamsDisplayed.setFont(fontMedium);
-        amountOfDirhamsDisplayed.setTextFill(Color.web("1F1F1F"));
+        StackPane smallDirhamIcon = createDirhamCoin();
+        smallDirhamIcon.setScaleY(0.5);
+        smallDirhamIcon.setScaleX(0.5);
 
+        Label dirhams = new Label(Integer.toString(numberOfDirhams));
+        dirhams.setFont(font24);
+        dirhams.setTextFill(Color.WHITE);
+        playerDirham.getChildren().addAll(smallDirhamIcon, dirhams);
+        playerDirham.setAlignment(Pos.CENTER_LEFT);
+
+        HBox playerRugs = new HBox(5);
+        Label rugs = new Label("RUGS");
+        rugs.setFont(font24);
+        rugs.setTextFill(Color.WHITE);
+        rugs.setPadding(new Insets(0, 5, 0,5));
+
+        Label rugsNumber = new Label(Integer.toString(numberOfRugs));
+        rugsNumber.setFont(font24);
+        rugsNumber.setTextFill(Color.WHITE);
+        playerRugs.getChildren().addAll(rugs, rugsNumber);
+        playerRugs.setAlignment(Pos.CENTER_LEFT);
+
+        playerAsset.getChildren().addAll(playerDirham, playerRugs);
+        playerAsset.setAlignment(Pos.CENTER);
+
+        playerBox.getChildren().addAll(playerName, playerAsset);
+
+        switch (playerColor) {
+            case 'c':
+                playerBox.setStyle("-fx-background-color: #1F8C86");
+                rugs.setStyle("-fx-background-color: #19706B");
+                break;
+            case 'y':
+                playerBox.setStyle("-fx-background-color: #FFA800");
+                rugs.setStyle("-fx-background-color: #A36B00");
+                break;
+            case 'r':
+                playerBox.setStyle("-fx-background-color: #E93119");
+                rugs.setStyle("-fx-background-color: #951F10");
+                break;
+            case 'p':
+                playerBox.setStyle("-fx-background-color: #894FA5");
+                rugs.setStyle("-fx-background-color: #58326A");
+        }
         return playerBox;
     }
 
