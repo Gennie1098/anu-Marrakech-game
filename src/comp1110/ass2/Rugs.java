@@ -13,13 +13,14 @@ public class Rugs {
     private int id; //rug id, unique (01-60)
     private int x1, y1, x2, y2; //x and y coordinates of both squares covered by the rug
 
-    public Rugs(char color, int id, int x1, int y1, int x2, int y2) {
-        this.color = color;
-        this.id = id;
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
+    public Rugs(String rugString) {
+        this.color = rugString.charAt(0);
+        this.id = Integer.parseInt(rugString.substring(1, 3));
+        this.x1 = Character.getNumericValue(rugString.charAt(3));
+        this.y1 = Character.getNumericValue(rugString.charAt(4));
+        this.x2 = Character.getNumericValue(rugString.charAt(5));
+        this.y2 = Character.getNumericValue(rugString.charAt(6));
+
 
         List<Character> colorList = Arrays.asList('c', 'r', 'p', 'y');
 
