@@ -221,6 +221,8 @@ public class Marrakech {
      * rotation is illegal.
      */
     public static String rotateAssam(String currentAssam, int rotation) {
+        //FIXME: Task 9
+
         // Verify that the input is valid
         if (currentAssam.length() != 4 || rotation % 90 != 0 ) {
             return currentAssam; // get back the currentAssam
