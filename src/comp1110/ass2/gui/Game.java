@@ -1,6 +1,8 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.Marrakech;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -20,11 +22,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.geometry.Insets;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.util.Random;
 
 
 public class Game extends Application {
@@ -148,38 +152,27 @@ public class Game extends Application {
          */
         HBox moveAssamSection = new HBox();
         moveAssamSection.setStyle("-fx-background-color: #FFFCE1");
-        moveAssamSection.setPrefHeight(198);
+        moveAssamSection.setPrefHeight(180);
         moveAssamSection.setMaxWidth(Double.MAX_VALUE);
 
-        //"Rotate Assam" functions section, rotate to N, E, S, W
-        VBox innerGroupButtons = new VBox(15);
+        //"Rotate Assam" functions section, rotate to left or right
         HBox rotateAssam = new HBox(13);
 
-        Button rotateAssamToNButton = createTextButton("N","#064B72","#053C5B" );
-        rotateAssamToNButton.setPrefSize(45, 39);
-        Button rotateAssamToEButton = createTextButton("E","#064B72","#053C5B" );
-        rotateAssamToEButton.setPrefSize(45, 39);
-        Button rotateAssamToSButton = createTextButton("S","#064B72","#053C5B" );
-        rotateAssamToSButton.setPrefSize(45, 39);
-        Button rotateAssamToWButton = createTextButton("W","#064B72","#053C5B" );
-        rotateAssamToWButton.setPrefSize(45, 39);
+        Button rotateAssamToLeftButton = createButtonImg("assets/rotateToLeft.png","#064B72","#053C5B" );
+        Button rotateAssamToRightButton = createButtonImg("assets/rotateToRight.png", "#064B72","#053C5B");
 
         //A mini version of Assam in Move section, to display real time status of assamInBoard
         //ex: if assamInBoard changes color by player, assamInPlaySection change color too
         StackPane assamInPlaySection = createAssamDuplication();
-        assamInPlaySection.setScaleX(0.6);
-        assamInPlaySection.setScaleY(0.6);
 
         StackPane assamStatus = new StackPane();
         assamStatus.getChildren().add(assamInPlaySection);
         assamStatus.setStyle("-fx-background-color: #A7A7A7; -fx-background-radius: 7; -fx-border-radius: 7;");
-        assamStatus.setMinSize(50, 50);
-        assamStatus.setMaxSize(50, 50);
+        assamStatus.setMinSize(70, 70);
+        assamStatus.setMaxSize(70, 70);
         //TODO: I think it should be one method with the method above for assamInBoard
 
-        innerGroupButtons.getChildren().addAll(rotateAssamToNButton, assamStatus, rotateAssamToSButton);
-        innerGroupButtons.setAlignment(Pos.CENTER);
-        rotateAssam.getChildren().addAll(rotateAssamToWButton, innerGroupButtons, rotateAssamToEButton);
+        rotateAssam.getChildren().addAll(rotateAssamToLeftButton, assamStatus, rotateAssamToRightButton);
         rotateAssam.setAlignment(Pos.CENTER);
 
         //"Roll dice" functions section
@@ -217,7 +210,7 @@ public class Game extends Application {
          */
         HBox payDirhamsSection = new HBox();
         payDirhamsSection.setStyle("-fx-background-color: #FFE6A9");
-        payDirhamsSection.setPrefHeight(80);
+        payDirhamsSection.setPrefHeight(90);
         payDirhamsSection.setMaxWidth(Double.MAX_VALUE);
         payDirhamsSection.setAlignment(Pos.CENTER);
 
@@ -245,7 +238,7 @@ public class Game extends Application {
          */
         HBox placeRugSection = new HBox();
         placeRugSection.setStyle("-fx-background-color: #FFFCE1");
-        placeRugSection.setPrefHeight(134);
+        placeRugSection.setPrefHeight(140);
         placeRugSection.setMaxWidth(Double.MAX_VALUE);
         placeRugSection.setPadding(layoutPadding);
         placeRugSection.setAlignment(Pos.CENTER);
@@ -291,7 +284,7 @@ public class Game extends Application {
          * display all player information (color, name, dirhams, rug)
          */
         GridPane playersSection = new GridPane(); //2x2
-        playersSection.setPrefHeight(288);
+        playersSection.setPrefHeight(290);
         RowConstraints row1 = new RowConstraints();
         row1.setPercentHeight(50); // 50% of the height
         RowConstraints row2 = new RowConstraints();
@@ -307,11 +300,6 @@ public class Game extends Application {
         playersSection.add(player2, 1, 0); // column 1, row 0
         playersSection.add(player3, 0, 1); // column 0, row 1
         playersSection.add(player4, 1, 1); // column 1, row 1
-
-//        GridPane.setVgrow(player1, Priority.ALWAYS);
-//        GridPane.setVgrow(player2, Priority.ALWAYS);
-//        GridPane.setVgrow(player3, Priority.ALWAYS);
-//        GridPane.setVgrow(player4, Priority.ALWAYS);
 
         //TODO: method to create players by number of player, Name, color, dirhams, rug
         // if it's possible, I prefer the order of player color always be c, y, r, p for beautiful design :)
@@ -569,6 +557,40 @@ public class Game extends Application {
         }
         return playerBox;
     }
+
+    // TODO: Đảm bảo rằng các mặt của xúc xắc được định nghĩa trong phần code của bạn.
+
+    private void rollDiceAnimation(StackPane diceFace) {
+        int animationDuration = 300; // Độ dài thời gian cho mỗi mặt xúc xắc (millisecond)
+        int totalDuration = 3000; // Tổng thời gian của animation (3 giây)
+
+        Timeline timeline = new Timeline();
+
+        // Tạo hiệu ứng animation cho từng mặt của xúc xắc
+        for (int i = 0; i < totalDuration / animationDuration; i++) {
+            int finalI = i;
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(finalI * animationDuration), e -> {
+                int face = finalI % 4 + 1; // Đảm bảo rằng nó sẽ hiển thị mặt từ 1 đến 4
+                displayDiceFace(diceFace, face); // Một hàm để hiển thị mặt xúc xắc tương ứng
+            });
+
+            timeline.getKeyFrames().add(keyFrame);
+        }
+
+        // Sau khi animation hoàn thành, chọn một mặt xúc xắc ngẫu nhiên và hiển thị nó
+        timeline.setOnFinished(e -> {
+            int randomFace = new Random().nextInt(4) + 1;
+            displayDiceFace(diceFace, randomFace);
+            // TODO: Xử lý sau khi hoàn thành animation (nếu cần)
+        });
+
+        timeline.play();
+    }
+
+    private void displayDiceFace(StackPane diceFace, int face) {
+        // TODO: Cập nhật giao diện của diceFace để hiển thị mặt `face` của xúc xắc
+    }
+
 
 }
 
