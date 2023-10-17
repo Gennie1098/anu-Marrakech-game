@@ -10,12 +10,12 @@ public class EndGame {
     public static void display(Stage primaryStage, Image backgroundImage) {
         VBox root = new VBox(20);
 
-        // 使用提供的图片作为背景
+        // Insert the provided picture as the background
         Background background = new Background(new BackgroundImage(backgroundImage,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT));
         root.setBackground(background);
 
-        Scene endScene = new Scene(root, 500, 500);  // 设定适合您的尺寸
+        Scene endScene = new Scene(root, 500, 500);  // Set the size to suit the game
 
         primaryStage.setScene(endScene);
         primaryStage.show();

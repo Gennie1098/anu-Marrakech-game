@@ -21,29 +21,29 @@ public class StartGame extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Marrakech Game");
         Label playernumberLabel = new Label("Please select the player numbers:");
-        // 数量选择下拉菜单
+        // player numbers selection drop-down menu
         ComboBox<String> NumberComboBox = new ComboBox<>();
         NumberComboBox.getItems().addAll("1", "2", "3", "4");
         HBox NumberBox = new HBox(30, playernumberLabel, NumberComboBox);
 
-        // 颜色选择标签
+        // Color selection tag
         Label colorLabel = new Label("Please select your color:");
 
-        // 颜色选择下拉菜单
+        //Color selection drop-down menu
         ComboBox<String> colorComboBox = new ComboBox<>();
         colorComboBox.getItems().addAll("y", "c", "g", "b");
 
         HBox colorBox = new HBox(30, colorLabel, colorComboBox);
 
-        // 开始游戏按钮
+        // game Start button
         Button startGameButton = new Button("Start Game");
         startGameButton.setOnAction(e -> {
             String numberSelected = NumberComboBox.getValue();
             String colorSelected = colorComboBox.getValue();
-            // 你可以在这里处理用户输入的数字和选择的颜色
+            // Here you can process the numbers entered by the user and the colors selected
         });
 
-        // 加载图片
+        // load the photos
         Image gameImage = new Image("comp1110/ass2/gui/Marrakechpic.jpg");
         ImageView imageView = new ImageView(gameImage);
         imageView.setPreserveRatio(true);
