@@ -1,9 +1,6 @@
 package comp1110.ass2.gui;
 
-import comp1110.ass2.Assam;
-import comp1110.ass2.Marrakech;
-import comp1110.ass2.Player;
-import comp1110.ass2.Rugs;
+import comp1110.ass2.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -50,11 +47,14 @@ public class Game extends Application {
     private Insets layoutPadding = new Insets(0, 40, 0, 40);
 
 
-
     public static void main(String[] args) {
         launch(args);
     }
 
+
+    private void createBoard() {
+
+    }
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
@@ -141,7 +141,7 @@ public class Game extends Application {
 
         //"Rotate Assam" functions section, rotate to left or right
         HBox rotateAssam = new HBox(13);
-
+        //TODO make it so that the rotate buttons can only rotate at most 90* each direction
         Button rotateAssamToLeftButton = createButtonImg("assets/rotateToLeft.png","#064B72","#053C5B" );
         rotateAssamToLeftButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -181,8 +181,7 @@ public class Game extends Application {
 
         Button rollDiceButton = createTextButton("ROLL DICE","#064B72","#053C5B" );
         //TODO: when hit rollDiceButton, 2 things happen (an animation run through all dice faces then display the one = dice number,
-        // then (below) the number of steps change
-        // then Assam auto moves on board
+
         HBox dice = new HBox(10);
         StackPane dice1 = createDiceFace(1);
         StackPane dice2 = createDiceFace(2);
@@ -197,26 +196,21 @@ public class Game extends Application {
         rollDiceButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                    board.getChildren().remove(assamInBoard);
+                board.getChildren().remove(assamInBoard);
 
-                    int result = Marrakech.rollDie();
-                    String newAssam = Marrakech.moveAssam(assamString[0], result);
-                    amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
+                int result = Marrakech.rollDie();
+                String newAssam = Marrakech.moveAssam(assamString[0], result);
+                amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
 
-                    System.out.println(assamString[0]);
-                    assamString[0] = newAssam;
+                assamString[0] = newAssam;
 
-                    Assam Assam = new Assam(newAssam);
+                Assam Assam = new Assam(newAssam);
 
-                    int assamX = Assam.getX();
-                    int assamY = Assam.getY();
-                    char orientation = Assam.getOrientation();
+                int assamX = Assam.getX();
+                int assamY = Assam.getY();
+                char orientation = Assam.getOrientation();
 
-                    System.out.println(assamX);
-                    System.out.println(assamY);
-                    System.out.println(orientation);
-
-                    board.add(assamInBoard, assamX, assamY);
+                board.add(assamInBoard, assamX, assamY);
             }
         });
 
@@ -262,6 +256,8 @@ public class Game extends Application {
          * "place rug" button
          * notice if the rug placement is invalid
          */
+        final String[] rugString = {"c033332"};
+
         StackPane rugOneInBoard = createRugHalfOne();
         StackPane rugTwoInBoard = createRugHalfTwo();
         board.add(rugOneInBoard, 3, 2);
@@ -279,7 +275,7 @@ public class Game extends Application {
 
         //group of (rotate to the left, rotate to the right)
         VBox rotateRugButtons = new VBox(15);
-        final String[] rugString = {"c033332"};
+
 
 //TODO Fix default case rotation problem - see methods at the bottom of Marrakech class
         Button rotateToLeftButton = createButtonImg("assets/rotateToLeft.png","#E66F51", "#AB513A");
@@ -290,7 +286,6 @@ public class Game extends Application {
                 board.getChildren().remove(rugOneInBoard);
 
                 String newString = Marrakech.rotateRugLeft(rugString[0]);
-                System.out.println(newString);
 
                 rugString[0] = newString;
                 Rugs rugs = new Rugs(newString);
@@ -332,6 +327,7 @@ public class Game extends Application {
 
         //group of (up, down, left, right)
         VBox upAndDownButtons = new VBox(15);
+
         Button moveRugUp = createMoveButton(0.0);
         moveRugUp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -340,7 +336,6 @@ public class Game extends Application {
                 board.getChildren().remove(rugOneInBoard);
 
                 String newString = Marrakech.moveRugUp(rugString[0]);
-                System.out.println(newString);
 
                 rugString[0] = newString;
                 Rugs rugs = new Rugs(newString);
@@ -352,10 +347,9 @@ public class Game extends Application {
 
                 board.add(rugOneInBoard, halfOneX, halfOneY);
                 board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-
-
             }
         });
+
 
         Button moveRugDown = createMoveButton(180.0);
         moveRugDown.setOnAction(new EventHandler<ActionEvent>() {
@@ -365,7 +359,6 @@ public class Game extends Application {
                 board.getChildren().remove(rugOneInBoard);
 
                 String newString = Marrakech.moveRugDown(rugString[0]);
-                System.out.println(newString);
 
                 rugString[0] = newString;
                 Rugs rugs = new Rugs(newString);
@@ -381,6 +374,7 @@ public class Game extends Application {
 
             }
         });
+
         upAndDownButtons.getChildren().addAll(moveRugUp,moveRugDown);
         upAndDownButtons.setAlignment(Pos.CENTER);
 
@@ -392,7 +386,6 @@ public class Game extends Application {
                 board.getChildren().remove(rugOneInBoard);
 
                 String newString = Marrakech.moveRugLeft(rugString[0]);
-                System.out.println(newString);
 
                 rugString[0] = newString;
                 Rugs rugs = new Rugs(newString);
@@ -415,7 +408,6 @@ public class Game extends Application {
                 board.getChildren().remove(rugOneInBoard);
 
                 String newString = Marrakech.moveRugRight(rugString[0]);
-                System.out.println(newString);
 
                 rugString[0] = newString;
                 Rugs rugs = new Rugs(newString);
@@ -436,25 +428,22 @@ public class Game extends Application {
 
         moveRugs.getChildren().addAll(rotateRugButtons, allMoveButtons);
 
-
+        //TODO implement a next turn/updated visual state when place rug button is pressed (it's the last part of a turn)
         Button placeRugButton = createTextButton("PLACE RUG","#9FD395","#7EA976" );
 
         placeRugButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Marrakech marrakech = new Marrakech();
                 System.out.println(gameString[0]);
                 String newGameString = Marrakech.makePlacement(gameString[0], rugString[0]);
                 gameString[0] = newGameString;
                 System.out.println(gameString[0]);
+                marrakech.setGameInfo(gameString[0]);
             }
         });
 
-
         placeRugSection.getChildren().addAll(moveRugs,createASpacerForLayout(), placeRugButton);
-
-
-
-
 
         //TODO: if rug placement is invalid, the button stays gray, and will not allow to place rug
         // if rug placement is valid, the button turns green, and allow to place rug
@@ -470,11 +459,6 @@ public class Game extends Application {
         RowConstraints row2 = new RowConstraints();
         row2.setPercentHeight(50); // 50% of the height
         playersSection.getRowConstraints().addAll(row1, row2);
-
-
-
-        //TODO: method to create players by number of player, Name, color, dirhams, rug
-        // if it's possible, I prefer the order of player color always be c, y, r, p for beautiful design :)
 
 
         String[] playerName = {"Player 1", "Player 2", "Player 3", "Player 4"};

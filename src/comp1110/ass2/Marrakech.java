@@ -29,6 +29,8 @@ public class Marrakech {
         }
     }
 
+    public Marrakech() {
+    }
     public Marrakech(String gameString) {
         this.setGameInfo(gameString);
     }
@@ -46,13 +48,13 @@ public class Marrakech {
         final int PLAYER_STRING_LENGTH = 8;
         final int ASSAM_STRING_LENGTH = 4;
         final int BOARD_STRING_LENGTH = 49 * 3;
-        int numberOfPlayers = 0;
+        int numberOfPlayers = 4;
 
         numberOfPlayers = gameString.indexOf("A")/PLAYER_STRING_LENGTH;
         players = new Player[numberOfPlayers];
 
 
-        if (gameString.length() != PLAYER_STRING_LENGTH * numberOfPlayers + ASSAM_STRING_LENGTH + BOARD_STRING_LENGTH) {
+        if (gameString.length() != PLAYER_STRING_LENGTH * numberOfPlayers + ASSAM_STRING_LENGTH + BOARD_STRING_LENGTH + 1) {
             System.err.println("Invalid game string");
 
         }
