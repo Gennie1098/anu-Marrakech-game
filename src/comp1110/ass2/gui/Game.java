@@ -101,9 +101,6 @@ public class Game extends Application {
          * Create Game GUI2
          */
 
-
-
-
         /**
          * Whole game layout
          */
@@ -184,13 +181,10 @@ public class Game extends Application {
             assamString[0] = gameString[0].substring(32,36); //assam string from game string
             rugString[0] = "c013332"; //base rug strinh
             playerString[0] = "Pc03015i";
-            System.out.println(gameString[0]);
-            System.out.println(assamString[0]);
         });
 
         startGameButton.setOnAction(e -> {
             player1Name = player1Input.getText();
-            System.out.println(player1Name);
             player2Name = player2Input.getText();
             player3Name = player3Input.getText();
             player4Name = player4Input.getText();
@@ -810,7 +804,6 @@ public class Game extends Application {
             Player[] players = Marrakech.players;
             int numDirhams = players[index].getNumberOfDirhams();
             int numRugs = players[index].getNumberOfRugs();
-            System.out.println(playerName[index]);
             VBox player = createPlayerBox(playerName[index], playerColor[index], numDirhams, numRugs);
             playersSection.add(player, (i - 1) % 2, (i - 1) / 2); // Column and Row logic adjusted
         }
@@ -1121,7 +1114,6 @@ public class Game extends Application {
             playerA.setNumberOfDirhams(numDirhamSub);
 
             playerString[0] = playerA.getPlayerState();
-            System.out.println(playerString[0]);
 
             String playerBString = "";
             char firstChar = abbBoardString.charAt(0);
@@ -1146,7 +1138,6 @@ public class Game extends Application {
             updateGameStringPlayerString(playerA.getPlayerState(), playerB.getPlayerState(), playerBString);
         }
 
-        placeRugButton.setDisable(false);
         rotateToRightButton.setDisable(false);
         rotateToLeftButton.setDisable(false);
         moveRugUp.setDisable(false);
@@ -1249,7 +1240,6 @@ public class Game extends Application {
                 gameString[0] = gameString[0].substring(0, 24) + playerString[0] + gameString[0].substring(32);
                 break;
         }
-        System.out.println(gameString[0]);
         Player playerBColor = new Player(originalPlayerB);
         char colorB = playerBColor.getColor();
 
