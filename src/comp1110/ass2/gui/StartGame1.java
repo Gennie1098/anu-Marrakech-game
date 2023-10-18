@@ -20,15 +20,15 @@ public class StartGame1 extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // 创建一个垂直的布局容器
+        // Create a vertical layout container
         VBox firstPane = new VBox(20);
         firstPane.setStyle("-fx-background-color: #FAEBCD;");
 
-        // "WELCOME TO" 文字
+        // "WELCOME TO"  text
         Text welcomeText = new Text("WELCOME TO");
         welcomeText.setFont(Font.font("Arial", 20));
 
-        // "MARRAKECK" 文字
+        // "MARRAKECK"   text
         HBox gameTitleBox1 = new HBox(0); // 创建一个水平布局容器，间距为0
         String[] letters1 = {"M", "A", "R", "R", "A", "K", "E", "C", "K"};
         String[] colors1 = {"#0099CC", "#FFCC00", "#33CC33", "#FF6600", "#9933FF", "#00CCFF", "#FF3399", "#00CC99", "#FF0033"};
@@ -40,11 +40,11 @@ public class StartGame1 extends Application {
             gameTitleBox1.getChildren().add(letter);
         }
 
-        // "NEW GAME" 按钮
+        // "NEW GAME" button
         Button newGameBtn = new Button("NEW GAME");
         newGameBtn.setFont(Font.font("Arial", 20));
 
-        // 设置布局和位置
+        // Set the layout and location
         firstPane.setAlignment(Pos.CENTER);
         gameTitleBox1.setAlignment(Pos.CENTER);
         firstPane.getChildren().addAll(welcomeText, gameTitleBox1, newGameBtn);
@@ -54,30 +54,31 @@ public class StartGame1 extends Application {
         primaryStage.setScene(scene1);
         primaryStage.show();
 
-        // 设置按钮的文字
+        //
+        //Set the text of the button
         newGameBtn.setText("NEW GAME >");
 
-// 使用CSS来样式化按钮
-        newGameBtn.setStyle("-fx-background-color: #0099CC; " +       // 背景颜色
-                "-fx-text-fill: white; " +                // 文字颜色
-                "-fx-border-color: #006699; " +           // 边框颜色
-                "-fx-border-width: 3px; " +               // 边框宽度
-                "-fx-font-family: 'Arial'; " +            // 字体
-                "-fx-font-size: 20px; " +                 // 字体大小
-                "-fx-padding: 10px 20px;");               // 内部间距
+// Use CSS to style the buttons
+        newGameBtn.setStyle("-fx-background-color: #0099CC; " +
+                "-fx-text-fill: white; " +
+                "-fx-border-color: #006699; " +
+                "-fx-border-width: 3px; " +
+                "-fx-font-family: 'Arial'; " +
+                "-fx-font-size: 20px; " +
+                "-fx-padding: 10px 20px;");
 
 
 
 
 
 
-        // 第二个界面
+        // second layout container
         VBox secondPane = new VBox(50);
         secondPane.setAlignment(Pos.CENTER);
         secondPane.setStyle("-fx-background-color: #FAEBCD;");
 
-        // "MARRAKECK" 文字
-        HBox gameTitle2 = new HBox(0); // 创建一个水平布局容器，间距为0
+        // "MARRAKECK" text
+        HBox gameTitle2 = new HBox(0); // Create a horizontal layout container with spacing 0
         String[] letters2 = {"M", "A", "R", "R", "A", "K", "E", "C", "K"};
         String[] colors2 = {"#0099CC", "#FFCC00", "#33CC33", "#FF6600", "#9933FF", "#00CCFF", "#FF3399", "#00CC99", "#FF0033"};
 
@@ -93,10 +94,10 @@ public class StartGame1 extends Application {
         question.setFont(Font.font("Arial", 30));
 
         TextField playerInput = new TextField();
-        playerInput.setEditable(true); // 设置输入框能否编辑
+        playerInput.setEditable(true); // Sets whether the input field can be edited
         playerInput.setPromptText("ENTER A NUMBER FROM 2 TO 4");
-        playerInput.setPrefWidth(300); // 设置输入框的推荐宽
-        playerInput.setPrefHeight(60); //设置输入框的推荐高
+        playerInput.setPrefWidth(300); // Sets the recommended width of the input field
+        playerInput.setPrefHeight(60); //Set the recommended height of the input field
 
         Button nextButton = new Button("NEXT");
         nextButton.setFont(Font.font("Arial", 20));
@@ -104,15 +105,15 @@ public class StartGame1 extends Application {
         secondPane.getChildren().addAll(gameTitle2, question, playerInput, nextButton);
 
         Scene scene2 = new Scene(secondPane, 700, 500);
-        nextButton.setStyle("-fx-background-color: #0099CC; " +       // 背景颜色
-                "-fx-text-fill: white; " +                // 文字颜色
-                "-fx-border-color: #006699; " +           // 边框颜色
-                "-fx-border-width: 3px; " +               // 边框宽度
-                "-fx-font-family: 'Arial'; " +            // 字体
-                "-fx-font-size: 20px; " +                 // 字体大小
-                "-fx-padding: 10px 20px;");               // 内部间距
+        nextButton.setStyle("-fx-background-color: #0099CC; " +
+                "-fx-text-fill: white; " +
+                "-fx-border-color: #006699; " +
+                "-fx-border-width: 3px; " +
+                "-fx-font-family: 'Arial'; " +
+                "-fx-font-size: 20px; " +
+                "-fx-padding: 10px 20px;");
 
-        // 为开始按钮设置跳转到第二个界面的操作
+        // Set the jump to the second screen for the Start button
         newGameBtn.setOnAction(e -> {
             primaryStage.setScene(scene2);
         });
@@ -120,14 +121,14 @@ public class StartGame1 extends Application {
 
 
 
-        // 第三个界面
+        // third layout
 
         VBox thirdPane = new VBox(30);
         thirdPane.setAlignment(Pos.CENTER);
         thirdPane.setStyle("-fx-background-color: #FAEBCD;");
 
-        // "MARRAKECK" 文字
-        HBox gameTitle3 = new HBox(0); // 创建一个水平布局容器，间距为0
+        // "MARRAKECK" text
+        HBox gameTitle3 = new HBox(0);
         String[] letters3 = {"M", "A", "R", "R", "A", "K", "E", "C", "K"};
         String[] colors3 = {"#0099CC", "#FFCC00", "#33CC33", "#FF6600", "#9933FF", "#00CCFF", "#FF3399", "#00CC99", "#FF0033"};
 
@@ -145,31 +146,31 @@ public class StartGame1 extends Application {
 
 
         TextField player1Input = new TextField();
-        player1Input.setEditable(true); // 设置输入框能否编辑
+        player1Input.setEditable(true);
         player1Input.setPromptText("PLAYER 1");
-        player1Input.setPrefWidth(300); // 设置输入框的推荐宽
-        player1Input.setPrefHeight(60); //设置输入框的推荐高
+        player1Input.setPrefWidth(300);
+        player1Input.setPrefHeight(60);
 
 
         TextField player2Input = new TextField();
-        player2Input.setEditable(true); // 设置输入框能否编辑
+        player2Input.setEditable(true);
         player2Input.setPromptText("PLAYER 2");
-        player2Input.setPrefWidth(300); // 设置输入框的推荐宽
-        player2Input.setPrefHeight(60); //设置输入框的推荐高
+        player2Input.setPrefWidth(300);
+        player2Input.setPrefHeight(60);
 
         TextField player3Input = new TextField();
-        player3Input.setEditable(true); // 设置输入框能否编辑
+        player3Input.setEditable(true);
         player3Input.setPromptText("PLAYER 3");
-        player3Input.setPrefWidth(300); // 设置输入框的推荐宽
-        player3Input.setPrefHeight(60); //设置输入框的推荐高
+        player3Input.setPrefWidth(300);
+        player3Input.setPrefHeight(60);
 
 
 
         TextField player4Input = new TextField();
-        player4Input.setEditable(true); // 设置输入框能否编辑
+        player4Input.setEditable(true);
         player4Input.setPromptText("PLAYER 4");
-        player4Input.setPrefWidth(300); // 设置输入框的推荐宽
-        player4Input.setPrefHeight(60); //设置输入框的推荐高
+        player4Input.setPrefWidth(300);
+        player4Input.setPrefHeight(60);
 
 
         Button StartGameButton = new Button("Start Game");
@@ -177,13 +178,13 @@ public class StartGame1 extends Application {
         thirdPane.getChildren().addAll(gameTitle3,Name,player1Input,player2Input,player3Input,player4Input,StartGameButton);
 
         Scene scene3 = new Scene(thirdPane, 700, 500);
-        StartGameButton.setStyle("-fx-background-color: #0099CC; " +       // 背景颜色
-                "-fx-text-fill: white; " +                // 文字颜色
-                "-fx-border-color: #006699; " +           // 边框颜色
-                "-fx-border-width: 3px; " +               // 边框宽度
-                "-fx-font-family: 'Arial'; " +            // 字体
-                "-fx-font-size: 20px; " +                 // 字体大小
-                "-fx-padding: 10px 20px;");               // 内部间距
+        StartGameButton.setStyle("-fx-background-color: #0099CC; " +
+                "-fx-text-fill: white; " +
+                "-fx-border-color: #006699; " +
+                "-fx-border-width: 3px; " +
+                "-fx-font-family: 'Arial'; " +
+                "-fx-font-size: 20px; " +
+                "-fx-padding: 10px 20px;");
 
 
         nextButton.setOnAction(e -> {
