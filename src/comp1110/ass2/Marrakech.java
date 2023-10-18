@@ -7,6 +7,12 @@ import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import comp1110.ass2.Player;
+import comp1110.ass2.Board;
+import comp1110.ass2.Rugs;
+import comp1110.ass2.Assam;
+
+
 import java.util.Random;
 
 public class Marrakech {
@@ -28,6 +34,9 @@ public class Marrakech {
             this.players[j] = new Player(colorGame[j], 30, 15, true);
         }
     }
+
+
+
 
     public Marrakech() {
     }
@@ -74,6 +83,9 @@ public class Marrakech {
         board = new Board(gameString.substring(boardStart));
 
     }
+
+
+
 
 
 
@@ -142,7 +154,7 @@ public class Marrakech {
         if (yCoordinate2 < 0 || yCoordinate2 > 6){
             return false;
         }
-        String boardString = gameString.substring(32, 184);
+        String boardString = gameString.substring(32, gameString.length());
         if (boardString.contains(color + idStr)) {
             return false;
         }
