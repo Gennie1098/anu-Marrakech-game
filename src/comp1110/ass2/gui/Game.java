@@ -46,10 +46,14 @@ public class Game extends Application {
     private SVGPath assamBody = new SVGPath();
     private Insets layoutPadding = new Insets(0, 40, 0, 40);
 
+//    public static Scene start() {
+//
+//    }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
 
 
     private void createBoard() {
@@ -64,7 +68,9 @@ public class Game extends Application {
          */
 
         Marrakech marrakech = new Marrakech(4);
-        final String[] gameString = {marrakech.getGameState()};
+        final String[] gameString = {
+                marrakech.getGameState()
+        };
         System.out.println(gameString[0]);
 
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -486,6 +492,10 @@ public class Game extends Application {
         stage.setScene(scene);
         stage.setTitle("Marrakech Game");
         stage.show();
+
+
+//        return scene;
+
     }
 
     private StackPane createAssamDuplication(Color Color){
