@@ -18,6 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.scene.shape.Rectangle;
@@ -46,19 +47,7 @@ public class Game extends Application {
     private SVGPath assamBody = new SVGPath();
     private Insets layoutPadding = new Insets(0, 40, 0, 40);
 
-//    public static Scene start() {
-//
-//    }
 
-
-//    public static void main(String[] args) {
-//        launch(args);
-//    }
-
-
-    private void createBoard() {
-
-    }
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
@@ -66,6 +55,12 @@ public class Game extends Application {
         /** @Authority: Gennie Nguyen
          * Create Game GUI
          */
+
+        /**
+         * Starting screen
+         */
+
+
 
         Marrakech marrakech = new Marrakech(4);
         final String[] gameString = {
