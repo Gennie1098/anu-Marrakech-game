@@ -17,6 +17,9 @@ public class Player {
     private int numberOfRugs; // a number 0-15, represented with 2 digits
     private boolean inGame; // 'i' or 'o'
 
+    public Player(){
+        //empty
+    }
 
     public Player(char color, int numberOfDirhams, int numberOfRugs, boolean inGame) {
         this.color = color;

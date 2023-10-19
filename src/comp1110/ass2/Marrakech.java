@@ -676,8 +676,12 @@ public class Marrakech {
     private static boolean rotateRugLeftPressed = false;
     private static boolean rotateRugRightPressed = false;
 
+    public static void resetRotationState() {
+        rotationState = 0;
+    }
 
     public static String rotateRug(String rugString, boolean rotateLeft) {
+
         Rugs rugs = new Rugs(rugString);
 
         int halfOneX = rugs.getX2();
