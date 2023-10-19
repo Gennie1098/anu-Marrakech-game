@@ -68,6 +68,7 @@ public class EndGame extends Application {
         primaryStage.setTitle("Congratulations Screen");
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
 
     private DropShadow createDropShadowEffect(String shadowColor) {
