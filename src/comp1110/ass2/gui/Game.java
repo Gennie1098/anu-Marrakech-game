@@ -1,22 +1,17 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.*;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -30,15 +25,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.geometry.Insets;
-import javafx.util.Duration;
-
 
 import java.io.FileInputStream;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 public class Game extends Application {
@@ -61,407 +52,54 @@ public class Game extends Application {
     private static Color purple = Color.web("#894FA5");
     private static Color lightYellow = Color.web("#FFE6A9");
 
+    private GridPane board;
+    private StackPane rugOneInBoard;
+    private StackPane rugTwoInBoard;
+    private Label amountOfDirhamsDisplayed;
+    private Label amountOfSteps;
+    private StackPane assamStatus;
+    private StackPane assamInBoard;
+    private StackPane assamInPlaySection;
+    private Button rotateAssamToLeftButton;
+    private Button rotateAssamToRightButton;
+    private Button rotateToLeftButton;
+    private Button rotateToRightButton;
+    private Button moveRugUp;
+    private Button moveRugDown;
+    private Button moveRugLeft;
+    private Button moveRugRight;
+    private Button placeRugButton;
+    private Button rollDiceButton;
+    private Button payDirhamsButton;
+    private String amountOwed;
+    private int gameTurn = 1;
+    private TextField player1Input;
+    private TextField player2Input;
+    private TextField player3Input;
+    private TextField player4Input;
+    private TextField numPlayerInput;
+    private String player1Name;
+    private String player2Name;
+    private String player3Name;
+    private String player4Name;
+    private Scene gameScene;
+    private int numOfPlayers;
+
+    private final String[] gameString = {""};
+    private final String[] assamString = {""};
+    private final String[] rugString = {""};
+    private final String[] playerString = {""};
     public static void main(String[] args) {
-       launch(args);
-   }
+        launch(args);
+    }
 
     @Override
-    public  void  start(Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
 
         /** @Authority: Gennie Nguyen
-         * Create Game GUI
+         * Create Game GUI2
          */
-
-        Marrakech marrakech = new Marrakech(4);
-        final String[] gameString = {
-                marrakech.getGameState()
-        };
-        System.out.println(gameString[0]);
-
-        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-
-        /**
-         * create left pane for game board, size 700x700
-         * the game state (game string) will be displayed only in this area, including board, Assam, and any rug placed on board
-         */
-
-        //board grid with tiles in centre
-        GridPane board = new GridPane();
-        board.setHgap(0.5);  // Add horizontal gap
-        board.setVgap(0.5);  // Add vertical gap
-
-        //Centre board (Board should not grow beyond its preferred size).
-        board.setMaxSize(BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE);
-
-        //tiles
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                //because in design, tile stroke is "outside" style, this is for outside border effect.
-                Rectangle tile = new Rectangle(TILE_SIZE + 1, TILE_SIZE + 1);
-
-                //tile border
-                tile.setStroke(Color.web("#FFFCE1"));
-                tile.setStrokeWidth(1.0);
-                tile.setArcHeight(7.0);
-                tile.setArcWidth(7.0);
-
-                //tile color
-                if ((i + j) % 2 == 0) {
-                    tile.setFill(Color.web("#F3A261"));
-                } else {
-                    tile.setFill(Color.web("#FFE6A9"));
-                }
-
-                board.add(tile, i, j);
-            }
-        }
-        //Assam on board
-        StackPane assamInBoard = updateAssamAppearance("Pc00912i");
-        board.add(assamInBoard, 3, 3);
-
-        //layer with circles around game board
-        StackPane boardWithCircles = new StackPane(board);
-        String imageUrl = "file:assets/boardWithCircles.png";
-        boardWithCircles.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-position: center center; -fx-background-repeat: stretch;");
-
-        StackPane leftPane = new StackPane(boardWithCircles);
-        leftPane.setPrefSize(LEFT_PANE_SIZE, LEFT_PANE_SIZE);
-        leftPane.setStyle("-fx-background-color: #E66F51");
-
-
-        /**
-         * create right pane for all game play functions and player information, size 500x700
-         * game functions include: rotate Assam, roll dice to move Assam, pay Dirhams if needed, place rug
-         * player information include: color, name, amount of Dirhams, amount of Rug, status (by color)
-         */
-
-        VBox rightPane = new VBox();
-        rightPane.setPrefWidth(WINDOW_WIDTH - LEFT_PANE_SIZE);
-
-        /**
-         * "Move Assam" functions section, rotate Assam and roll dice
-         */
-
-        final String[] assamString = {"A33N"};
-
-        HBox moveAssamSection = new HBox();
-        moveAssamSection.setStyle("-fx-background-color: #FFFCE1");
-        moveAssamSection.setPrefHeight(180);
-        moveAssamSection.setMaxWidth(Double.MAX_VALUE);
-
-        //"Rotate Assam" functions section, rotate to left or right
-        HBox rotateAssam = new HBox(13);
-        //TODO make it so that the rotate buttons can only rotate at most 90* each direction
-        Button rotateAssamToLeftButton = createButtonImg("assets/rotateToLeft.png","#064B72","#053C5B" );
-        rotateAssamToLeftButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String newAssam = Marrakech.rotateAssam(assamString[0], 270);
-
-                assamString[0] = newAssam;
-            }
-        });
-        Button rotateAssamToRightButton = createButtonImg("assets/rotateToRight.png", "#064B72","#053C5B");
-        rotateAssamToRightButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String newAssam = Marrakech.rotateAssam(assamString[0], 90);
-
-                assamString[0] = newAssam;
-            }
-        });
-
-        //A mini version of Assam in Move section, to display real time status of assamInBoard
-        //ex: if assamInBoard changes color by player, assamInPlaySection change color too
-        StackPane assamInPlaySection = updateAssamAppearance("Pc01209i");
-
-        StackPane assamStatus = new StackPane();
-        assamStatus.getChildren().add(assamInPlaySection);
-        assamStatus.setStyle("-fx-background-color: #A7A7A7; -fx-background-radius: 7; -fx-border-radius: 7;");
-        assamStatus.setMinSize(70, 70);
-        assamStatus.setMaxSize(70, 70);
-        //TODO: I think it should be one method with the method above for assamInBoard
-
-        rotateAssam.getChildren().addAll(rotateAssamToLeftButton, assamStatus, rotateAssamToRightButton);
-        rotateAssam.setAlignment(Pos.CENTER);
-
-        //"Roll dice" functions section
-        VBox rollDice = new VBox(15);
-        rollDice.setAlignment(Pos.CENTER_RIGHT);
-
-        Button rollDiceButton = createTextButton("ROLL DICE","#064B72","#053C5B" );
-        //TODO: when hit rollDiceButton, 2 things happen (an animation run through all dice faces then display the one = dice number,
-
-        HBox dice = new HBox(10);
-        StackPane dice1 = createDiceFace(1);
-        StackPane dice2 = createDiceFace(2);
-        StackPane dice3 = createDiceFace(3);
-        StackPane dice4 = createDiceFace(4);
-        dice.getChildren().addAll(dice1, dice2, dice3, dice4);
-
-        Label amountOfSteps = new Label("ASSAM WILL MOVE \"4\" STEPS");
-        Font font18 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 18);
-        amountOfSteps.setFont(font18);
-        amountOfSteps.setTextFill(Color.web("064B72"));
-        rollDiceButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.getChildren().remove(assamInBoard);
-
-                int result = Marrakech.rollDie();
-                String newAssam = Marrakech.moveAssam(assamString[0], result);
-                amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
-
-                assamString[0] = newAssam;
-
-                Assam Assam = new Assam(newAssam);
-
-                int assamX = Assam.getX();
-                int assamY = Assam.getY();
-                char orientation = Assam.getOrientation();
-
-                board.add(assamInBoard, assamX, assamY);
-            }
-        });
-
-        rollDice.getChildren().addAll(rollDiceButton, dice, amountOfSteps);
-        rollDice.setAlignment(Pos.CENTER_RIGHT);
-
-        moveAssamSection.setPadding(layoutPadding);
-        moveAssamSection.getChildren().addAll(rotateAssam, createASpacerForLayoutHBox(), rollDice);
-
-        /**
-         * "Pay Dirhams" functions section
-         * display the amount of dirhams needed to be pay, and pay button
-         */
-        HBox payDirhamsSection = new HBox();
-        payDirhamsSection.setStyle("-fx-background-color: #FFE6A9");
-        payDirhamsSection.setPrefHeight(90);
-        payDirhamsSection.setMaxWidth(Double.MAX_VALUE);
-        payDirhamsSection.setAlignment(Pos.CENTER);
-
-        HBox amountOfDirhamsToPay = new HBox(10);
-
-        Label amountOfDirhamsDisplayed = new Label("000");
-        amountOfDirhamsDisplayed.setFont(font32);
-        amountOfDirhamsDisplayed.setTextFill(Color.web("1F1F1F"));
-        //TODO: a method for amountOfDirhamsDisplayed changed by the amount player need to pay
-        // Potential problem with game recognizing blank square as a payable option.
-
-        String amountDisplayed = String.valueOf(Marrakech.getPaymentAmount(gameString[0]));
-        amountOfDirhamsDisplayed.setText(amountDisplayed);
-
-        amountOfDirhamsToPay.getChildren().addAll(createDirhamCoin(), amountOfDirhamsDisplayed);
-        amountOfDirhamsToPay.setAlignment(Pos.CENTER_LEFT);
-
-        Button payDirhamsButton = createTextButton("PAY DIRHAMS","#FFC700","#EBB700");
-        //TODO: when hit payDirhamsButton, money from play A change to player B
-
-        payDirhamsSection.setPadding(layoutPadding);
-        payDirhamsSection.getChildren().addAll(amountOfDirhamsToPay, createASpacerForLayoutHBox(), payDirhamsButton);
-
-        /**
-         * "Place rug" functions section
-         * buttons to change rug location (rotate and move)
-         * "place rug" button
-         * notice if the rug placement is invalid
-         */
-        final String[] rugString = {"c033332"};
-
-        StackPane rugOneInBoard = createRugHalfOne();
-        StackPane rugTwoInBoard = createRugHalfTwo();
-        board.add(rugOneInBoard, 3, 2);
-        board.add(rugTwoInBoard, 3, 3);
-
-        HBox placeRugSection = new HBox();
-        placeRugSection.setStyle("-fx-background-color: #FFFCE1");
-        placeRugSection.setPrefHeight(140);
-        placeRugSection.setMaxWidth(Double.MAX_VALUE);
-        placeRugSection.setPadding(layoutPadding);
-        placeRugSection.setAlignment(Pos.CENTER);
-
-        //group of move rug buttons (rotate to the left, rotate to the right, up, down, left, right)
-        HBox moveRugs = new HBox(30);
-
-        //group of (rotate to the left, rotate to the right)
-        VBox rotateRugButtons = new VBox(15);
-
-
-//TODO Fix default case rotation problem - see methods at the bottom of Marrakech class
-        Button rotateToLeftButton = createButtonImg("assets/rotateToLeft.png","#E66F51", "#AB513A");
-        rotateToLeftButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.getChildren().remove(rugTwoInBoard);
-                board.getChildren().remove(rugOneInBoard);
-
-                String newString = Marrakech.rotateRugLeft(rugString[0]);
-
-                rugString[0] = newString;
-                Rugs rugs = new Rugs(newString);
-
-                int halfOneX = rugs.getX2();
-                int halfTwoX = rugs.getX1();
-                int halfOneY = rugs.getY2();
-                int halfTwoY = rugs.getY1();
-
-                board.add(rugOneInBoard, halfOneX, halfOneY);
-                board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-            }
-        });
-        Button rotateToRightButton = createButtonImg("assets/rotateToRight.png", "#E66F51", "#AB513A");
-        rotateToRightButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.getChildren().remove(rugTwoInBoard);
-                board.getChildren().remove(rugOneInBoard);
-
-                String newString = Marrakech.rotateRugRight(rugString[0]);
-                System.out.println(newString);
-
-                rugString[0] = newString;
-                Rugs rugs = new Rugs(newString);
-
-                int halfOneX = rugs.getX2();
-                int halfTwoX = rugs.getX1();
-                int halfOneY = rugs.getY2();
-                int halfTwoY = rugs.getY1();
-
-                board.add(rugOneInBoard, halfOneX, halfOneY);
-                board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-            }
-        });
-
-        rotateRugButtons.getChildren().addAll(rotateToLeftButton, rotateToRightButton);
-        rotateRugButtons.setAlignment(Pos.CENTER);
-
-        //group of (up, down, left, right)
-        VBox upAndDownButtons = new VBox(15);
-
-        Button moveRugUp = createMoveButton(0.0);
-        moveRugUp.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.getChildren().remove(rugTwoInBoard);
-                board.getChildren().remove(rugOneInBoard);
-
-                String newString = Marrakech.moveRugUp(rugString[0]);
-
-                rugString[0] = newString;
-                Rugs rugs = new Rugs(newString);
-
-                int halfOneX = rugs.getX2();
-                int halfTwoX = rugs.getX1();
-                int halfOneY = rugs.getY2();
-                int halfTwoY = rugs.getY1();
-
-                board.add(rugOneInBoard, halfOneX, halfOneY);
-                board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-            }
-        });
-
-
-        Button moveRugDown = createMoveButton(180.0);
-        moveRugDown.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.getChildren().remove(rugTwoInBoard);
-                board.getChildren().remove(rugOneInBoard);
-
-                String newString = Marrakech.moveRugDown(rugString[0]);
-
-                rugString[0] = newString;
-                Rugs rugs = new Rugs(newString);
-
-                int halfOneX = rugs.getX2();
-                int halfTwoX = rugs.getX1();
-                int halfOneY = rugs.getY2();
-                int halfTwoY = rugs.getY1();
-
-                board.add(rugOneInBoard, halfOneX, halfOneY);
-                board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-
-
-            }
-        });
-
-        upAndDownButtons.getChildren().addAll(moveRugUp,moveRugDown);
-        upAndDownButtons.setAlignment(Pos.CENTER);
-
-        Button moveRugLeft = createMoveButton(270.0);
-        moveRugLeft.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.getChildren().remove(rugTwoInBoard);
-                board.getChildren().remove(rugOneInBoard);
-
-                String newString = Marrakech.moveRugLeft(rugString[0]);
-
-                rugString[0] = newString;
-                Rugs rugs = new Rugs(newString);
-
-                int halfOneX = rugs.getX2();
-                int halfTwoX = rugs.getX1();
-                int halfOneY = rugs.getY2();
-                int halfTwoY = rugs.getY1();
-
-                board.add(rugOneInBoard, halfOneX, halfOneY);
-                board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-            }
-        });
-
-        Button moveRugRight = createMoveButton(90.0);
-        moveRugRight.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.getChildren().remove(rugTwoInBoard);
-                board.getChildren().remove(rugOneInBoard);
-
-                String newString = Marrakech.moveRugRight(rugString[0]);
-
-                rugString[0] = newString;
-                Rugs rugs = new Rugs(newString);
-
-                int halfOneX = rugs.getX2();
-                int halfTwoX = rugs.getX1();
-                int halfOneY = rugs.getY2();
-                int halfTwoY = rugs.getY1();
-
-                board.add(rugOneInBoard, halfOneX, halfOneY);
-                board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-            }
-        });
-
-        HBox allMoveButtons = new HBox(10);
-        allMoveButtons.getChildren().addAll(moveRugLeft, upAndDownButtons, moveRugRight);
-        allMoveButtons.setAlignment(Pos.CENTER);
-
-        moveRugs.getChildren().addAll(rotateRugButtons, allMoveButtons);
-
-        //TODO implement a next turn/updated visual state when place rug button is pressed (it's the last part of a turn)
-        Button placeRugButton = createTextButton("PLACE RUG","#9FD395","#7EA976" );
-
-        placeRugButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Marrakech marrakech = new Marrakech();
-                System.out.println(gameString[0]);
-                String newGameString = Marrakech.makePlacement(gameString[0], rugString[0]);
-                gameString[0] = newGameString;
-                System.out.println(gameString[0]);
-                marrakech.setGameInfo(gameString[0]);
-            }
-        });
-
-        placeRugSection.getChildren().addAll(moveRugs,createASpacerForLayoutHBox(), placeRugButton);
-
-        //TODO: if rug placement is invalid, the button stays gray, and will not allow to place rug
-        // if rug placement is valid, the button turns green, and allow to place rug
-
-
-
 
         /**
          * Whole game layout
@@ -482,7 +120,7 @@ public class Game extends Application {
         Scene scene1 = new Scene(welcomeScene, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setTitle("Marrakeck Game");
         stage.setScene(scene1);
-//        stage.show();
+        stage.show();
 
 
         // "Game Prepare 1" scence with fill number of players
@@ -498,11 +136,11 @@ public class Game extends Application {
         Text numberOfPlayers = new Text("HOW MANY PLAYERS YOU HAVE?");
         numberOfPlayers.setFont(font32);
 
-        TextField playerInput = createTextField("ENTER A NUMBER FROM 2 TO 4", "\\d*");
+        numPlayerInput = createTextField("ENTER A NUMBER FROM 2 TO 4", "\\d*");
 
         Button nextButton = createTextButton("NEXT", "#064B72", "#053C5B");
 
-        gamePrepare1.getChildren().addAll(gameTitle1, createASpacerForLayoutVBox(), numberOfPlayers, playerInput, nextButton);
+        gamePrepare1.getChildren().addAll(gameTitle1, createASpacerForLayoutVBox(), numberOfPlayers, numPlayerInput, nextButton);
 
         Scene scene2 = new Scene(gamePrepare1, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -524,151 +162,43 @@ public class Game extends Application {
         Text Name = new Text("PLAYERS　NAME");
         Name.setFont(font32);
 
-        //        get the number of player
-            playerInput.setText("4");
-            String text = playerInput.getText();
-            int playernumbers = Integer.parseInt(text);
-//        if (text != "2" && !text.trim().isEmpty()) {
-//            try {
-//                playernumbers = Integer.parseInt(text);
-//            } catch (NumberFormatException e) {
-//                System.out.println("Invalid number of players entered!");
-//            }
-//        }
-
-
-
-        playerInput.setOnKeyTyped(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                String text = playerInput.getText();
-                int playernumbers = Integer.parseInt(text);
-
-            }
-        });
-
-        playerInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(Integer.parseInt(oldValue) ==2 ){
-                    playerInput.setText(oldValue);
-                } else if (Integer.parseInt(oldValue) !=2) {
-                    playerInput.setText(newValue);
-                }
-            }
-        });
-
-
-
-
-
-
-
+        player1Input = createTextField("PLAYER 1", "\\s");
+        player2Input =  createTextField("PLAYER 2", "\\s");
+        player3Input =  createTextField("PLAYER 3", "\\s");
+        player4Input =  createTextField("PLAYER 3", "\\s");
 
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
-        List<TextField> playerFields = createPlayerNameFields(playernumbers);
-        TextField field1 = playerFields.get(0);
-
-        if(playerFields.size()==2){
-            TextField field2 = playerFields.get(1);
-            gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,field1,field2,startGameButton);
-        }else if(playerFields.size()==3){
-            TextField field2 = playerFields.get(1);
-            TextField field3 = playerFields.get(2);
-            gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,field1,field2,field3,startGameButton);
-        } else if(playerFields.size()==4){
-            TextField field2 = playerFields.get(1);
-            TextField field3 = playerFields.get(2);
-            TextField field4 = playerFields.get(3);
-            gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,field1,field2,field3,field4,startGameButton);
-        }
-        stage.show();
-
-
-
+        gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,player1Input,player2Input,player3Input,player4Input,startGameButton);
 
         Scene scene3 = new Scene(gamePrepare2, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         nextButton.setOnAction(e -> {
+            numOfPlayers = Integer.parseInt(numPlayerInput.getText());
             stage.setScene(scene3);
+
+            Marrakech marrakech = new Marrakech(numOfPlayers);
+            gameString[0] = marrakech.getGameState();
+            assamString[0] = gameString[0].substring(32,36); //assam string from game string
+            rugString[0] = "c013332"; //base rug strinh
+            playerString[0] = "Pc03015i";
         });
 
         startGameButton.setOnAction(e -> {
-            stage.setScene(scene);
+            player1Name = player1Input.getText();
+            player2Name = player2Input.getText();
+            player3Name = player3Input.getText();
+            player4Name = player4Input.getText();
+            try {
+                gameScene = createGameScene();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            stage.setScene(gameScene);
         });
-
-        HBox mainLayout = new HBox(leftPane, rightPane);
-        root.getChildren().add(mainLayout);
-
-
-
-        /**
-         * "Players" section
-         * display all player information (color, name, dirhams, rug)
-         */
-        GridPane playersSection = new GridPane(); //2x2
-        playersSection.setPrefHeight(290);
-        RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(50); // 50% of the height
-        RowConstraints row2 = new RowConstraints();
-        row2.setPercentHeight(50); // 50% of the height
-        playersSection.getRowConstraints().addAll(row1, row2);
-
-
-        String[] playerName = {"Player 1", "Player 2", "Player 3", "Player 4"};
-        char[] playerColor = {'c', 'y', 'r', 'p'};
-        int numPlayers = 4;
-
-        for (int i = 0; i < (numPlayers + 1) / 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                int index = i * 2 + j;
-                if (index < numPlayers) {
-                    VBox player = createPlayerBox(playerName[index], playerColor[index], 30, 15);
-                    playersSection.add(player, j, i); // column 0, row 0
-                }
-            }
-        }
-
-        rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection,placeRugSection, playersSection);
-
-
-
-
-
-
-
-
     }
 
-
-
-    private List<TextField> createPlayerNameFields(int numbers) {
-        List<TextField> playerFields = new ArrayList<>();
-
-        for (int i = 1; i <= numbers; i++) {
-            TextField Input = createTextField("PLAYER " + i, "\\s");
-            if (Input != null) {  // 这里检查TextField对象是否为null
-                playerFields.add(Input);
-            } else {
-                System.out.println("Warning: createTextField returned null for PLAYER " + i);
-            }
-        }
-
-        return playerFields;
-    }
-
-
-    private TextField getfield (List<TextField> playerFields) {
-        TextField field = null;
-        for (int i = 0; i < playerFields.size(); i++) {
-            field = playerFields.get(i);
-        }
-        return field;
-    }
-
-
-
-    private StackPane createAssamDuplication(Color Color){
+    private StackPane createAssamDuplication(Color Color, char Orientation){
         Group assam = new Group();
         //Assam's body
 
@@ -701,6 +231,30 @@ public class Game extends Application {
         assamHat.setFill(Color);
         assam.getChildren().add(assamHat);
 
+
+
+        Rotate rotation = new Rotate();
+
+        rotation.setPivotX(28);
+        rotation.setPivotY(28);
+
+        switch (Orientation) {
+            case 'N':
+                rotation.setAngle(0); // Set the desired rotation angle for 'N'
+                break;
+            case 'E':
+                rotation.setAngle(90); // Set the desired rotation angle for 'E'
+                break;
+            case 'S':
+                rotation.setAngle(180); // Set the desired rotation angle for 'S'
+                break;
+            case 'W':
+                rotation.setAngle(270); // Set the desired rotation angle for 'W'
+                break;
+        }
+
+        assam.getTransforms().add(rotation);
+
         //Assam's position
         StackPane tileWithAssam = new StackPane();
         tileWithAssam.getChildren().add(assam);
@@ -731,7 +285,6 @@ public class Game extends Application {
         dropShadow.setRadius(0.0);
         return dropShadow;
     }
-
 
     private Button createTextButton(String buttonLabel, String buttonColor, String shadowColor) {
         Button button = new Button(buttonLabel);
@@ -780,8 +333,6 @@ public class Game extends Application {
         return buttonShape;
     }
 
-
-
     private Region createASpacerForLayoutHBox () {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -807,30 +358,59 @@ public class Game extends Application {
         }
     }
 
-    private StackPane createRugHalfOne() {
+    private StackPane createRugHalfOne(String rugString) {
+        char color = rugString.charAt(0);
         StackPane rugFace = new StackPane();
         Rectangle rug = new Rectangle(70, 70, Color.web("#FFFFFF"));
         rug.setArcHeight(7.0);
         rug.setArcWidth(7.0);
+
+        if (color == 'r') {
+            rug.setFill(Color.RED);
+        }
+        if (color == 'y') {
+            rug.setFill(Color.YELLOW);
+        }
+        if (color == 'p') {
+            rug.setFill(Color.PURPLE);
+        }
+        if (color == 'c') {
+            rug.setFill(Color.CYAN);
+        }
+
         rugFace.getChildren().add(rug);
         return rugFace;
     }
 
-    private StackPane createRugHalfTwo() {
+    private StackPane createRugHalfTwo(String rugString) {
+        char color = rugString.charAt(0);
         StackPane rugFace = new StackPane();
         Rectangle rug = new Rectangle(70, 70, Color.web("#FFFFFF"));
         rug.setArcHeight(7.0);
         rug.setArcWidth(7.0);
+
+        if (color == 'r') {
+            rug.setFill(Color.RED);
+        }
+        if (color == 'y') {
+            rug.setFill(Color.YELLOW);
+        }
+        if (color == 'p') {
+            rug.setFill(Color.PURPLE);
+        }
+        if (color == 'c') {
+            rug.setFill(Color.CYAN);
+        }
         rugFace.getChildren().add(rug);
         return rugFace;
     }
 
-
-    public StackPane updateAssamAppearance(String playerString) {
+    public StackPane updateAssamAppearance(String playerString, String assamString) {
         Player player = new Player(playerString);
         // Update color by Player's color
         char color = player.getColor();
-        Group assam = new Group();
+        Assam assam = new Assam(assamString);
+        char orientation = assam.getOrientation();
 
         Color fillColor;
         if (color == 'c') {
@@ -846,9 +426,8 @@ public class Game extends Application {
             fillColor = Color.web("#064B72"); // Default color
         }
 
-        return createAssamDuplication(fillColor);
+        return createAssamDuplication(fillColor, orientation);
     }
-
 
     private StackPane createDiceFace (int number) {
         StackPane diceFace = new StackPane();
@@ -1097,6 +676,587 @@ public class Game extends Application {
 
         return fillInfo;
     }
+    private StackPane populateRugBoard(String gameString) {
+        String boardString = gameString.substring(37, 183);
+        String assamString = gameString.substring(32, 36);
 
+        List<Character> colorList = new ArrayList<>();
+        for (int i = 0; i < boardString.length(); i += 3) {
+            char color = boardString.charAt(i);
+            colorList.add(color);
+        }
+
+        //board grid with tiles in centre
+        board = new GridPane();
+        board.setHgap(0.5);  // Add horizontal gap
+        board.setVgap(0.5);  // Add vertical gap
+
+        //Centre board (Board should not grow beyond its preferred size).
+        board.setMaxSize(BOARD_SIZE * TILE_SIZE, BOARD_SIZE * TILE_SIZE);
+
+        //tiles
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                //because in design, tile stroke is "outside" style, this is for outside border effect.
+                Rectangle tile = new Rectangle(TILE_SIZE + 1, TILE_SIZE + 1);
+
+                //tile border
+                tile.setStroke(Color.web("#FFFCE1"));
+                tile.setStrokeWidth(1.0);
+                tile.setArcHeight(7.0);
+                tile.setArcWidth(7.0);
+
+                //tile color
+                char color = colorList.get(0);
+                colorList.remove(0);
+
+                switch (color) {
+                    case 'r' -> tile.setFill(Color.RED);
+                    case 'p' -> tile.setFill(Color.PURPLE);
+                    case 'c' -> tile.setFill(Color.CYAN);
+                    case 'y' -> tile.setFill(Color.YELLOW);
+                    default -> {
+                        if ((i + j) % 2 == 0) {
+                            tile.setFill(Color.web("#F3A261"));
+                        } else {
+                            tile.setFill(Color.web("#FFE6A9"));
+                        }
+                    }
+                }
+                board.add(tile, i, j);
+            }
+        }
+        //Assam on board
+        assamInBoard = updateAssamAppearance(playerString[0], assamString);
+        Assam assam = new Assam(assamString);
+
+
+        board.add(assamInBoard, assam.getX(), assam.getY());
+        //A mini version of Assam in Move section, to display real time status of assamInBoard
+        //ex: if assamInBoard changes color by player, assamInPlaySection change color too
+        StackPane assamInPlaySection = updateAssamAppearance(playerString[0], assamString);
+
+        assamStatus = new StackPane();
+        assamStatus.getChildren().add(assamInPlaySection);
+        assamStatus.setStyle("-fx-background-color: #A7A7A7; -fx-background-radius: 7; -fx-border-radius: 7;");
+        assamStatus.setMinSize(70, 70);
+        assamStatus.setMaxSize(70, 70);
+
+        //layer with circles around game board
+        StackPane boardWithCircles = new StackPane(board);
+        String imageUrl = "file:assets/boardWithCircles.png";
+        boardWithCircles.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-position: center center; -fx-background-repeat: stretch;");
+
+        StackPane leftPane = new StackPane(boardWithCircles);
+        leftPane.setPrefSize(LEFT_PANE_SIZE, LEFT_PANE_SIZE);
+        leftPane.setStyle("-fx-background-color: #E66F51");
+
+        return leftPane;
+    }
+    private HBox createPayDirhamsSection(String amountDirhams) {
+        HBox payDirhamsSection = new HBox();
+        payDirhamsSection.setStyle("-fx-background-color: #FFE6A9");
+        payDirhamsSection.setPrefHeight(90);
+        payDirhamsSection.setMaxWidth(Double.MAX_VALUE);
+        payDirhamsSection.setAlignment(Pos.CENTER);
+
+        HBox amountOfDirhamsToPay = new HBox(10);
+
+        amountOfDirhamsDisplayed = new Label();
+        amountOfDirhamsDisplayed.setText(amountDirhams);
+        amountOfDirhamsDisplayed.setFont(font32);
+        amountOfDirhamsDisplayed.setTextFill(Color.web("1F1F1F"));
+
+        amountOfDirhamsToPay.getChildren().addAll(createDirhamCoin(), amountOfDirhamsDisplayed);
+        amountOfDirhamsToPay.setAlignment(Pos.CENTER_LEFT);
+
+        payDirhamsButton = createTextButton("PAY DIRHAMS","#FFC700","#EBB700");
+
+        payDirhamsSection.setPadding(layoutPadding);
+        payDirhamsSection.getChildren().addAll(amountOfDirhamsToPay, createASpacerForLayoutHBox(), payDirhamsButton);
+
+        return payDirhamsSection;
+    }
+    private String updateDirhams(String gameString) {
+        amountOwed = String.valueOf(Marrakech.getPaymentAmount(gameString));
+        amountOfDirhamsDisplayed.setText(amountOwed);
+        if (amountOwed == null){
+            amountOwed = "000";
+        }
+        return amountOwed;
+    }
+    private GridPane createPlayerSection() {
+        GridPane playersSection = new GridPane(); //2x2
+        playersSection.setPrefHeight(290);
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(50); // 50% of the height
+        RowConstraints row2 = new RowConstraints();
+        row2.setPercentHeight(50); // 50% of the height
+        playersSection.getRowConstraints().addAll(row1, row2);
+
+
+        String[] playerName = {player1Name, player2Name, player3Name, player4Name};
+        char[] playerColor = {'c', 'y', 'r', 'p'};
+        int numPlayers = numOfPlayers;
+
+        for (int i = 1; i <= numPlayers; i++) {
+            int index = i - 1;
+            Player[] players = Marrakech.players;
+            int numDirhams = players[index].getNumberOfDirhams();
+            int numRugs = players[index].getNumberOfRugs();
+            VBox player = createPlayerBox(playerName[index], playerColor[index], numDirhams, numRugs);
+            playersSection.add(player, (i - 1) % 2, (i - 1) / 2); // Column and Row logic adjusted
+        }
+        return playersSection;
+    }
+    private Scene createGameScene() throws FileNotFoundException {
+        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        /**
+         * create left pane for game board, size 700x700
+         * the game state (game string) will be displayed only in this area, including board, Assam, and any rug placed on board
+         */
+        StackPane leftPane = populateRugBoard(gameString[0]);
+        /**
+         * create right pane for all game play functions and player information, size 500x700
+         * game functions include: rotate Assam, roll dice to move Assam, pay Dirhams if needed, place rug
+         * player information include: color, name, amount of Dirhams, amount of Rug, status (by color)
+         */
+        VBox rightPane = new VBox();
+        rightPane.setPrefWidth(WINDOW_WIDTH - LEFT_PANE_SIZE);
+
+        /**
+         * Right Pane populating section
+         */
+        HBox moveAssamSection = createMoveAssamSection();
+        HBox payDirhamsSection = createPayDirhamsSection("000");
+        HBox placeRugSection = createPlaceRugSection(gameString[0], rugString[0]);
+        GridPane playersSection = createPlayerSection();
+        rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection, placeRugSection, playersSection);
+
+        payDirhamsButton.setDisable(true);
+        placeRugButton.setDisable(true);
+        rotateToRightButton.setDisable(true);
+        rotateToLeftButton.setDisable(true);
+        moveRugUp.setDisable(true);
+        moveRugDown.setDisable(true);
+        moveRugLeft.setDisable(true);
+        moveRugRight.setDisable(true);
+
+        //All buttons
+        payDirhamsButton.setOnAction(event -> handleDirhamPayment());
+        rotateAssamToLeftButton.setOnAction(event -> handleAssamRotation(true));
+        rotateAssamToRightButton.setOnAction(event -> handleAssamRotation(false));
+        rollDiceButton.setOnAction(event -> handleAssamMovement());
+        rotateToLeftButton.setOnAction(event -> handleRugRotation(true));
+        rotateToRightButton.setOnAction(event -> handleRugRotation(false));
+        moveRugUp.setOnAction(event -> handleRugMovement("up"));
+        moveRugDown.setOnAction(event -> handleRugMovement("down"));
+        moveRugLeft.setOnAction(event -> handleRugMovement("left"));
+        moveRugRight.setOnAction(event -> handleRugMovement("right"));
+        placeRugButton.setOnAction(event -> {
+            try {
+                handleRugPlacement();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        HBox mainLayout = new HBox(leftPane, rightPane);
+        root.getChildren().add(mainLayout);
+
+        return scene;
+    }
+    private HBox createPlaceRugSection(String gameString, String rugString) throws FileNotFoundException {
+        /**
+         * "Place rug" functions section
+         * buttons to change rug location (rotate and move)
+         * "place rug" button
+         * notice if the rug placement is invalid
+         */
+        HBox placeRugSection = new HBox();
+        placeRugSection.setStyle("-fx-background-color: #FFFCE1");
+        placeRugSection.setPrefHeight(140);
+        placeRugSection.setMaxWidth(Double.MAX_VALUE);
+        placeRugSection.setPadding(layoutPadding);
+        placeRugSection.setAlignment(Pos.CENTER);
+        placeRugButton = createTextButton("PLACE RUG","#9FD395","#7EA976" );
+
+
+        //group of (rotate to the left, rotate to the right)
+        VBox rotateRugButtons = new VBox(15);
+        rotateToLeftButton = createButtonImg("assets/rotateToLeft.png","#E66F51", "#AB513A");
+        rotateToRightButton = createButtonImg("assets/rotateToRight.png", "#E66F51", "#AB513A");
+
+        rotateRugButtons.getChildren().addAll(rotateToLeftButton, rotateToRightButton);
+        rotateRugButtons.setAlignment(Pos.CENTER);
+
+
+        //group of move rug buttons (rotate to the left, rotate to the right, up, down, left, right)
+        HBox moveRugs = new HBox(30);
+        //group of (up, down, left, right)
+        VBox upAndDownButtons = new VBox(15);
+
+        moveRugUp = createMoveButton(0.0);
+        moveRugDown = createMoveButton(180.0);
+
+        upAndDownButtons.getChildren().addAll(moveRugUp,moveRugDown);
+        upAndDownButtons.setAlignment(Pos.CENTER);
+
+        moveRugLeft = createMoveButton(270.0);
+        moveRugRight = createMoveButton(90.0);
+
+        HBox allMoveButtons = new HBox(10);
+
+        allMoveButtons.getChildren().addAll(moveRugLeft, upAndDownButtons, moveRugRight);
+        allMoveButtons.setAlignment(Pos.CENTER);
+
+        moveRugs.getChildren().addAll(rotateRugButtons, allMoveButtons);
+
+        placeRugSection.getChildren().addAll(moveRugs,createASpacerForLayoutHBox(), placeRugButton);
+
+        return placeRugSection;
+    }
+    private HBox createMoveAssamSection() throws FileNotFoundException {
+        /**
+         * "Move Assam" functions section, rotate Assam and roll dice
+         */
+        rollDiceButton = createTextButton("ROLL DICE","#064B72","#053C5B" );
+        //TODO: when hit rollDiceButton, 2 things happen (an animation run through all dice faces then display the one = dice number,
+
+        HBox moveAssamSection = new HBox();
+        moveAssamSection.setStyle("-fx-background-color: #FFFCE1");
+        moveAssamSection.setPrefHeight(180);
+        moveAssamSection.setMaxWidth(Double.MAX_VALUE);
+
+        //"Rotate Assam" functions section, rotate to left or right
+        HBox rotateAssam = new HBox(13);
+        //TODO make it so that the rotate buttons can only rotate at most 90* each direction
+        rotateAssamToLeftButton = createButtonImg("assets/rotateToLeft.png","#064B72","#053C5B" );
+        rotateAssamToRightButton = createButtonImg("assets/rotateToRight.png", "#064B72","#053C5B");
+
+
+        rotateAssam.getChildren().addAll(rotateAssamToLeftButton, assamStatus, rotateAssamToRightButton);
+        rotateAssam.setAlignment(Pos.CENTER);
+
+        //"Roll dice" functions section
+        VBox rollDice = new VBox(15);
+        rollDice.setAlignment(Pos.CENTER_RIGHT);
+
+
+
+        HBox dice = new HBox(10);
+        StackPane dice1 = createDiceFace(1);
+        StackPane dice2 = createDiceFace(2);
+        StackPane dice3 = createDiceFace(3);
+        StackPane dice4 = createDiceFace(4);
+        dice.getChildren().addAll(dice1, dice2, dice3, dice4);
+
+        amountOfSteps = new Label("ASSAM WILL MOVE \"4\" STEPS");
+        Font font18 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 18);
+        amountOfSteps.setFont(font18);
+        amountOfSteps.setTextFill(Color.web("064B72"));
+
+
+        rollDice.getChildren().addAll(rollDiceButton, dice, amountOfSteps);
+        rollDice.setAlignment(Pos.CENTER_RIGHT);
+
+        moveAssamSection.setPadding(layoutPadding);
+        moveAssamSection.getChildren().addAll(rotateAssam, createASpacerForLayoutHBox(), rollDice);
+
+        return moveAssamSection;
+    }
+    private void handleRugMovement(String direction) {
+        board.getChildren().remove(rugTwoInBoard);
+        board.getChildren().remove(rugOneInBoard);
+
+        String newString = Marrakech.moveRug(rugString[0], direction);
+
+        rugString[0] = newString;
+        Rugs rugs = new Rugs(rugString[0]);
+
+        int halfOneX = rugs.getX2();
+        int halfTwoX = rugs.getX1();
+        int halfOneY = rugs.getY2();
+        int halfTwoY = rugs.getY1();
+
+        board.add(rugOneInBoard, halfOneX, halfOneY);
+        board.add(rugTwoInBoard, halfTwoX, halfTwoY);
+
+        if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            placeRugButton.setDisable(true);
+        }
+
+        if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            placeRugButton.setDisable(false);
+        }
+    }
+    private void handleRugRotation(Boolean rotateLeft) {
+        board.getChildren().remove(rugTwoInBoard);
+        board.getChildren().remove(rugOneInBoard);
+
+        String newString;
+        if (rotateLeft) {
+            newString = Marrakech.rotateRug(rugString[0], true);
+        }
+        else {
+            newString = Marrakech.rotateRug(rugString[0], false);
+        }
+
+        rugString[0] = newString;
+        Rugs rugs = new Rugs(rugString[0]);
+
+        int halfOneX = rugs.getX2();
+        int halfTwoX = rugs.getX1();
+        int halfOneY = rugs.getY2();
+        int halfTwoY = rugs.getY1();
+
+        board.add(rugOneInBoard, halfOneX, halfOneY);
+        board.add(rugTwoInBoard, halfTwoX, halfTwoY);
+
+
+
+        if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            placeRugButton.setDisable(true);
+        }
+        if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            placeRugButton.setDisable(false);
+        }
+    }
+    private void handleAssamRotation(boolean rotateLeft) {
+        rotateAssamToLeftButton.setDisable(true);
+        rotateAssamToRightButton.setDisable(true);
+
+        String newAssam;
+        if (rotateLeft){
+            newAssam = Marrakech.rotateAssam(assamString[0], 270);
+        }
+        else {
+            newAssam = Marrakech.rotateAssam(assamString[0], 90);
+        }
+
+        assamString[0] = newAssam;
+
+        gameString[0] = gameString[0].substring(0, 32) + assamString[0] + gameString[0].substring(36, 184);
+
+        assamStatus.getChildren().clear();
+        StackPane newAssamStatus = updateAssamAppearance(playerString[0], assamString[0]);
+
+        newAssamStatus.setStyle("-fx-background-color: #A7A7A7; -fx-background-radius: 7; -fx-border-radius: 7;");
+        newAssamStatus.setMinSize(70, 70);
+        newAssamStatus.setMaxSize(70, 70);
+
+        assamStatus.getChildren().add(newAssamStatus);
+
+        assamInBoard.getChildren().clear();
+        StackPane newAssamBoard = updateAssamAppearance(playerString[0], assamString[0]);
+        assamInBoard.getChildren().add(newAssamBoard);
+    }
+    private void handleAssamMovement() {
+        rotateAssamToLeftButton.setDisable(true);
+        rotateAssamToRightButton.setDisable(true);
+        rollDiceButton.setDisable(true);
+        payDirhamsButton.setDisable(false);
+        int result = Marrakech.rollDie();
+        String newAssam = Marrakech.moveAssam(assamString[0], result);
+        amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
+
+        assamString[0] = newAssam;
+
+        gameString[0] = gameString[0].substring(0, 32) + assamString[0] + gameString[0].substring(36, 184);
+
+        Assam Assam = new Assam(newAssam);
+
+        int assamX = Assam.getX();
+        int assamY = Assam.getY();
+
+        board.getChildren().remove(assamInBoard);
+        assamInBoard.getChildren().clear();
+        StackPane newAssamInBoard = updateAssamAppearance(playerString[0], assamString[0]);
+        assamInBoard.getChildren().add(newAssamInBoard);
+        board.add(assamInBoard, assamX, assamY);
+
+        assamStatus.getChildren().clear();
+        StackPane newAssamStatus = updateAssamAppearance(playerString[0], assamString[0]);
+
+        newAssamStatus.setStyle("-fx-background-color: #A7A7A7; -fx-background-radius: 7; -fx-border-radius: 7;");
+        newAssamStatus.setMinSize(70, 70);
+        newAssamStatus.setMaxSize(70, 70);
+
+        assamStatus.getChildren().add(newAssamStatus);
+
+        updateDirhams(gameString[0]);
+
+        //TODO move to payDirhams button
+        rugOneInBoard = createRugHalfOne(rugString[0]);
+        rugTwoInBoard = createRugHalfTwo(rugString[0]);
+    }
+    private void handleRugPlacement() throws FileNotFoundException {
+        Marrakech marrakech = new Marrakech();
+        String newGameString = Marrakech.makePlacement(gameString[0], rugString[0]);
+        gameString[0] = newGameString;
+
+        board.getChildren().clear();
+        board.getChildren().addAll(populateRugBoard(gameString[0]));
+
+        newGameTurn();
+    }
+    private void handleDirhamPayment() {
+        int amountDirhamsToPay = Integer.parseInt(amountOwed);
+        if (amountDirhamsToPay != 0) {
+            String boardString = gameString[0].substring(37, 184);
+
+            Assam assam = new Assam(assamString[0]);
+            Board newBoard = new Board(boardString);
+            String abbBoardString = newBoard.getTile(assam.getX(), assam.getY());
+
+            Player playerA = new Player(playerString[0]);
+            int numDirhamSub = playerA.subDirhams(amountDirhamsToPay);
+            playerA.setNumberOfDirhams(numDirhamSub);
+
+            playerString[0] = playerA.getPlayerState();
+
+            String playerBString = "";
+            char firstChar = abbBoardString.charAt(0);
+            switch (firstChar) {
+                case 'c':
+                    playerBString = gameString[0].substring(0, 8);
+                    break;
+                case 'y':
+                    playerBString = gameString[0].substring(8, 16);
+                    break;
+                case 'r':
+                    playerBString = gameString[0].substring(16, 24);
+                    break;
+                case 'p':
+                    playerBString = gameString[0].substring(24, 32);
+                    break;
+            }
+            Player playerB = new Player(playerBString);
+            int numDirhamsAdd = playerB.addDirhams(amountDirhamsToPay);
+            playerB.setNumberOfDirhams(numDirhamsAdd);
+
+            updateGameStringPlayerString(playerA.getPlayerState(), playerB.getPlayerState(), playerBString);
+        }
+
+        rotateToRightButton.setDisable(false);
+        rotateToLeftButton.setDisable(false);
+        moveRugUp.setDisable(false);
+        moveRugDown.setDisable(false);
+        moveRugLeft.setDisable(false);
+        moveRugRight.setDisable(false);
+        payDirhamsButton.setDisable(true);
+        board.add(rugOneInBoard, 3, 3);
+        board.add(rugTwoInBoard, 3, 2);
+
+    }
+    private void newGameTurn() throws FileNotFoundException {
+
+        gameTurn += 1;
+        int currentIndex = 0;
+        switch (numOfPlayers) {
+            case 2:
+                currentIndex = (gameTurn - 1 + 2) % 2;
+                break;
+            case 3:
+                currentIndex = (gameTurn - 1 + 3) % 3;
+                break;
+            case 4:
+                currentIndex = (gameTurn - 1 + 4) % 4;
+                break;
+        }
+
+        Marrakech marrakech = new Marrakech();
+        marrakech.setGameInfo(gameString[0]);
+        gameString[0] = marrakech.getGameState();
+        assamString[0] = gameString[0].substring(32,36); //assam string from game string
+        String formattedGameTurn = String.format("%02d", gameTurn);
+        playerString[0] = gameString[0].substring(8 * (currentIndex), 8 * (currentIndex + 1));
+        rugString[0] = playerString[0].substring(1, 2) + formattedGameTurn + "3332";
+
+
+        StackPane leftPane = populateRugBoard(gameString[0]);
+
+        VBox rightPane = new VBox();
+        rightPane.setPrefWidth(WINDOW_WIDTH - LEFT_PANE_SIZE);
+
+        /**
+         * Right Pane populating section
+         */
+        HBox moveAssamSection = createMoveAssamSection();
+        HBox payDirhamsSection = createPayDirhamsSection("000");
+        HBox placeRugSection = createPlaceRugSection(gameString[0], rugString[0]);
+        GridPane playersSection = createPlayerSection();
+        rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection, placeRugSection, playersSection);
+        HBox mainLayout = new HBox(leftPane, rightPane);
+        root.getChildren().add(mainLayout);
+
+        payDirhamsButton.setDisable(true);
+        moveRugUp.setDisable(true);
+        moveRugDown.setDisable(true);
+        moveRugLeft.setDisable(true);
+        moveRugRight.setDisable(true);
+        rotateToLeftButton.setDisable(true);
+        rotateToRightButton.setDisable(true);
+        placeRugButton.setDisable(true);
+        rotateAssamToLeftButton.setDisable(false);
+        rotateAssamToRightButton.setDisable(false);
+        rollDiceButton.setDisable(false);
+
+        //All buttons
+        payDirhamsButton.setOnAction(event -> handleDirhamPayment());
+        rotateAssamToLeftButton.setOnAction(event -> handleAssamRotation(true));
+        rotateAssamToRightButton.setOnAction(event -> handleAssamRotation(false));
+        rollDiceButton.setOnAction(event -> handleAssamMovement());
+        rotateToLeftButton.setOnAction(event -> handleRugRotation(true));
+        rotateToRightButton.setOnAction(event -> handleRugRotation(false));
+        moveRugUp.setOnAction(event -> handleRugMovement("up"));
+        moveRugDown.setOnAction(event -> handleRugMovement("down"));
+        moveRugLeft.setOnAction(event -> handleRugMovement("left"));
+        moveRugRight.setOnAction(event -> handleRugMovement("right"));
+        placeRugButton.setOnAction(event -> {
+            try {
+                handleRugPlacement();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+    }
+    private void updateGameStringPlayerString(String playerA, String playerB, String originalPlayerB) {
+        Player playerAColor = new Player(playerA);
+        char colorA = playerAColor.getColor();
+
+        switch (colorA) {
+            case 'c':
+                gameString[0] = playerString[0] + gameString[0].substring(8);
+                break;
+            case 'y':
+                gameString[0] = gameString[0].substring(0, 8) + playerString[0] + gameString[0].substring(16);
+                break;
+            case 'r':
+                gameString[0] = gameString[0].substring(0, 16) + playerString[0] + gameString[0].substring(24);
+                break;
+            case 'p':
+                gameString[0] = gameString[0].substring(0, 24) + playerString[0] + gameString[0].substring(32);
+                break;
+        }
+        Player playerBColor = new Player(originalPlayerB);
+        char colorB = playerBColor.getColor();
+
+        switch (colorB) {
+            case 'c':
+                gameString[0] = playerB + gameString[0].substring(8);
+                break;
+            case 'y':
+                gameString[0] = gameString[0].substring(0, 8) + playerB + gameString[0].substring(16);
+                break;
+            case 'r':
+                gameString[0] = gameString[0].substring(0, 16) + playerB + gameString[0].substring(24);
+                break;
+            case 'p':
+                gameString[0] = gameString[0].substring(0, 24) + playerB+ gameString[0].substring(32);
+                break;
+        }
+    }
 }
 

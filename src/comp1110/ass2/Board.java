@@ -26,7 +26,6 @@ public class Board {
 
     public Board (String boardString) {
         List<String> validChar = Arrays.asList("B", "c", "r", "y", "p", "n", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
-
         for (char value : boardString.toCharArray()) {
             String str = String.valueOf(value);
             if (!validChar.contains(str)) {
@@ -42,10 +41,11 @@ public class Board {
             }
         }
     }
+
     //Gennie
     //method getBoardState(), return String to print Board State at the time "n00n00n00n00...n00"
     public String getBoardState() {
-        String boardState = "";
+        String boardState = ("B");
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
                 boardState += boardMatrix[i][j];

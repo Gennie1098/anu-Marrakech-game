@@ -18,7 +18,7 @@ import java.util.Random;
 public class Marrakech {
     private Assam assam;
     private Board board;
-    private Player[] players;
+    public static Player[] players;
     private Rugs[] rugs;
     private static final int MAX_PLAYERS = 4;
 
@@ -29,9 +29,13 @@ public class Marrakech {
         this.numberOfPlayers = numPlayers;
         this.assam = new Assam();
         this.board = new Board();
-        this.players = new Player[numberOfPlayers];
-        for(int j = 0; j < numberOfPlayers; j++){
-            this.players[j] = new Player(colorGame[j], 30, 15, true);
+        this.players = new Player[4];
+        for (int i = 0; i < 4; i++) {
+            if (i < numberOfPlayers) {
+                this.players[i] = new Player(colorGame[i], 30, 15, true);
+            } else {
+                this.players[i] = new Player(colorGame[i], 0, 0, false);
+            }
         }
     }
 
@@ -40,6 +44,7 @@ public class Marrakech {
 
     public Marrakech() {
     }
+
     public Marrakech(String gameString) {
         this.setGameInfo(gameString);
     }
@@ -47,10 +52,10 @@ public class Marrakech {
     // get String current game state
     public String getGameState(){
         String gameString = "";
-        for(int i = 0; i < numberOfPlayers; i++) {
+        for(int i = 0; i < 4; i++) {
             gameString += players[i].getPlayerState();
         }
-        return gameString += assam.getAssamState() + "B" + board.getBoardState();
+        return gameString += assam.getAssamState() + board.getBoardState();
     }
 
     public void setGameInfo(String gameString) {
@@ -79,7 +84,7 @@ public class Marrakech {
         assam = new Assam(gameString.substring(assamStart, assamStart + ASSAM_STRING_LENGTH));
 
         //create board from game string
-        int boardStart = assamStart + 4;
+        int boardStart = assamStart + 5;
         board = new Board(gameString.substring(boardStart));
 
     }
@@ -324,7 +329,6 @@ public class Marrakech {
         String rugString1 = gameState.substring(37+3*(7*startx1+starty1),37+3*(7*startx1+starty1)+3);
 
         String rugString2 = gameState.substring(37+3*(7*startx2+starty2), 37+3*(7*startx2+starty2)+3);//Get checkerboard string
-
         if(!rugString1.equals("n00") && !rugString2.equals("n00")){
             if(rugString1.equals(rugString2)){
                     return false;
@@ -353,7 +357,9 @@ public class Marrakech {
         int assamX = Character.getNumericValue(gameString.charAt(33));
         int assamY = Character.getNumericValue(gameString.charAt(34)); // get the String of Assam
         char assamColor = boardString.charAt(3*(assamX*7 + assamY));
-
+        if (assamColor == 'n'){
+            return 0;
+        }
         // Use depth-first search (DFS) to find the number of connected blocks
         boolean[][] visited = new boolean[7][7];
         int paymentAmount = dfs(boardString, assamX, assamY, assamColor, visited);
@@ -619,7 +625,7 @@ public class Marrakech {
         // Parse the current game state
         String players = currentGame.substring(0,32);
         String assamString = currentGame.substring(32,36);
-        String boardString = currentGame.substring(37, 184);
+        String boardString = currentGame.substring(36, 184);
 
         // // Verify that the rug is legal
         if (!isPlacementValid(currentGame, rug)) {
@@ -638,8 +644,8 @@ public class Marrakech {
 
         // Update checkerboard string
         StringBuilder newBoardString = new StringBuilder(boardString);
-        newBoardString.replace((rugx1*7 + rugy1)*3 , 3*(rugx1*7 + rugy1)+3, rugColor+rugID);
-        newBoardString.replace((rugx2*7 + rugy2)*3 , 3*(rugx2*7 + rugy2)+3, rugColor+rugID);
+        newBoardString.replace((rugx1*7 + rugy1)*3 + 1, 3*(rugx1*7 + rugy1)+4, rugColor+rugID);
+        newBoardString.replace((rugx2*7 + rugy2)*3  + 1, 3*(rugx2*7 + rugy2)+4, rugColor+rugID);
         // Create a player string
         StringBuilder newPlayerString = new StringBuilder(players);
         // Deduct the amount of carpet left by the player who placed the carpet
@@ -662,178 +668,169 @@ public class Marrakech {
 
         // Update the player string
         // Build a new game status string
-        String newGameString = newPlayerString + assamString  + "B" + newBoardString;
-
+        String newGameString = newPlayerString + assamString + newBoardString;
         return newGameString;
     }
 
     private static int rotationState = 0;
-    public static String rotateRugLeft(String rugString) {
+    private static boolean rotateRugLeftPressed = false;
+    private static boolean rotateRugRightPressed = false;
 
+
+    public static String rotateRug(String rugString, boolean rotateLeft) {
         Rugs rugs = new Rugs(rugString);
-        System.out.println(rugString);
-
-        rotationState = (rotationState + 1) % 4;
-        // Depending on the rotation state, rotate the rugs accordingly
 
         int halfOneX = rugs.getX2();
         int halfOneY = rugs.getY2();
         int halfTwoX = rugs.getX1();
         int halfTwoY = rugs.getY1();
 
-        if ((halfOneX == 0 && halfTwoX == 0) || (halfOneX == 6 && halfTwoX == 6) || (halfOneY == 0 && halfTwoY == 0) || (halfOneY == 6 && halfTwoY == 6)){
+        if ((halfOneX == 0 && halfTwoX == 0) || (halfOneX == 6 && halfTwoX == 6) || (halfOneY == 0 && halfTwoY == 0) || (halfOneY == 6 && halfTwoY == 6)) {
             String formattedId = String.format("%02d", rugs.getId());
             return rugs.getColor() + formattedId + String.valueOf(halfTwoX) + String.valueOf(halfTwoY) + String.valueOf(halfOneX) + String.valueOf(halfOneY);
-        }
-
-        else {
+        } else {
+            rotationState = (rotationState + 1) % 4;
             switch (rotationState) {
                 case 1:
-                    halfOneX = rugs.getX2() - 1;
-                    halfOneY = rugs.getY2() + 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
+                    if (rotateLeft) {
+                        halfOneX = rugs.getX2() - 1;
+                        halfOneY = rugs.getY2() + 1;
+                        halfTwoX = rugs.getX1();
+                        halfTwoY = rugs.getY1();
+                    } else {
+                        halfOneX = rugs.getX2() + 1;
+                        halfOneY = rugs.getY2() + 1;
+                        halfTwoX = rugs.getX1();
+                        halfTwoY = rugs.getY1();
+                    }
                     break;
                 case 2:
-                    halfOneX = rugs.getX2() + 1;
-                    halfOneY = rugs.getY2() + 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
+                    if (rotateLeft) {
+                        if (rotateRugRightPressed) {
+                            halfOneX = rugs.getX2() - 1;
+                            halfOneY = rugs.getY2() - 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                            rotationState = 0;
+                        }
+                        else {
+                            halfOneX = rugs.getX2() + 1;
+                            halfOneY = rugs.getY2() + 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                        }
+                    }
+                    else {
+                        if (rotateRugLeftPressed) {
+                            halfOneX = rugs.getX2() + 1;
+                            halfOneY = rugs.getY2() - 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                            rotationState = 0;
+                        }
+                        else {
+                            halfOneX = rugs.getX2() - 1;
+                            halfOneY = rugs.getY2() + 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                        }
+                    }
                     break;
                 case 3:
-                    halfOneX = rugs.getX2() + 1;
-                    halfOneY = rugs.getY2() - 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
+                    if (rotateLeft) {
+                        halfOneX = rugs.getX2() + 1;
+                        halfOneY = rugs.getY2() - 1;
+                        halfTwoX = rugs.getX1();
+                        halfTwoY = rugs.getY1();
+                    } else {
+                        halfOneX = rugs.getX2() - 1;
+                        halfOneY = rugs.getY2() - 1;
+                        halfTwoX = rugs.getX1();
+                        halfTwoY = rugs.getY1();
+                    }
                     break;
                 default:
-                    halfOneX = rugs.getX2() - 1;
-                    halfOneY = rugs.getY2() - 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
+                    if (rotateLeft) {
+                        if (rotateRugRightPressed) {
+                            halfOneX = rugs.getX2() + 1;
+                            halfOneY = rugs.getY2() + 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                            rotationState = 2;
+                        }
+                        else {
+                            halfOneX = rugs.getX2() - 1;
+                            halfOneY = rugs.getY2() - 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                        }
+                    }
+                    else {
+                        if (rotateRugLeftPressed) {
+                            halfOneX = rugs.getX2() - 1;
+                            halfOneY = rugs.getY2() + 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                            rotationState = 2;
+                        }
+                        else {
+                            halfOneX = rugs.getX2() + 1;
+                            halfOneY = rugs.getY2() - 1;
+                            halfTwoX = rugs.getX1();
+                            halfTwoY = rugs.getY1();
+                        }
+                    }
                     break;
             }
         }
-
-        String formattedId = String.format("%02d", rugs.getId());
-        return rugs.getColor() + formattedId + String.valueOf(halfTwoX) + String.valueOf(halfTwoY) + String.valueOf(halfOneX) + String.valueOf(halfOneY);
-    }
-
-    public static String rotateRugRight(String rugString) {
-
-        Rugs rugs = new Rugs(rugString);
-
-        rotationState = (rotationState + 1) % 4;
-        // Depending on the rotation state, rotate the rugs accordingly
-
-        int halfOneX = rugs.getX2();
-        int halfOneY = rugs.getY2();
-        int halfTwoX = rugs.getX1();
-        int halfTwoY = rugs.getY1();
-
-        if ((halfOneX == 0 && halfTwoX == 0) || (halfOneX == 6 && halfTwoX == 6) || (halfOneY == 0 && halfTwoY == 0) || (halfOneY == 6 && halfTwoY == 6)){
-            String formattedId = String.format("%02d", rugs.getId());
-            return rugs.getColor() + formattedId + String.valueOf(halfTwoX) + String.valueOf(halfTwoY) + String.valueOf(halfOneX) + String.valueOf(halfOneY);
-        }
-        else {
-            switch (rotationState) {
-                case 1:
-                    halfOneX = rugs.getX2() + 1;
-                    halfOneY = rugs.getY2() + 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
-                    break;
-                case 2:
-                    halfOneX = rugs.getX2() - 1;
-                    halfOneY = rugs.getY2() + 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
-                    break;
-                case 3:
-                    halfOneX = rugs.getX2() - 1;
-                    halfOneY = rugs.getY2() - 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
-                    break;
-                default:
-                    halfOneX = rugs.getX2() + 1;
-                    halfOneY = rugs.getY2() - 1;
-                    halfTwoX = rugs.getX1();
-                    halfTwoY = rugs.getY1();
-                    break;
-            }
+        if (rotateLeft) {
+            rotateRugLeftPressed = true;
+            rotateRugRightPressed = false;
+        } else {
+            rotateRugLeftPressed = false;
+            rotateRugRightPressed = true;
         }
 
         String formattedId = String.format("%02d", rugs.getId());
         return rugs.getColor() + formattedId + String.valueOf(halfTwoX) + String.valueOf(halfTwoY) + String.valueOf(halfOneX) + String.valueOf(halfOneY);
     }
 
-    public static String moveRugUp(String rugString) {
+    public static String moveRug(String rugString, String direction) {
         Rugs rugs = new Rugs(rugString);
-        System.out.println(rugString);
 
         int halfOneX = rugs.getX2();
         int halfTwoX = rugs.getX1();
         int halfOneY = rugs.getY2();
         int halfTwoY = rugs.getY1();
 
-        if (halfOneY > 0 && halfTwoY > 0) {
-            halfOneY -= 1;
-            halfTwoY -= 1;
-        }
-
-        String formattedId = String.format("%02d", rugs.getId());
-        return rugs.getColor() + formattedId + String.valueOf(halfTwoX) + String.valueOf(halfTwoY) + String.valueOf(halfOneX) + String.valueOf(halfOneY);
-    }
-
-    public static String moveRugDown(String rugString) {
-        Rugs rugs = new Rugs(rugString);
-        System.out.println(rugString);
-
-        int halfOneX = rugs.getX2();
-        int halfTwoX = rugs.getX1();
-        int halfOneY = rugs.getY2();
-        int halfTwoY = rugs.getY1();
-
-        if (halfOneY < 6 && halfTwoY < 6) {
-            halfOneY += 1;
-            halfTwoY += 1;
-        }
-
-        String formattedId = String.format("%02d", rugs.getId());
-        return rugs.getColor() + formattedId + String.valueOf(halfTwoX) + String.valueOf(halfTwoY) + String.valueOf(halfOneX) + String.valueOf(halfOneY);
-    }
-
-    public static String moveRugLeft(String rugString) {
-        Rugs rugs = new Rugs(rugString);
-        System.out.println(rugString);
-
-        int halfOneX = rugs.getX2();
-        int halfTwoX = rugs.getX1();
-        int halfOneY = rugs.getY2();
-        int halfTwoY = rugs.getY1();
-
-        if (halfOneX > 0 && halfTwoX > 0) {
-            halfOneX -= 1;
-            halfTwoX -= 1;
-        }
-
-        String formattedId = String.format("%02d", rugs.getId());
-        return rugs.getColor() + formattedId + String.valueOf(halfTwoX) + String.valueOf(halfTwoY) + String.valueOf(halfOneX) + String.valueOf(halfOneY);
-    }
-
-    public static String moveRugRight(String rugString) {
-        Rugs rugs = new Rugs(rugString);
-        System.out.println(rugString);
-
-        int halfOneX = rugs.getX2();
-        int halfTwoX = rugs.getX1();
-        int halfOneY = rugs.getY2();
-        int halfTwoY = rugs.getY1();
-
-        if (halfOneX < 6 && halfTwoX < 6) {
-            halfOneX += 1;
-            halfTwoX += 1;
+        switch (direction) {
+            case "up":
+                if (halfOneY > 0 && halfTwoY > 0) {
+                    halfOneY -= 1;
+                    halfTwoY -= 1;
+                }
+                break;
+            case "down":
+                if (halfOneY < 6 && halfTwoY < 6) {
+                    halfOneY += 1;
+                    halfTwoY += 1;
+                }
+                break;
+            case "left":
+                if (halfOneX > 0 && halfTwoX > 0) {
+                    halfOneX -= 1;
+                    halfTwoX -= 1;
+                }
+                break;
+            case "right":
+                if (halfOneX < 6 && halfTwoX < 6) {
+                    halfOneX += 1;
+                    halfTwoX += 1;
+                }
+                break;
+            default:
+                // Handle invalid direction (optional)
+                break;
         }
 
         String formattedId = String.format("%02d", rugs.getId());
