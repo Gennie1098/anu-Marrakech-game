@@ -261,16 +261,16 @@ public class Marrakech {
         if (rotation == 90) {
             switch (currentDirection) {
                 case 'N':
-                    newDirection = 'E'; // From North to East
+                    newDirection = 'E'; // From North to West (East)
                     break;
                 case 'E':
-                    newDirection = 'S'; // From East to South
+                    newDirection = 'S'; // From East to North (South)
                     break;
                 case 'S':
-                    newDirection = 'W'; // From South to West
+                    newDirection = 'W'; // From South to East (West)
                     break;
                 case 'W':
-                    newDirection = 'N'; // From West to North
+                    newDirection = 'N'; // From West to South (North)
                     break;
                 default:
                     return currentAssam;

@@ -251,13 +251,13 @@ public class Game extends Application {
                 rotation.setAngle(180); // Set the desired rotation angle for 'N'
                 break;
             case 'E':
-                rotation.setAngle(90); // Set the desired rotation angle for 'E'
+                rotation.setAngle(270); // Set the desired rotation angle for 'E'
                 break;
             case 'S':
                 rotation.setAngle(0); // Set the desired rotation angle for 'S'
                 break;
             case 'W':
-                rotation.setAngle(270); // Set the desired rotation angle for 'W'
+                rotation.setAngle(90); // Set the desired rotation angle for 'W'
                 break;
         }
 
