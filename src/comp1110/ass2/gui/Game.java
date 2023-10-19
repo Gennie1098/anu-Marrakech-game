@@ -387,6 +387,12 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * set style if button is disable, and return to the old style when button is enable
+     * @param button
+     * @param isDisable
+     */
     private void setButtonDisable (Button button, Boolean isDisable) {
         button.setDisable(isDisable);
         if (isDisable) {
@@ -408,7 +414,11 @@ public class Game extends Application {
         }
     }
 
-
+    /**
+     * @Authority: Gennie Nguyen
+     * create button with text
+     *
+     */
     private Button createTextButton(String buttonLabel, String buttonColor, String shadowColor) {
         Button button = new Button(buttonLabel);
         button.setPadding(new Insets(0, 10, 0, 10));
@@ -423,6 +433,11 @@ public class Game extends Application {
         return button;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create button with image
+     *
+     */
     private Button createButtonImg(String imagePath, String buttonColor, String shadowColor) throws FileNotFoundException {
         FileInputStream input= new FileInputStream(imagePath);
         Image image = new Image(input);
@@ -439,6 +454,11 @@ public class Game extends Application {
         return buttonImg;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create button with shape, specifically for move rug buttons
+     *
+     */
     private Button createMoveButton(Double angle) {
         Button buttonShape = new Button();
 
@@ -456,18 +476,33 @@ public class Game extends Application {
         return buttonShape;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create a spacer to align layout in HBox
+     *
+     */
     private Region createASpacerForLayoutHBox () {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
         return spacer;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create a spacer to align layout in VBox
+     *
+     */
     private Region createASpacerForLayoutVBox () {
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
         return spacer;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create a triangle, specifically for shape in button (move rug buttons)
+     *
+     */
     class Triangle extends Polygon {
         Triangle(double x, double y, double side) {
             double height = side * Math.sqrt(3) / 2; //equilateral triangle
@@ -552,6 +587,11 @@ public class Game extends Application {
         return createAssamDuplication(fillColor, orientation);
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create dice faces with dice number 1-4
+     *
+     */
     private StackPane createDiceFace (int number) {
         StackPane diceFace = new StackPane();
         Rectangle square = new Rectangle(39, 39, Color.web("#FFE6A9"));
@@ -594,67 +634,6 @@ public class Game extends Application {
         return diceFace;
     }
 
-    private VBox createPlayerBox (String playerNameInput, char playerColor, int numberOfDirhams, int numberOfRugs) {
-        VBox playerBox = new VBox(0);
-        playerBox.setAlignment(Pos.CENTER);
-        playerBox.setPrefWidth((WINDOW_WIDTH - LEFT_PANE_SIZE)/2);
-
-        Label playerName = new Label(playerNameInput);
-        playerName.setFont(font32);
-        playerName.setTextFill(Color.WHITE);
-
-        HBox playerAsset = new HBox(10);
-        Font font24 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 24);
-
-        HBox playerDirham = new HBox(0);
-
-        StackPane smallDirhamIcon = createDirhamCoin();
-        smallDirhamIcon.setScaleY(0.5);
-        smallDirhamIcon.setScaleX(0.5);
-
-        Label dirhams = new Label(Integer.toString(numberOfDirhams));
-        dirhams.setFont(font24);
-        dirhams.setTextFill(Color.WHITE);
-        playerDirham.getChildren().addAll(smallDirhamIcon, dirhams);
-        playerDirham.setAlignment(Pos.CENTER_LEFT);
-
-        HBox playerRugs = new HBox(5);
-        Label rugs = new Label("RUGS");
-        rugs.setFont(font24);
-        rugs.setTextFill(Color.WHITE);
-        rugs.setPadding(new Insets(0, 5, 0,5));
-
-        Label rugsNumber = new Label(Integer.toString(numberOfRugs));
-        rugsNumber.setFont(font24);
-        rugsNumber.setTextFill(Color.WHITE);
-        playerRugs.getChildren().addAll(rugs, rugsNumber);
-        playerRugs.setAlignment(Pos.CENTER_LEFT);
-
-        playerAsset.getChildren().addAll(playerDirham, playerRugs);
-        playerAsset.setAlignment(Pos.CENTER);
-
-        playerBox.getChildren().addAll(playerName, playerAsset);
-
-        switch (playerColor) {
-            case 'c':
-                playerBox.setStyle("-fx-background-color: #1F8C86");
-                rugs.setStyle("-fx-background-color: #19706B");
-                break;
-            case 'y':
-                playerBox.setStyle("-fx-background-color: #FFA800");
-                rugs.setStyle("-fx-background-color: #A36B00");
-                break;
-            case 'r':
-                playerBox.setStyle("-fx-background-color: #E93119");
-                rugs.setStyle("-fx-background-color: #951F10");
-                break;
-            case 'p':
-                playerBox.setStyle("-fx-background-color: #894FA5");
-                rugs.setStyle("-fx-background-color: #58326A");
-        }
-        return playerBox;
-    }
-
     private void rollDiceAnimation(StackPane diceFace) {
         int animationDuration = 300; // Độ dài thời gian cho mỗi mặt xúc xắc (millisecond)
         int totalDuration = 3000; // Tổng thời gian của animation (3 giây)
@@ -682,6 +661,11 @@ public class Game extends Application {
         timeline.play();
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create game title "MARRAKECK" for UI use
+     *
+     */
     private StackPane creatMarrakeckTitle () {
         StackPane marrakeckTilte = new StackPane();
 
@@ -781,6 +765,11 @@ public class Game extends Application {
         return marrakeckTilte;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create a fill box for information input
+     *
+     */
     private TextField createTextField (String promptText, String dataType) {
         TextField fillInfo = new TextField();
         fillInfo.setEditable(true);
@@ -874,6 +863,12 @@ public class Game extends Application {
 
         return leftPane;
     }
+
+    /**
+     * @Authority: Gennie Nguyen
+     * create "pay Dirhams" section, with number of dirhams needed to be paid displayed, and "pay dirhams" button
+     *
+     */
     private HBox createPayDirhamsSection(String amountDirhams) {
         HBox payDirhamsSection = new HBox();
         payDirhamsSection.setStyle("-fx-background-color: #FFE6A9");
@@ -906,6 +901,78 @@ public class Game extends Application {
         }
         return amountOwed;
     }
+
+    /**
+     * @Authority: Gennie Nguyen
+     * create one box for each player, have player name, color, number of rugs, number of dirhams
+     *
+     */
+    private VBox createPlayerBox (String playerNameInput, char playerColor, int numberOfDirhams, int numberOfRugs) {
+        VBox playerBox = new VBox(0);
+        playerBox.setAlignment(Pos.CENTER);
+        playerBox.setPrefWidth((WINDOW_WIDTH - LEFT_PANE_SIZE)/2);
+
+        Label playerName = new Label(playerNameInput);
+        playerName.setFont(font32);
+        playerName.setTextFill(Color.WHITE);
+
+        HBox playerAsset = new HBox(10);
+        Font font24 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 24);
+
+        HBox playerDirham = new HBox(0);
+
+        StackPane smallDirhamIcon = createDirhamCoin();
+        smallDirhamIcon.setScaleY(0.5);
+        smallDirhamIcon.setScaleX(0.5);
+
+        Label dirhams = new Label(Integer.toString(numberOfDirhams));
+        dirhams.setFont(font24);
+        dirhams.setTextFill(Color.WHITE);
+        playerDirham.getChildren().addAll(smallDirhamIcon, dirhams);
+        playerDirham.setAlignment(Pos.CENTER_LEFT);
+
+        HBox playerRugs = new HBox(5);
+        Label rugs = new Label("RUGS");
+        rugs.setFont(font24);
+        rugs.setTextFill(Color.WHITE);
+        rugs.setPadding(new Insets(0, 5, 0,5));
+
+        Label rugsNumber = new Label(Integer.toString(numberOfRugs));
+        rugsNumber.setFont(font24);
+        rugsNumber.setTextFill(Color.WHITE);
+        playerRugs.getChildren().addAll(rugs, rugsNumber);
+        playerRugs.setAlignment(Pos.CENTER_LEFT);
+
+        playerAsset.getChildren().addAll(playerDirham, playerRugs);
+        playerAsset.setAlignment(Pos.CENTER);
+
+        playerBox.getChildren().addAll(playerName, playerAsset);
+
+        switch (playerColor) {
+            case 'c':
+                playerBox.setStyle("-fx-background-color: #1F8C86");
+                rugs.setStyle("-fx-background-color: #19706B");
+                break;
+            case 'y':
+                playerBox.setStyle("-fx-background-color: #FFA800");
+                rugs.setStyle("-fx-background-color: #A36B00");
+                break;
+            case 'r':
+                playerBox.setStyle("-fx-background-color: #E93119");
+                rugs.setStyle("-fx-background-color: #951F10");
+                break;
+            case 'p':
+                playerBox.setStyle("-fx-background-color: #894FA5");
+                rugs.setStyle("-fx-background-color: #58326A");
+        }
+        return playerBox;
+    }
+
+    /**
+     * @Authority: Gennie Nguyen
+     * create "Players" Section, all players
+     *
+     */
     private GridPane createPlayerSection() {
         Marrakech marrakech = new Marrakech();
         marrakech.setGameInfo(gameString[0]);
@@ -934,13 +1001,14 @@ public class Game extends Application {
         return playersSection;
     }
 
+    /** @Authority: Gennie Nguyen
+     * "Place rug" functions section
+     * buttons to change rug location (rotate and move)
+     * "place rug" button
+     * notice if the rug placement is invalid
+     */
     private HBox createPlaceRugSection(String gameString, String rugString) throws FileNotFoundException {
-        /**
-         * "Place rug" functions section
-         * buttons to change rug location (rotate and move)
-         * "place rug" button
-         * notice if the rug placement is invalid
-         */
+
         HBox placeRugSection = new HBox();
         placeRugSection.setStyle("-fx-background-color: #FFFCE1");
         placeRugSection.setPrefHeight(140);
@@ -949,7 +1017,6 @@ public class Game extends Application {
         placeRugSection.setAlignment(Pos.CENTER);
         placeRugButton = createTextButton("PLACE RUG","#9FD395","#7EA976" );
 
-
         //group of (rotate to the left, rotate to the right)
         VBox rotateRugButtons = new VBox(15);
         rotateToLeftButton = createButtonImg("assets/rotateToLeft.png","#E66F51", "#AB513A");
@@ -957,7 +1024,6 @@ public class Game extends Application {
 
         rotateRugButtons.getChildren().addAll(rotateToLeftButton, rotateToRightButton);
         rotateRugButtons.setAlignment(Pos.CENTER);
-
 
         //group of move rug buttons (rotate to the left, rotate to the right, up, down, left, right)
         HBox moveRugs = new HBox(30);
@@ -984,10 +1050,12 @@ public class Game extends Application {
 
         return placeRugSection;
     }
+
+    /**@Authority: Gennie Nguyen
+     * "Move Assam" functions section, rotate Assam and roll dice
+     */
     private HBox createMoveAssamSection() throws FileNotFoundException {
-        /**
-         * "Move Assam" functions section, rotate Assam and roll dice
-         */
+
         rollDiceButton = createTextButton("ROLL DICE","#064B72","#053C5B" );
         //TODO: when hit rollDiceButton, 2 things happen (an animation run through all dice faces then display the one = dice number,
 
@@ -1010,8 +1078,6 @@ public class Game extends Application {
         VBox rollDice = new VBox(15);
         rollDice.setAlignment(Pos.CENTER_RIGHT);
 
-
-
         HBox dice = new HBox(10);
         StackPane dice1 = createDiceFace(1);
         StackPane dice2 = createDiceFace(2);
@@ -1024,7 +1090,6 @@ public class Game extends Application {
         amountOfSteps.setFont(font18);
         amountOfSteps.setTextFill(Color.web("064B72"));
 
-
         rollDice.getChildren().addAll(rollDiceButton, dice, amountOfSteps);
         rollDice.setAlignment(Pos.CENTER_RIGHT);
 
@@ -1033,6 +1098,7 @@ public class Game extends Application {
 
         return moveAssamSection;
     }
+
     private void handleRugMovement(String direction) {
         board.getChildren().remove(rugTwoInBoard);
         board.getChildren().remove(rugOneInBoard);
@@ -1081,8 +1147,6 @@ public class Game extends Application {
         board.add(rugOneInBoard, halfOneX, halfOneY);
         board.add(rugTwoInBoard, halfTwoX, halfTwoY);
 
-
-
         if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
             setButtonDisable(placeRugButton, true);
         }
@@ -1090,6 +1154,7 @@ public class Game extends Application {
             setButtonDisable(placeRugButton, false);
         }
     }
+
     private void handleAssamRotation(boolean rotateLeft) {
         setButtonDisable(rotateAssamToLeftButton, true);
         setButtonDisable(rotateAssamToRightButton, true);
@@ -1119,6 +1184,7 @@ public class Game extends Application {
         StackPane newAssamBoard = updateAssamAppearance(playerString[0], assamString[0]);
         assamInBoard.getChildren().add(newAssamBoard);
     }
+
     private void handleAssamMovement() {
         setButtonDisable(rotateAssamToLeftButton, true);
         setButtonDisable(rotateAssamToRightButton, true);
@@ -1158,6 +1224,7 @@ public class Game extends Application {
         rugOneInBoard = createRugHalfOne(rugString[0]);
         rugTwoInBoard = createRugHalfTwo(rugString[0]);
     }
+
     private void handleRugPlacement() throws FileNotFoundException {
         Marrakech marrakech = new Marrakech();
         String newGameString = marrakech.makePlacement(gameString[0], rugString[0]);
@@ -1168,6 +1235,7 @@ public class Game extends Application {
 
         newGameTurn();
     }
+
     private void handleDirhamPayment() throws FileNotFoundException {
         int amountDirhamsToPay = Integer.parseInt(amountOwed);
         if (amountDirhamsToPay != 0) {
@@ -1204,9 +1272,6 @@ public class Game extends Application {
                 int numDirhamsAdd = playerB.addDirhams(amountDirhamsToPay);
                 playerB.setNumberOfDirhams(numDirhamsAdd);
             }
-
-
-
 
             rightPane = new VBox();
             rightPane.setPrefWidth(WINDOW_WIDTH - LEFT_PANE_SIZE);
@@ -1523,6 +1588,9 @@ public class Game extends Application {
 
 
             root.setCenter(mainContent);
+            String imageUrl = "file:assets/winnerBackground.png";
+            root.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-position: center center; -fx-background-repeat: stretch;");
+
 
             Scene scene = new Scene(root, 1200, 700);
             stage.setTitle("Congratulations Screen");
