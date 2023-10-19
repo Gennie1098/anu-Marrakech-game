@@ -84,6 +84,8 @@ public class Game extends Application {
     private TextField player3Input;
     private TextField player4Input;
     private TextField numPlayerInput;
+
+    private TextField field;
     private String player1Name;
     private String player2Name;
     private String player3Name;
@@ -167,6 +169,16 @@ public class Game extends Application {
         Text Name = new Text("PLAYERS　NAME");
         Name.setFont(font32);
 
+
+//        TextField field = null;
+//        List<TextField> playerFields = createPlayerNameFields(numOfPlayers);
+//        for (field : playerFields) {
+//            gamePrepare2.getChildren().add(field);
+//        }
+
+
+
+
         player1Input = createTextField("PLAYER 1", "\\s");
         player2Input = createTextField("PLAYER 2", "\\s");
         player3Input = createTextField("PLAYER 3", "\\s");
@@ -209,6 +221,23 @@ public class Game extends Application {
             stage.setScene(gameScene);
         });
     }
+
+    /**
+     * create the playerNameFields to fix the imput text
+     *
+     */
+
+    private List<TextField> createPlayerNameFields(int numberOfPlayers) {
+        List<TextField> playerFields = new ArrayList<>();
+
+        for (int i = 1; i <= numberOfPlayers; i++) {
+            TextField playerInput = createTextField("PLAYER " + i, "\\s");
+            playerFields.add(playerInput);
+        }
+
+        return playerFields;
+    }
+
 
     /** @Authority: Gennie Nguyen, Morris
      * Create main Game GUI
@@ -795,7 +824,7 @@ public class Game extends Application {
         return fillInfo;
     }
     private StackPane populateRugBoard(String gameString) {
-        String boardString = gameString.substring(37, 183);
+        String boardString = gameString.substring(37, 184);
         String assamString = gameString.substring(32, 36);
 
         List<Character> colorList = new ArrayList<>();
