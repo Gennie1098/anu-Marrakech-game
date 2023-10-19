@@ -11,7 +11,7 @@ public class getBoardStateTest {
     @Test
     public void getBoardStateTest() {
 
-        Board board = new Board("Bn00n00y08n00n00n00n00r97n00n00n00n00y44n00r01n00n00r78r22n00n00n00c03y86c04r12n00n00n00n00n00n00y66r08c76r24n00n00n00y22y00r20n00n00n00y82r74n00y34");
+        Board board = new Board("n00n00y08n00n00n00n00r97n00n00n00n00y44n00r01n00n00r78r22n00n00n00c03y86c04r12n00n00n00n00n00n00y66r08c76r24n00n00n00y22y00r20n00n00n00y82r74n00y34");
 
         String test = board.getBoardState();
 

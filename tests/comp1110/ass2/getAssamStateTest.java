@@ -17,7 +17,7 @@ public class getAssamStateTest {
 
     @Test
     public void incorrectOrientation() {
-        int randomValue = (int) (Math.random() * 8);
+        int randomValue = (int) (Math.random() * 6);
 
         String randomAssamString = "A" + randomValue + randomValue + 'F';
 

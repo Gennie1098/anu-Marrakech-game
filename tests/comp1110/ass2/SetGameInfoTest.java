@@ -33,7 +33,7 @@ public class SetGameInfoTest {
             String currentGameState = game.getGameState();
 
             // Compare the current game state with the expected game state
-            Assertions.assertEquals(183, inputGameString.length(), testDescription);
+            Assertions.assertEquals(184, inputGameString.length(), testDescription);
         });
 
 

@@ -107,6 +107,7 @@ public class Game extends Application {
     private final String[] rugString = {""};
     private final String[] playerString = {""};
     private Stage stage;
+    private Label congratsText1;
 
     public static void main(String[] args) {
         launch(args);
@@ -594,7 +595,6 @@ public class Game extends Application {
             );
         }
     }
-
     private StackPane createRugHalfOne(String rugString) {
         char color = rugString.charAt(0);
         StackPane rugFace = new StackPane();
@@ -618,7 +618,6 @@ public class Game extends Application {
         rugFace.getChildren().add(rug);
         return rugFace;
     }
-
     private StackPane createRugHalfTwo(String rugString) {
         char color = rugString.charAt(0);
         StackPane rugFace = new StackPane();
@@ -1275,11 +1274,31 @@ public class Game extends Application {
         assamStatus.getChildren().add(newAssamStatus);
 
         updateDirhams(gameString[0]);
-        });
 
-        //TODO move to payDirhams button
-        rugOneInBoard = createRugHalfOne(rugString[0]);
-        rugTwoInBoard = createRugHalfTwo(rugString[0]);
+            if ((amountOwed == null) || (amountOwed.equals("0"))) {
+                setButtonDisable(rotateAssamToLeftButton, true);
+                setButtonDisable(rotateAssamToRightButton, true);
+                setButtonDisable(rollDiceButton, true);
+                setButtonDisable(rotateToRightButton, false);
+                setButtonDisable(rotateToLeftButton, false);
+                setButtonDisable(moveRugUp, false);
+                setButtonDisable(moveRugDown, false);
+                setButtonDisable(moveRugLeft, false);
+                setButtonDisable(moveRugRight, false);
+                setButtonDisable(payDirhamsButton, true);
+                if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0]) && placeRugButton.isDisabled()) {
+                    setButtonDisable(placeRugButton, false);
+                }
+
+                if ((!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) && placeRugButton.isDisabled()) {
+                    //Do nothing
+                }
+                rugOneInBoard = createRugHalfOne(rugString[0]);
+                rugTwoInBoard = createRugHalfTwo(rugString[0]);
+                board.add(rugOneInBoard, 3, 3);
+                board.add(rugTwoInBoard, 3, 2);
+            }
+        });
     }
 
     /**@Authority: Gennie
@@ -1424,6 +1443,9 @@ public class Game extends Application {
         setButtonDisable(moveRugRight,false);
         setButtonDisable(payDirhamsButton,true);
 
+
+        rugOneInBoard = createRugHalfOne(rugString[0]);
+        rugTwoInBoard = createRugHalfTwo(rugString[0]);
         board.add(rugOneInBoard, 3, 3);
         board.add(rugTwoInBoard, 3, 2);
 
@@ -1445,7 +1467,7 @@ public class Game extends Application {
                 break;
         }
 
-        
+
         Marrakech marrakech = new Marrakech();
         marrakech.setGameInfo(gameString[0]);
         gameString[0] = marrakech.getGameState();
@@ -1612,7 +1634,6 @@ public class Game extends Application {
 
         return winnerDisplay;
     }
-
     private void checkWinner(Stage stage) {
         if (Marrakech.isGameOver(gameString[0])) {
             char winnerChar = Marrakech.getWinner(gameString[0]);
@@ -1630,32 +1651,39 @@ public class Game extends Application {
                 case 'p':
                     winner = player4Name;
                     break;
-                case 'n':
-                    winner = "Draw!"; // draw case
+                case 't':
+                    winner = "It's A Draw!"; // draw case
             }
 
             List<String> rankings = getRankingsScore();
 
+
             BorderPane root = new BorderPane();
             root.setStyle("-fx-background-color: white;");
 
-            //Header "CONGRATULATIONS!"
+
             Font font48 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 48);
             Label congratsText2 = new Label();
-            Text labelText = new Text("CONGRATULATIONS!");
+            Text labelText = new Text(winner);
             labelText.setStroke(lightYellow);
             labelText.setStrokeWidth(12.0);
             congratsText2.setGraphic(labelText);
             congratsText2.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             labelText.setFont(font48);
             labelText.setFill(red);
-            Label congratsText1 = new Label("CONGRATULATIONS!");
+            if (winnerChar == 't') {
+                congratsText1 = new Label(winner);
+            }
+            else {
+                congratsText1 = new Label("CONGRATULATIONS!");
+            }
             congratsText1.setFont(font48);
             congratsText1.setTextFill(red);
             StackPane headerText = new StackPane(congratsText2, congratsText1);
 
+
             //Winner Banner
-            VBox winnerBanner = createWinnerBanner(winner, winnerChar, rankings.get(0).substring(8, 10));
+            VBox winnerBanner = createWinnerBanner(winner, winnerChar, rankings.get(0).substring(1, 3));
 
             // Content
             VBox mainContent = new VBox(20);
@@ -1664,7 +1692,7 @@ public class Game extends Application {
 
             for (int i = 1; i < numOfPlayers; i++) {
                 String playerName = "";
-                String playerChar = rankings.get(i).substring(1, 2);
+                String playerChar = rankings.get(i).substring(0, 1);
                 switch (playerChar) {
                     case "c":
                         playerName = player1Name;
@@ -1679,7 +1707,7 @@ public class Game extends Application {
                         playerName = player4Name;
                         break;
                 }
-                Text rankText = new Text((i + 1) + ". " + playerName +  " - " + rankings.get(i).substring(8, 10));
+                Text rankText = new Text((i + 1) + ". " + playerName +  " - " + rankings.get(i).substring(1,3));
                 Font font24 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 24);
                 rankText.setFont(font24);
                 mainContent.getChildren().add(rankText);
@@ -1741,8 +1769,13 @@ public class Game extends Application {
         players[1] = player2;
         players[2] = player3;
         players[3] = player4;
+        String boardString = gameString[0].substring(32, 184);
 
-        int[] scores = new int[4];
+        // Initialize variables to keep track of player scores
+        int cyanScore = 0;
+        int yellowScore = 0;
+        int redScore = 0;
+        int purpleScore = 0;
 
         // Calculate player scores based on their dirhams
         // Player strings are in the format: P<color><dirhams><remaining rugs>i
@@ -1753,19 +1786,42 @@ public class Game extends Application {
 
             switch (color) {
                 case 'c':
-                    scores[i] = dirhams;
+                    cyanScore = dirhams;
                     break;
                 case 'y':
-                    scores[i] = dirhams;
+                    yellowScore = dirhams;
                     break;
                 case 'r':
-                    scores[i] = dirhams;
+                    redScore = dirhams;
                     break;
                 case 'p':
-                    scores[i] = dirhams;
+                    purpleScore = dirhams;
                     break;
             }
         }
+
+        // Calculate player scores based on the board information
+        // Board string is in the format: "n00<board_data>"
+        // Each character in <board_data> represents a square on the board
+        for (char square : boardString.toCharArray()) {
+            switch (square) {
+                case 'c':
+                    cyanScore++;
+                    break;
+                case 'y':
+                    yellowScore++;
+                    break;
+                case 'r':
+                    redScore++;
+                    break;
+                case 'p':
+                    purpleScore++;
+                    break;
+            }
+        }
+        int[] scores = {cyanScore, yellowScore, redScore, purpleScore};
+        String[] playerColors = {"c", "y", "r", "p"};
+
         for (int i = 0; i < 4; i++) {
             for (int j = i + 1; j < 4; j++) {
                 if (scores[i] < scores[j]) {
@@ -1775,18 +1831,17 @@ public class Game extends Application {
                     scores[j] = tempScore;
 
                     // Swap players
-                    String tempPlayer = players[i];
-                    players[i] = players[j];
-                    players[j] = tempPlayer;
+                    String tempColor = playerColors[i];
+                    playerColors[i] = playerColors[j];
+                    playerColors[j] = tempColor;
                 }
             }
         }
-
         List<String> rankedPlayers = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            rankedPlayers.add(players[i] + scores[i]);
+            rankedPlayers.add(playerColors[i] + scores[i]);
         }
         return rankedPlayers;
-    }
+}
 }
 
