@@ -98,7 +98,7 @@ public class Game extends Application {
         // FIXME Task 7 and 15
 
         /** @Authority: Gennie Nguyen
-         * Create Game GUI2
+         * Create Game GUI
          */
 
         /**
@@ -163,9 +163,9 @@ public class Game extends Application {
         Name.setFont(font32);
 
         player1Input = createTextField("PLAYER 1", "\\s");
-        player2Input =  createTextField("PLAYER 2", "\\s");
-        player3Input =  createTextField("PLAYER 3", "\\s");
-        player4Input =  createTextField("PLAYER 3", "\\s");
+        player2Input = createTextField("PLAYER 2", "\\s");
+        player3Input = createTextField("PLAYER 3", "\\s");
+        player4Input = createTextField("PLAYER 4", "\\s");
 
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
         gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,player1Input,player2Input,player3Input,player4Input,startGameButton);
@@ -179,7 +179,7 @@ public class Game extends Application {
             Marrakech marrakech = new Marrakech(numOfPlayers);
             gameString[0] = marrakech.getGameState();
             assamString[0] = gameString[0].substring(32,36); //assam string from game string
-            rugString[0] = "c013332"; //base rug strinh
+            rugString[0] = "c013332"; //base rug string
             playerString[0] = "Pc03015i";
         });
 
@@ -200,8 +200,8 @@ public class Game extends Application {
 
     private StackPane createAssamDuplication(Color Color, char Orientation){
         Group assam = new Group();
-        //Assam's body
 
+        //Assam's body
         assamBody = new SVGPath();
         assamBody.setContent("M25.4019 24.5C26.5566 22.5 29.4434 22.5 30.5981 24.5L49.6506 57.5C50.8053 59.5 49.362 62 47.0526 62H8.94744C6.63804 62 5.19466 59.5 6.34937 57.5L25.4019 24.5Z");
         assamBody.setFill(Color);
@@ -230,8 +230,6 @@ public class Game extends Application {
         assamHat.setContent("M45 17H28H11C11 7.61116 18.6112 0 28 0C37.3888 0 45 7.61116 45 17Z");
         assamHat.setFill(Color);
         assam.getChildren().add(assamHat);
-
-
 
         Rotate rotation = new Rotate();
 
@@ -284,6 +282,14 @@ public class Game extends Application {
         dropShadow.setColor(Color.web(shadowColor));
         dropShadow.setRadius(0.0);
         return dropShadow;
+    }
+
+    private void setButtonDisable (Boolean isDisable) {
+        Button button = new Button();
+        button.setDisable(isDisable);
+        if (isDisable) {
+            button.setStyle("-fx-background-color: #D3D3D3");
+        }
     }
 
     private Button createTextButton(String buttonLabel, String buttonColor, String shadowColor) {
@@ -366,16 +372,16 @@ public class Game extends Application {
         rug.setArcWidth(7.0);
 
         if (color == 'r') {
-            rug.setFill(Color.RED);
+            rug.setFill(red);
         }
         if (color == 'y') {
-            rug.setFill(Color.YELLOW);
+            rug.setFill(yellow);
         }
         if (color == 'p') {
-            rug.setFill(Color.PURPLE);
+            rug.setFill(purple);
         }
         if (color == 'c') {
-            rug.setFill(Color.CYAN);
+            rug.setFill(green);
         }
 
         rugFace.getChildren().add(rug);
@@ -390,16 +396,16 @@ public class Game extends Application {
         rug.setArcWidth(7.0);
 
         if (color == 'r') {
-            rug.setFill(Color.RED);
+            rug.setFill(red);
         }
         if (color == 'y') {
-            rug.setFill(Color.YELLOW);
+            rug.setFill(yellow);
         }
         if (color == 'p') {
-            rug.setFill(Color.PURPLE);
+            rug.setFill(purple);
         }
         if (color == 'c') {
-            rug.setFill(Color.CYAN);
+            rug.setFill(green);
         }
         rugFace.getChildren().add(rug);
         return rugFace;
@@ -414,13 +420,13 @@ public class Game extends Application {
 
         Color fillColor;
         if (color == 'c') {
-            fillColor = Color.web("#1F8C86");
+            fillColor = Color.web("#19706B");
         } else if (color == 'y') {
-            fillColor = Color.web("#FFA800");
+            fillColor = Color.web("#A36B00");
         } else if (color == 'p') {
-            fillColor = Color.web("#894FA5");
+            fillColor = Color.web("#58326A");
         } else if (color == 'r') {
-            fillColor = Color.web("#E93119");
+            fillColor = Color.web("#951F10");
         } else {
             // Handle any other cases if needed
             fillColor = Color.web("#064B72"); // Default color
@@ -711,10 +717,10 @@ public class Game extends Application {
                 colorList.remove(0);
 
                 switch (color) {
-                    case 'r' -> tile.setFill(Color.RED);
-                    case 'p' -> tile.setFill(Color.PURPLE);
-                    case 'c' -> tile.setFill(Color.CYAN);
-                    case 'y' -> tile.setFill(Color.YELLOW);
+                    case 'r' -> tile.setFill(red);
+                    case 'p' -> tile.setFill(purple);
+                    case 'c' -> tile.setFill(green);
+                    case 'y' -> tile.setFill(yellow);
                     default -> {
                         if ((i + j) % 2 == 0) {
                             tile.setFill(Color.web("#F3A261"));
@@ -832,6 +838,7 @@ public class Game extends Application {
         HBox placeRugSection = createPlaceRugSection(gameString[0], rugString[0]);
         GridPane playersSection = createPlayerSection();
         rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection, placeRugSection, playersSection);
+
 
         payDirhamsButton.setDisable(true);
         placeRugButton.setDisable(true);
