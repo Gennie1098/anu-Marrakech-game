@@ -185,6 +185,7 @@ public class StartGame1 extends Application {
 //        });
 
 
+
     }
     private StackPane creatMarrakeckTitle () {
         StackPane marrakeckTilte = new StackPane();
