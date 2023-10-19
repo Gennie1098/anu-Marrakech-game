@@ -82,6 +82,7 @@ public class EndGame extends Application {
         HBox.setHgrow(spacer, Priority.ALWAYS);
         return spacer;
     }
+
     private VBox createWinnerBanner (String winnerName, String playerString, String playerScore) {
         VBox winnerDisplay = new VBox(20);
 
@@ -178,6 +179,12 @@ public class EndGame extends Application {
         winnerDisplay.setAlignment(Pos.CENTER);
 
         return winnerDisplay;
+    }
+
+    private VBox showOtherPlayerResults () {
+        VBox otherPlayerResults = new VBox(10);
+
+        return otherPlayerResults;
     }
 }
 
