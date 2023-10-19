@@ -483,6 +483,8 @@ public class Marrakech {
             winner = 'r';
         } else if (purpleScore == maxScore) {
             winner = 'p';
+        } else if (maxScore==cyanScore && maxScore==yellowScore && redScore == maxScore && purpleScore == maxScore ) {
+            winner = 't';
         }
 
         return winner;

@@ -3,6 +3,8 @@ package comp1110.ass2.gui;
 import comp1110.ass2.*;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -150,6 +152,7 @@ public class Game extends Application {
 
         numPlayerInput = createTextField("ENTER A NUMBER FROM 2 TO 4", "\\d*");
 
+
         Button nextButton = createTextButton("NEXT", "#064B72", "#053C5B");
 
         gamePrepare1.getChildren().addAll(gameTitle1, createASpacerForLayoutVBox(), numberOfPlayers, numPlayerInput, nextButton);
@@ -170,22 +173,32 @@ public class Game extends Application {
         Name.setFont(font32);
 
 
-//        TextField field = null;
-//        List<TextField> playerFields = createPlayerNameFields(numOfPlayers);
-//        for (field : playerFields) {
-//            gamePrepare2.getChildren().add(field);
-//        }
 
 
+        numPlayerInput.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            if(newValue == "2"||newValue == "3"||newValue=="4"){
+                oldValue = "2";
+                numPlayerInput.setText(newValue);
+
+            }
+
+            }
+        });
+
+        String numberofplayers = numPlayerInput.getText();
+        int num = Integer.parseInt(numberofplayers);
+        List<TextField> playerFields = createPlayerNameFields(num);
+        for (int i = 0; i <  playerFields.size(); i++) {
+            field = playerFields.get(i);
+            gamePrepare2.getChildren().add(field);
+        }
 
 
-        player1Input = createTextField("PLAYER 1", "\\s");
-        player2Input = createTextField("PLAYER 2", "\\s");
-        player3Input = createTextField("PLAYER 3", "\\s");
-        player4Input = createTextField("PLAYER 4", "\\s");
 
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
-        gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,player1Input,player2Input,player3Input,player4Input,startGameButton);
+        gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name ,startGameButton);
 
         Scene scene3 = new Scene(gamePrepare2, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -208,10 +221,26 @@ public class Game extends Application {
 
         //click on "START GAME" button, go to "main layout" Game scence
         startGameButton.setOnAction(e -> {
-            player1Name = player1Input.getText();
-            player2Name = player2Input.getText();
-            player3Name = player3Input.getText();
-            player4Name = player4Input.getText();
+//            player1Name = playerFields.get(0).getText();
+//            player2Name = playerFields.get(1).getText();
+//            player3Name = playerFields.get(2).getText();
+//            player4Name = playerFields.get(3).getText();
+
+            if (playerFields.size()==2){
+                player1Name = playerFields.get(0).getText();
+                player2Name = playerFields.get(1).getText();
+            } else if (playerFields.size()==3) {
+                player1Name = playerFields.get(0).getText();
+                player2Name = playerFields.get(1).getText();
+                player3Name = playerFields.get(2).getText();
+            } else if (playerFields.size()==4) {
+                player1Name = playerFields.get(0).getText();
+                player2Name = playerFields.get(1).getText();
+                player3Name = playerFields.get(2).getText();
+                player4Name = playerFields.get(3).getText();
+
+            }
+
             try {
                 gameScene = createGameScene();
             } catch (FileNotFoundException ex) {
@@ -227,10 +256,10 @@ public class Game extends Application {
      *
      */
 
-    private List<TextField> createPlayerNameFields(int numberOfPlayers) {
+    private List<TextField> createPlayerNameFields(int number) {
         List<TextField> playerFields = new ArrayList<>();
 
-        for (int i = 1; i <= numberOfPlayers; i++) {
+        for (int i = 1; i <= number; i++) {
             TextField playerInput = createTextField("PLAYER " + i, "\\s");
             playerFields.add(playerInput);
         }
