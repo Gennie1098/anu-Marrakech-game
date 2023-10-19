@@ -4,15 +4,19 @@ import comp1110.ass2.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -28,9 +32,12 @@ import javafx.scene.control.Label;
 import javafx.geometry.Insets;
 import javafx.util.Duration;
 
+
 import java.io.FileInputStream;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -59,7 +66,7 @@ public class Game extends Application {
    }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public  void  start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
 
         /** @Authority: Gennie Nguyen
@@ -453,34 +460,8 @@ public class Game extends Application {
         //TODO: if rug placement is invalid, the button stays gray, and will not allow to place rug
         // if rug placement is valid, the button turns green, and allow to place rug
 
-        /**
-         * "Players" section
-         * display all player information (color, name, dirhams, rug)
-         */
-        GridPane playersSection = new GridPane(); //2x2
-        playersSection.setPrefHeight(290);
-        RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(50); // 50% of the height
-        RowConstraints row2 = new RowConstraints();
-        row2.setPercentHeight(50); // 50% of the height
-        playersSection.getRowConstraints().addAll(row1, row2);
 
 
-        String[] playerName = {"Player 1", "Player 2", "Player 3", "Player 4"};
-        char[] playerColor = {'c', 'y', 'r', 'p'};
-        int numPlayers = 4;
-
-        for (int i = 0; i < (numPlayers + 1) / 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                int index = i * 2 + j;
-                if (index < numPlayers) {
-                    VBox player = createPlayerBox(playerName[index], playerColor[index], 30, 15);
-                    playersSection.add(player, j, i); // column 0, row 0
-                }
-            }
-        }
-
-        rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection,placeRugSection, playersSection);
 
         /**
          * Whole game layout
@@ -501,7 +482,7 @@ public class Game extends Application {
         Scene scene1 = new Scene(welcomeScene, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setTitle("Marrakeck Game");
         stage.setScene(scene1);
-        stage.show();
+//        stage.show();
 
 
         // "Game Prepare 1" scence with fill number of players
@@ -543,13 +524,68 @@ public class Game extends Application {
         Text Name = new Text("PLAYERS　NAME");
         Name.setFont(font32);
 
-        TextField player1Input = createTextField("PLAYER 1", "\\s");
-        TextField player2Input =  createTextField("PLAYER 2", "\\s");
-        TextField player3Input =  createTextField("PLAYER 3", "\\s");
-        TextField player4Input =  createTextField("PLAYER 3", "\\s");
+        //        get the number of player
+            playerInput.setText("4");
+            String text = playerInput.getText();
+            int playernumbers = Integer.parseInt(text);
+//        if (text != "2" && !text.trim().isEmpty()) {
+//            try {
+//                playernumbers = Integer.parseInt(text);
+//            } catch (NumberFormatException e) {
+//                System.out.println("Invalid number of players entered!");
+//            }
+//        }
+
+
+
+        playerInput.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                String text = playerInput.getText();
+                int playernumbers = Integer.parseInt(text);
+
+            }
+        });
+
+        playerInput.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(Integer.parseInt(oldValue) ==2 ){
+                    playerInput.setText(oldValue);
+                } else if (Integer.parseInt(oldValue) !=2) {
+                    playerInput.setText(newValue);
+                }
+            }
+        });
+
+
+
+
+
+
+
 
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
-        gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,player1Input,player2Input,player3Input,player4Input,startGameButton);
+        List<TextField> playerFields = createPlayerNameFields(playernumbers);
+        TextField field1 = playerFields.get(0);
+
+        if(playerFields.size()==2){
+            TextField field2 = playerFields.get(1);
+            gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,field1,field2,startGameButton);
+        }else if(playerFields.size()==3){
+            TextField field2 = playerFields.get(1);
+            TextField field3 = playerFields.get(2);
+            gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,field1,field2,field3,startGameButton);
+        } else if(playerFields.size()==4){
+            TextField field2 = playerFields.get(1);
+            TextField field3 = playerFields.get(2);
+            TextField field4 = playerFields.get(3);
+            gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,field1,field2,field3,field4,startGameButton);
+        }
+        stage.show();
+
+
+
 
         Scene scene3 = new Scene(gamePrepare2, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -564,7 +600,73 @@ public class Game extends Application {
         HBox mainLayout = new HBox(leftPane, rightPane);
         root.getChildren().add(mainLayout);
 
+
+
+        /**
+         * "Players" section
+         * display all player information (color, name, dirhams, rug)
+         */
+        GridPane playersSection = new GridPane(); //2x2
+        playersSection.setPrefHeight(290);
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(50); // 50% of the height
+        RowConstraints row2 = new RowConstraints();
+        row2.setPercentHeight(50); // 50% of the height
+        playersSection.getRowConstraints().addAll(row1, row2);
+
+
+        String[] playerName = {"Player 1", "Player 2", "Player 3", "Player 4"};
+        char[] playerColor = {'c', 'y', 'r', 'p'};
+        int numPlayers = 4;
+
+        for (int i = 0; i < (numPlayers + 1) / 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                int index = i * 2 + j;
+                if (index < numPlayers) {
+                    VBox player = createPlayerBox(playerName[index], playerColor[index], 30, 15);
+                    playersSection.add(player, j, i); // column 0, row 0
+                }
+            }
+        }
+
+        rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection,placeRugSection, playersSection);
+
+
+
+
+
+
+
+
     }
+
+
+
+    private List<TextField> createPlayerNameFields(int numbers) {
+        List<TextField> playerFields = new ArrayList<>();
+
+        for (int i = 1; i <= numbers; i++) {
+            TextField Input = createTextField("PLAYER " + i, "\\s");
+            if (Input != null) {  // 这里检查TextField对象是否为null
+                playerFields.add(Input);
+            } else {
+                System.out.println("Warning: createTextField returned null for PLAYER " + i);
+            }
+        }
+
+        return playerFields;
+    }
+
+
+    private TextField getfield (List<TextField> playerFields) {
+        TextField field = null;
+        for (int i = 0; i < playerFields.size(); i++) {
+            field = playerFields.get(i);
+        }
+        return field;
+    }
+
+
 
     private StackPane createAssamDuplication(Color Color){
         Group assam = new Group();
@@ -677,6 +779,8 @@ public class Game extends Application {
         buttonShape.setEffect(createDropShadowEffect("#AB513A"));
         return buttonShape;
     }
+
+
 
     private Region createASpacerForLayoutHBox () {
         Region spacer = new Region();
