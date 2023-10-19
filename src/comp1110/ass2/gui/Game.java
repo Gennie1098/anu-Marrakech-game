@@ -173,45 +173,41 @@ public class Game extends Application {
         gameTitle2.setScaleX(0.5);
         gameTitle2.setScaleY(0.5);
 
-        Text Name = new Text("PLAYERS　NAME");
-        Name.setFont(font32);
-
-
-
-
-
+        Text inputName = new Text("PLAYERS　NAME");
+        inputName.setFont(font32);
 
         numPlayerInput.setText("4");
         numPlayerInput.textProperty().addListener(new ChangeListener<String>() {
-                                                      @Override
-                                                      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                                                          if("1".equals(newValue)){
-                                                              numPlayerInput.setText("2");
-                                                          }
+              @Override
+              public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                  if("1".equals(newValue)){
+                      numPlayerInput.setText("2");
+                  }
 
-                                                          if("2".equals(newValue) || "3".equals(newValue)){
-                                                              numPlayerInput.setText(newValue);
-                                                          }
+                  if("2".equals(newValue) || "3".equals(newValue)){
+                      numPlayerInput.setText(newValue);
+                  }
 
-                                                      }
+              }
 
-                                                  }
+          }
         );
 
+        //TODO: (from Gennie to Terry) I fixed your code a bit here
+
+        VBox playerNameInput = new VBox(5);
+        playerNameInput.setAlignment(Pos.CENTER);
         String numberofplayers = numPlayerInput.getText();
         int num = Integer.parseInt(numberofplayers);
         List<TextField> playerFields = createPlayerNameFields(num);
         for (int i = 0; i <  playerFields.size(); i++) {
             field = playerFields.get(i);
-            gamePrepare2.getChildren().add(field);
+            playerNameInput.getChildren().add(field);
+//            gamePrepare2.getChildren().add(field);
         }
 
-
-
-
-
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
-        gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name ,startGameButton);
+        gamePrepare2.getChildren().addAll(gameTitle2, createASpacerForLayoutVBox(), inputName, playerNameInput, startGameButton);
 
         Scene scene3 = new Scene(gamePrepare2, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -257,7 +253,6 @@ public class Game extends Application {
                 player2Name = playerFields.get(1).getText();
                 player3Name = playerFields.get(2).getText();
                 player4Name = playerFields.get(3).getText();
-
             }
 
             try {
@@ -274,9 +269,6 @@ public class Game extends Application {
      * create the playerNameFields to fix the imput text
      *
      */
-
-
-
 
     private List<TextField> createPlayerNameFields(int number) {
         List<TextField> playerFields = new ArrayList<>();
