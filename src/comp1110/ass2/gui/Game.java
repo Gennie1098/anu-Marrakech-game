@@ -390,14 +390,16 @@ public class Game extends Application {
     private void setButtonDisable (Button button, Boolean isDisable) {
         button.setDisable(isDisable);
         if (isDisable) {
-            // Store the current style
-            ButtonStyle originalStyle = new ButtonStyle(button.getStyle(), button.getEffect());
-            button.setUserData(originalStyle);
+            // Only store the current style and effect if it hasn't been stored before
+            if (button.getUserData() == null || !(button.getUserData() instanceof ButtonStyle)) {
+                ButtonStyle originalStyle = new ButtonStyle(button.getStyle(), button.getEffect());
+                button.setUserData(originalStyle);
+            }
 
             button.setStyle("-fx-background-color: #9D9D9D; -fx-opacity: 1;");
             button.setEffect(createDropShadowEffect("6A6A6A"));
         } else {
-            // Restore the original styleupdate
+            // Restore the original style and effect
             if (button.getUserData() != null && button.getUserData() instanceof ButtonStyle) {
                 ButtonStyle storedStyle = (ButtonStyle) button.getUserData();
                 button.setStyle(storedStyle.style);
@@ -405,6 +407,7 @@ public class Game extends Application {
             }
         }
     }
+
 
     private Button createTextButton(String buttonLabel, String buttonColor, String shadowColor) {
         Button button = new Button(buttonLabel);
