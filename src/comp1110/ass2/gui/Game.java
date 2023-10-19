@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
@@ -396,7 +397,7 @@ public class Game extends Application {
             button.setStyle("-fx-background-color: #9D9D9D; -fx-opacity: 1;");
             button.setEffect(createDropShadowEffect("6A6A6A"));
         } else {
-            // Restore the original style
+            // Restore the original styleupdate
             if (button.getUserData() != null && button.getUserData() instanceof ButtonStyle) {
                 ButtonStyle storedStyle = (ButtonStyle) button.getUserData();
                 button.setStyle(storedStyle.style);
@@ -1341,6 +1342,110 @@ public class Game extends Application {
         });
         checkWinner(stage);
     }
+
+    /** @Authority: Gennie Nguyen
+     * create a banner for Winner
+     * @param winnerName
+     * @param winnerChar
+     * @param playerScore
+     * @return
+     */
+    private VBox createWinnerBanner (String winnerName, Character winnerChar, String playerScore) {
+        VBox winnerDisplay = new VBox(20);
+
+        StackPane winnerBanner = new StackPane();
+
+        Text winnerNameDisplayed = new Text(winnerName);
+        winnerNameDisplayed.setFill(Color.WHITE);
+        Font font64 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 64);
+        winnerNameDisplayed.setFont(font64);
+
+        Rectangle background = new Rectangle(474, 90);
+        String bannerBackgroundColor = "";
+        String bannerBorderColor = "";
+        String shadowColor = "";
+
+        switch (winnerChar) {
+            case 'c':
+                bannerBackgroundColor = "#1F8C86";
+                bannerBorderColor = "#00FFF1";
+                shadowColor = "#19706B";
+                break;
+            case 'y':
+                bannerBackgroundColor = "#FFA800";
+                bannerBorderColor = "#FFE588";
+                shadowColor = "#CC8600";
+                break;
+            case 'r':
+                bannerBackgroundColor = "#E93119";
+                bannerBorderColor = "#FF6551";
+                shadowColor = "#BA2714";
+                break;
+            case 'p':
+                bannerBackgroundColor = "#894FA5";
+                bannerBorderColor = "#E09DFF";
+                shadowColor = "#6E3F84";
+                break;
+            default:
+                bannerBackgroundColor = "#064B72";
+                bannerBorderColor = "#0091E3";
+                shadowColor = "#053C5B";
+        }
+
+        background.setArcHeight(10);
+        background.setArcWidth(10);
+        background.setStroke(Color.web(bannerBorderColor));
+        background.setStrokeWidth(5);
+        background.setEffect(createDropShadowEffect(shadowColor));
+        background.setFill(Color.web(bannerBackgroundColor));
+
+        StackPane mainContent = new StackPane(background, winnerNameDisplayed);
+        mainContent.setPrefSize(480, 120);
+
+        SVGPath svg1 = new SVGPath();
+        svg1.setContent("M6.92401 15.1756C2.37225 10.4018 5.756 2.5 12.352 2.5H74.5C78.6421 2.5 82 5.85787 82 10V80C82 84.1421 78.6421 87.5 74.5 87.5H10.9936C4.55523 87.5 1.10945 79.9215 5.34182 75.0697L25.8881 51.5167C30.1342 46.6492 29.9725 39.3484 25.5152 34.6736L6.92401 15.1756Z");
+        svg1.setFill(Color.web(bannerBackgroundColor));
+        svg1.setStroke(Color.web(bannerBorderColor));
+        svg1.setStrokeWidth(5);
+        svg1.setEffect(createDropShadowEffect(shadowColor));
+
+        SVGPath svg2 = new SVGPath();
+        svg2.setContent("M77.576 15.1756C82.1278 10.4018 78.744 2.5 72.148 2.5H10C5.85787 2.5 2.5 5.85787 2.5 10V80C2.5 84.1421 5.85786 87.5 10 87.5H73.5064C79.9448 87.5 83.3906 79.9215 79.1582 75.0697L58.6119 51.5167C54.3658 46.6492 54.5275 39.3484 58.9848 34.6736L77.576 15.1756Z");
+        svg2.setFill(Color.web(bannerBackgroundColor));
+        svg2.setStroke(Color.web(bannerBorderColor));
+        svg2.setStrokeWidth(5);
+        svg2.setEffect(createDropShadowEffect(shadowColor));
+
+        HBox bannerSides = new HBox(svg1, createASpacerForLayoutHBox(), svg2);
+        bannerSides.setMaxSize(590, 120);
+
+        String imageUrl = "file:assets/winnerTrophy.png";
+        Pane trophy1 = new Pane();
+        trophy1.setPrefSize(80, 100);
+        trophy1.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-position: center center; -fx-background-repeat: stretch;");
+        Pane trophy2 = new Pane();
+        trophy2.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-position: center center; -fx-background-repeat: stretch;");
+        trophy2.setPrefSize(80, 100);
+
+        HBox trophies = new HBox(trophy1, createASpacerForLayoutHBox(), trophy2);
+        trophies.setMaxSize(510, 120);
+
+        winnerBanner.setPrefSize(590, 120);
+        winnerBanner.getChildren().addAll(bannerSides, mainContent, trophies);
+        trophies.setAlignment(Pos.TOP_CENTER);
+        mainContent.setAlignment(Pos.CENTER);
+        bannerSides.setAlignment(Pos.BOTTOM_CENTER);
+
+        Label winnerScore = new Label("SCORE: " + playerScore);
+        winnerScore.setTextFill(Color.BLACK);
+        winnerScore.setFont(font32);
+
+        winnerDisplay.getChildren().addAll(winnerBanner, winnerScore);
+        winnerDisplay.setAlignment(Pos.CENTER);
+
+        return winnerDisplay;
+    }
+
     private void checkWinner(Stage stage) {
         if (Marrakech.isGameOver(gameString[0])) {
             char winnerChar = Marrakech.getWinner(gameString[0]);
@@ -1367,31 +1472,28 @@ public class Game extends Application {
             BorderPane root = new BorderPane();
             root.setStyle("-fx-background-color: white;");
 
-            // Header
-            HBox headerBox = new HBox();
-            headerBox.setAlignment(Pos.CENTER);
-            headerBox.setPadding(new Insets(20, 0, 20, 0));
-            headerBox.setStyle("-fx-background-color: linear-gradient(to right, #FFA500, #FF4500);");
-            Label headerLabel = new Label("CONGRATULATIONS!");
-            headerLabel.setFont(new Font("Arial", 30));
-            headerLabel.setTextFill(Color.WHITE);
-            headerBox.getChildren().add(headerLabel);
+            //Header "CONGRATULATIONS!"
+            Font font48 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 48);
+            Label congratsText2 = new Label();
+            Text labelText = new Text("CONGRATULATIONS!");
+            labelText.setStroke(lightYellow);
+            labelText.setStrokeWidth(12.0);
+            congratsText2.setGraphic(labelText);
+            congratsText2.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            labelText.setFont(font48);
+            labelText.setFill(red);
+            Label congratsText1 = new Label("CONGRATULATIONS!");
+            congratsText1.setFont(font48);
+            congratsText1.setTextFill(red);
+            StackPane headerText = new StackPane(congratsText2, congratsText1);
+
+            //Winner Banner
+            VBox winnerBanner = createWinnerBanner(winner, winnerChar, rankings.get(0).substring(8, 10));
 
             // Content
-            VBox contentBox = new VBox(10);
-            contentBox.setAlignment(Pos.CENTER);
-            contentBox.setPadding(new Insets(20));
-
-            Label winnerLabel = new Label(winner);
-            winnerLabel.setFont(new Font("Arial", 50));
-            winnerLabel.setTextFill(Color.DARKBLUE);
-
-            Label scoreLabel = new Label("SCORE: " + rankings.get(0).substring(8, 10));
-            scoreLabel.setFont(new Font("Arial", 20));
-            scoreLabel.setTextFill(Color.GRAY);
-
-            contentBox.getChildren().addAll(winnerLabel, scoreLabel);
-
+            VBox mainContent = new VBox(20);
+            mainContent.getChildren().addAll(headerText, winnerBanner);
+            mainContent.setAlignment(Pos.CENTER);
 
             for (int i = 1; i < numOfPlayers; i++) {
                 String playerName = "";
@@ -1411,14 +1513,15 @@ public class Game extends Application {
                         break;
                 }
                 Text rankText = new Text((i + 1) + ". " + playerName +  " - " + rankings.get(i).substring(8, 10));
-                rankText.setFont(new Font("Arial", 20));
-                contentBox.getChildren().add(rankText);
+                Font font24 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 24);
+                rankText.setFont(font24);
+                mainContent.getChildren().add(rankText);
             }
 
-            root.setTop(headerBox);
-            root.setCenter(contentBox);
 
-            Scene scene = new Scene(root, 600, 400);
+            root.setCenter(mainContent);
+
+            Scene scene = new Scene(root, 1200, 700);
             stage.setTitle("Congratulations Screen");
             stage.setScene(scene);
             stage.show();
