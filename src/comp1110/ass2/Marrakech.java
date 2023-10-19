@@ -411,15 +411,15 @@ public class Marrakech {
         //FIXME: Task 12
 
         // Parse the game state to get player and board information
-        String player1 = gameState.substring(0,8);
-        String player2 = gameState.substring(8,16);
-        String player3 = gameState.substring(16,24);
-        String player4 = gameState.substring(24,32);
+        String player1 = gameState.substring(0, 8);
+        String player2 = gameState.substring(8, 16);
+        String player3 = gameState.substring(16, 24);
+        String player4 = gameState.substring(24, 32);
         String[] players = new String[4];
-        players[0]= player1;
-        players[1]= player2;
-        players[2]= player3;
-        players[3]= player4;
+        players[0] = player1;
+        players[1] = player2;
+        players[2] = player3;
+        players[3] = player4;
         String boardString = gameState.substring(32, 184);
 
         // Initialize variables to keep track of player scores
@@ -475,7 +475,14 @@ public class Marrakech {
         char winner = 'n'; // Default: No winner
         int maxScore = Math.max(Math.max(cyanScore, yellowScore), Math.max(redScore, purpleScore));
 
-        if (cyanScore == maxScore) {
+        int count = 0;
+        if (maxScore == cyanScore) count++;
+        if (maxScore == yellowScore) count++;
+        if (maxScore == redScore) count++;
+        if (maxScore == purpleScore) count++;
+        if (count >= 2) {
+            winner = 't';
+        } else if (cyanScore == maxScore) {
             winner = 'c';
         } else if (yellowScore == maxScore) {
             winner = 'y';
@@ -486,7 +493,6 @@ public class Marrakech {
         } else if (maxScore==cyanScore && maxScore==yellowScore && redScore == maxScore && purpleScore == maxScore ) {
             winner = 't';
         }
-
         return winner;
     }
 
