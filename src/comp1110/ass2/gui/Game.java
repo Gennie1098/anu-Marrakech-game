@@ -234,7 +234,7 @@ public class Game extends Application {
 //            player2Name = playerFields.get(1).getText();
 //            player3Name = playerFields.get(2).getText();
 //            player4Name = playerFields.get(3).getText();
-            if(playerFields.size()==1){
+            if(playerFields.size()==1&&playerFields.size()==0){
                 try {
                     throw new Exception("please enter the right number!");
                 } catch (Exception ex) {
@@ -253,6 +253,14 @@ public class Game extends Application {
                 player2Name = playerFields.get(1).getText();
                 player3Name = playerFields.get(2).getText();
                 player4Name = playerFields.get(3).getText();
+            }
+
+            if(player1Name==""||player2Name==""||player3Name==""||player4Name==""){
+                try {
+                    throw new Exception("please enter the name!");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
 
             try {
