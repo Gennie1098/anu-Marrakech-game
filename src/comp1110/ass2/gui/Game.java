@@ -175,17 +175,24 @@ public class Game extends Application {
 
 
 
+
+
+        numPlayerInput.setText("4");
         numPlayerInput.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-            if(newValue == "2"||newValue == "3"||newValue=="4"){
-                oldValue = "2";
-                numPlayerInput.setText(newValue);
+                                                      @Override
+                                                      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                                                          if("1".equals(newValue)){
+                                                              numPlayerInput.setText("2");
+                                                          }
 
-            }
+                                                          if("2".equals(newValue) || "3".equals(newValue)){
+                                                              numPlayerInput.setText(newValue);
+                                                          }
 
-            }
-        });
+                                                      }
+
+                                                  }
+        );
 
         String numberofplayers = numPlayerInput.getText();
         int num = Integer.parseInt(numberofplayers);
@@ -194,6 +201,8 @@ public class Game extends Application {
             field = playerFields.get(i);
             gamePrepare2.getChildren().add(field);
         }
+
+
 
 
 
@@ -225,7 +234,13 @@ public class Game extends Application {
 //            player2Name = playerFields.get(1).getText();
 //            player3Name = playerFields.get(2).getText();
 //            player4Name = playerFields.get(3).getText();
-
+            if(playerFields.size()==1){
+                try {
+                    throw new Exception("please enter the right number!");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
             if (playerFields.size()==2){
                 player1Name = playerFields.get(0).getText();
                 player2Name = playerFields.get(1).getText();
@@ -255,6 +270,9 @@ public class Game extends Application {
      * create the playerNameFields to fix the imput text
      *
      */
+
+
+
 
     private List<TextField> createPlayerNameFields(int number) {
         List<TextField> playerFields = new ArrayList<>();
