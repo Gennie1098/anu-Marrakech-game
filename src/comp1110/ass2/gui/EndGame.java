@@ -184,6 +184,10 @@ public class EndGame extends Application {
     private VBox showOtherPlayerResults () {
         VBox otherPlayerResults = new VBox(10);
 
+//        for (int i = 0; i < numberOfPlayer; i ++) {
+//
+//        }
+
         return otherPlayerResults;
     }
 }

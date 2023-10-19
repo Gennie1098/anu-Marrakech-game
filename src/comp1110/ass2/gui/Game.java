@@ -10,6 +10,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -107,13 +108,12 @@ public class Game extends Application {
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
         this.stage = stage;
-        /** @Authority: Gennie Nguyen
-         * Create Game GUI
+
+
+        /**@Authority: Gennie Nguyen (GUI), tong yuan xiong (function)
+         * Staring game: Welcome scene,input number of players scene, input Player's name scene
          */
 
-        /**
-         * Whole game layout
-         */
         //Welcome scene with "NEW GAME" BUTTON
         VBox welcomeScene = new VBox(30);
         welcomeScene.setStyle("-fx-background-color: #FAEBCD;");
@@ -131,7 +131,6 @@ public class Game extends Application {
         stage.setTitle("Marrakeck Game");
         stage.setScene(scene1);
         stage.show();
-
 
         // "Game Prepare 1" scence with fill number of players
         VBox gamePrepare1 = new VBox(20);
@@ -153,11 +152,6 @@ public class Game extends Application {
         gamePrepare1.getChildren().addAll(gameTitle1, createASpacerForLayoutVBox(), numberOfPlayers, numPlayerInput, nextButton);
 
         Scene scene2 = new Scene(gamePrepare1, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        //click on "NEW GAME" button, go to "Game Prepare 1" scence
-        newGameBtn.setOnAction(e -> {
-            stage.setScene(scene2);
-        });
 
         // "Game Prepare 2" scence with fill players name
         VBox gamePrepare2 = new VBox(10);
@@ -182,6 +176,12 @@ public class Game extends Application {
 
         Scene scene3 = new Scene(gamePrepare2, WINDOW_WIDTH, WINDOW_HEIGHT);
 
+        //click on "NEW GAME" button, go to "Game Prepare 1" scence
+        newGameBtn.setOnAction(e -> {
+            stage.setScene(scene2);
+        });
+
+        //click on "NEXT" button, go to "Game Prepare 2" scence
         nextButton.setOnAction(e -> {
             numOfPlayers = Integer.parseInt(numPlayerInput.getText());
             stage.setScene(scene3);
@@ -193,6 +193,7 @@ public class Game extends Application {
             playerString[0] = "Pc03015i";
         });
 
+        //click on "START GAME" button, go to "main layout" Game scence
         startGameButton.setOnAction(e -> {
             player1Name = player1Input.getText();
             player2Name = player2Input.getText();
@@ -208,6 +209,79 @@ public class Game extends Application {
         });
     }
 
+    /** @Authority: Gennie Nguyen, Morris
+     * Create main Game GUI
+     */
+    private Scene createGameScene() throws FileNotFoundException {
+        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        /**
+         * create left pane for game board, size 700x700
+         * the game state (game string) will be displayed only in this area, including board, Assam, and any rug placed on board
+         */
+        leftPane = populateRugBoard(gameString[0]);
+        /**
+         * create right pane for all game play functions and player information, size 500x700
+         * game functions include: rotate Assam, roll dice to move Assam, pay Dirhams if needed, place rug
+         * player information include: color, name, amount of Dirhams, amount of Rug, status (by color)
+         */
+        rightPane = new VBox();
+        rightPane.setPrefWidth(WINDOW_WIDTH - LEFT_PANE_SIZE);
+
+        /**
+         * Right Pane populating section
+         */
+        HBox moveAssamSection = createMoveAssamSection();
+        HBox payDirhamsSection = createPayDirhamsSection("000");
+        HBox placeRugSection = createPlaceRugSection(gameString[0], rugString[0]);
+        GridPane playersSection = createPlayerSection();
+        rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection, placeRugSection, playersSection);
+
+        setButtonDisable(payDirhamsButton, true);
+        setButtonDisable(placeRugButton, true);
+        setButtonDisable(rotateToRightButton, true);
+        setButtonDisable(rotateToLeftButton, true);
+        setButtonDisable(moveRugUp, true);
+        setButtonDisable(moveRugDown, true);
+        setButtonDisable(moveRugLeft, true);
+        setButtonDisable(moveRugRight, true);
+
+        //All buttons
+        payDirhamsButton.setOnAction(event -> {
+            try {
+                handleDirhamPayment();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        rotateAssamToLeftButton.setOnAction(event -> handleAssamRotation(true));
+        rotateAssamToRightButton.setOnAction(event -> handleAssamRotation(false));
+        rollDiceButton.setOnAction(event -> handleAssamMovement());
+        rotateToLeftButton.setOnAction(event -> handleRugRotation(true));
+        rotateToRightButton.setOnAction(event -> handleRugRotation(false));
+        moveRugUp.setOnAction(event -> handleRugMovement("up"));
+        moveRugDown.setOnAction(event -> handleRugMovement("down"));
+        moveRugLeft.setOnAction(event -> handleRugMovement("left"));
+        moveRugRight.setOnAction(event -> handleRugMovement("right"));
+        placeRugButton.setOnAction(event -> {
+            try {
+                handleRugPlacement();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        HBox mainLayout = new HBox(leftPane, rightPane);
+        root.getChildren().add(mainLayout);
+
+        return scene;
+    }
+
+    /**
+     * @Authority: Gennie Nguyen (GUI), Morris (orientation update)
+     * @param Color a String represents color of Assam's hat and Body, set by Player's color, to show Player's turn
+     * @param Orientation a Char represents Assam's orientation
+     * @return a StackPane of Assam appearance and state
+     */
     private StackPane createAssamDuplication(Color Color, char Orientation){
         Group assam = new Group();
 
@@ -270,6 +344,9 @@ public class Game extends Application {
         return tileWithAssam;
     }
 
+    /** @Authority: Gennie Nguyen
+     * @return a StackPane of DirHam Icon for display
+     */
     private StackPane createDirhamCoin() {
         StackPane dirhamIcon = new StackPane();
 
@@ -286,6 +363,11 @@ public class Game extends Application {
         return dirhamIcon;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * @param shadowColor a String represents color drop shadow
+     * @return a DropShadow effect
+     */
     private DropShadow createDropShadowEffect(String shadowColor) {
         DropShadow dropShadow = new DropShadow();
         dropShadow.setOffsetY(7.0);
@@ -294,11 +376,32 @@ public class Game extends Application {
         return dropShadow;
     }
 
-    private void setButtonDisable (Boolean isDisable) {
-        Button button = new Button();
+    private static class ButtonStyle {
+        private final String style;
+        private final Effect effect;
+
+        public ButtonStyle(String style, Effect effect) {
+            this.style = style;
+            this.effect = effect;
+        }
+    }
+
+    private void setButtonDisable (Button button, Boolean isDisable) {
         button.setDisable(isDisable);
         if (isDisable) {
-            button.setStyle("-fx-background-color: #D3D3D3");
+            // Store the current style
+            ButtonStyle originalStyle = new ButtonStyle(button.getStyle(), button.getEffect());
+            button.setUserData(originalStyle);
+
+            button.setStyle("-fx-background-color: #9D9D9D; -fx-opacity: 1;");
+            button.setEffect(createDropShadowEffect("6A6A6A"));
+        } else {
+            // Restore the original style
+            if (button.getUserData() != null && button.getUserData() instanceof ButtonStyle) {
+                ButtonStyle storedStyle = (ButtonStyle) button.getUserData();
+                button.setStyle(storedStyle.style);
+                button.setEffect(storedStyle.effect);
+            }
         }
     }
 
@@ -547,8 +650,6 @@ public class Game extends Application {
         }
         return playerBox;
     }
-
-    // TODO: Đảm bảo rằng các mặt của xúc xắc được định nghĩa trong phần code của bạn.
 
     private void rollDiceAnimation(StackPane diceFace) {
         int animationDuration = 300; // Độ dài thời gian cho mỗi mặt xúc xắc (millisecond)
@@ -828,70 +929,7 @@ public class Game extends Application {
         }
         return playersSection;
     }
-    private Scene createGameScene() throws FileNotFoundException {
-        Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        /**
-         * create left pane for game board, size 700x700
-         * the game state (game string) will be displayed only in this area, including board, Assam, and any rug placed on board
-         */
-        leftPane = populateRugBoard(gameString[0]);
-        /**
-         * create right pane for all game play functions and player information, size 500x700
-         * game functions include: rotate Assam, roll dice to move Assam, pay Dirhams if needed, place rug
-         * player information include: color, name, amount of Dirhams, amount of Rug, status (by color)
-         */
-        rightPane = new VBox();
-        rightPane.setPrefWidth(WINDOW_WIDTH - LEFT_PANE_SIZE);
 
-        /**
-         * Right Pane populating section
-         */
-        HBox moveAssamSection = createMoveAssamSection();
-        HBox payDirhamsSection = createPayDirhamsSection("000");
-        HBox placeRugSection = createPlaceRugSection(gameString[0], rugString[0]);
-        GridPane playersSection = createPlayerSection();
-        rightPane.getChildren().addAll(moveAssamSection, payDirhamsSection, placeRugSection, playersSection);
-
-
-        payDirhamsButton.setDisable(true);
-        placeRugButton.setDisable(true);
-        rotateToRightButton.setDisable(true);
-        rotateToLeftButton.setDisable(true);
-        moveRugUp.setDisable(true);
-        moveRugDown.setDisable(true);
-        moveRugLeft.setDisable(true);
-        moveRugRight.setDisable(true);
-
-        //All buttons
-        payDirhamsButton.setOnAction(event -> {
-            try {
-                handleDirhamPayment();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        rotateAssamToLeftButton.setOnAction(event -> handleAssamRotation(true));
-        rotateAssamToRightButton.setOnAction(event -> handleAssamRotation(false));
-        rollDiceButton.setOnAction(event -> handleAssamMovement());
-        rotateToLeftButton.setOnAction(event -> handleRugRotation(true));
-        rotateToRightButton.setOnAction(event -> handleRugRotation(false));
-        moveRugUp.setOnAction(event -> handleRugMovement("up"));
-        moveRugDown.setOnAction(event -> handleRugMovement("down"));
-        moveRugLeft.setOnAction(event -> handleRugMovement("left"));
-        moveRugRight.setOnAction(event -> handleRugMovement("right"));
-        placeRugButton.setOnAction(event -> {
-            try {
-                handleRugPlacement();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        HBox mainLayout = new HBox(leftPane, rightPane);
-        root.getChildren().add(mainLayout);
-
-        return scene;
-    }
     private HBox createPlaceRugSection(String gameString, String rugString) throws FileNotFoundException {
         /**
          * "Place rug" functions section
@@ -1009,11 +1047,11 @@ public class Game extends Application {
         board.add(rugTwoInBoard, halfTwoX, halfTwoY);
 
         if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            placeRugButton.setDisable(true);
+            setButtonDisable(placeRugButton, true);
         }
 
         if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            placeRugButton.setDisable(false);
+            setButtonDisable(placeRugButton, false);
         }
     }
     private void handleRugRotation(Boolean rotateLeft) {
@@ -1042,15 +1080,15 @@ public class Game extends Application {
 
 
         if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            placeRugButton.setDisable(true);
+            setButtonDisable(placeRugButton, true);
         }
         if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            placeRugButton.setDisable(false);
+            setButtonDisable(placeRugButton, false);
         }
     }
     private void handleAssamRotation(boolean rotateLeft) {
-        rotateAssamToLeftButton.setDisable(true);
-        rotateAssamToRightButton.setDisable(true);
+        setButtonDisable(rotateAssamToLeftButton, true);
+        setButtonDisable(rotateAssamToRightButton, true);
 
         String newAssam;
         if (rotateLeft){
@@ -1078,10 +1116,10 @@ public class Game extends Application {
         assamInBoard.getChildren().add(newAssamBoard);
     }
     private void handleAssamMovement() {
-        rotateAssamToLeftButton.setDisable(true);
-        rotateAssamToRightButton.setDisable(true);
-        rollDiceButton.setDisable(true);
-        payDirhamsButton.setDisable(false);
+        setButtonDisable(rotateAssamToLeftButton, true);
+        setButtonDisable(rotateAssamToRightButton, true);
+        setButtonDisable(rollDiceButton, true);
+        setButtonDisable(payDirhamsButton, false);
         int result = Marrakech.rollDie();
         String newAssam = Marrakech.moveAssam(assamString[0], result);
         amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
@@ -1206,16 +1244,17 @@ public class Game extends Application {
                 }
             });
         }
-        rotateAssamToLeftButton.setDisable(true);
-        rotateAssamToRightButton.setDisable(true);
-        rollDiceButton.setDisable(true);
-        rotateToRightButton.setDisable(false);
-        rotateToLeftButton.setDisable(false);
-        moveRugUp.setDisable(false);
-        moveRugDown.setDisable(false);
-        moveRugLeft.setDisable(false);
-        moveRugRight.setDisable(false);
-        payDirhamsButton.setDisable(true);
+        setButtonDisable(rotateAssamToLeftButton,true);
+        setButtonDisable(rotateAssamToRightButton,true);
+        setButtonDisable(rollDiceButton,true);
+        setButtonDisable(rotateToRightButton,false);
+        setButtonDisable(rotateToLeftButton,false);
+        setButtonDisable(moveRugUp,false);
+        setButtonDisable(moveRugDown,false);
+        setButtonDisable(moveRugLeft,false);
+        setButtonDisable(moveRugRight,false);
+        setButtonDisable(payDirhamsButton,true);
+
         board.add(rugOneInBoard, 3, 3);
         board.add(rugTwoInBoard, 3, 2);
 
@@ -1264,17 +1303,17 @@ public class Game extends Application {
         HBox mainLayout = new HBox(leftPane, rightPane);
         root.getChildren().add(mainLayout);
 
-        payDirhamsButton.setDisable(true);
-        moveRugUp.setDisable(true);
-        moveRugDown.setDisable(true);
-        moveRugLeft.setDisable(true);
-        moveRugRight.setDisable(true);
-        rotateToLeftButton.setDisable(true);
-        rotateToRightButton.setDisable(true);
-        placeRugButton.setDisable(true);
-        rotateAssamToLeftButton.setDisable(false);
-        rotateAssamToRightButton.setDisable(false);
-        rollDiceButton.setDisable(false);
+        setButtonDisable(payDirhamsButton, true);
+        setButtonDisable(moveRugUp, true);
+        setButtonDisable(moveRugDown, true);
+        setButtonDisable(moveRugLeft, true);
+        setButtonDisable(moveRugRight, true);
+        setButtonDisable(rotateToLeftButton, true);
+        setButtonDisable(rotateToRightButton, true);
+        setButtonDisable(placeRugButton, true);
+        setButtonDisable(rotateAssamToLeftButton, false);
+        setButtonDisable(rotateAssamToRightButton, false);
+        setButtonDisable(rollDiceButton, false);
 
         //All buttons
         payDirhamsButton.setOnAction(event -> {
