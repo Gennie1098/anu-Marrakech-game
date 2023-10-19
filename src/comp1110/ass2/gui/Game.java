@@ -4,6 +4,8 @@ import comp1110.ass2.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -87,6 +89,8 @@ public class Game extends Application {
     private TextField player3Input;
     private TextField player4Input;
     private TextField numPlayerInput;
+
+    private TextField field;
     private String player1Name;
     private String player2Name;
     private String player3Name;
@@ -151,6 +155,7 @@ public class Game extends Application {
 
         numPlayerInput = createTextField("ENTER A NUMBER FROM 2 TO 4", "\\d*");
 
+
         Button nextButton = createTextButton("NEXT", "#064B72", "#053C5B");
 
         gamePrepare1.getChildren().addAll(gameTitle1, createASpacerForLayoutVBox(), numberOfPlayers, numPlayerInput, nextButton);
@@ -170,13 +175,42 @@ public class Game extends Application {
         Text Name = new Text("PLAYERS　NAME");
         Name.setFont(font32);
 
-        player1Input = createTextField("PLAYER 1", "\\s");
-        player2Input = createTextField("PLAYER 2", "\\s");
-        player3Input = createTextField("PLAYER 3", "\\s");
-        player4Input = createTextField("PLAYER 4", "\\s");
+
+
+
+
+
+        numPlayerInput.setText("4");
+        numPlayerInput.textProperty().addListener(new ChangeListener<String>() {
+                                                      @Override
+                                                      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                                                          if("1".equals(newValue)){
+                                                              numPlayerInput.setText("2");
+                                                          }
+
+                                                          if("2".equals(newValue) || "3".equals(newValue)){
+                                                              numPlayerInput.setText(newValue);
+                                                          }
+
+                                                      }
+
+                                                  }
+        );
+
+        String numberofplayers = numPlayerInput.getText();
+        int num = Integer.parseInt(numberofplayers);
+        List<TextField> playerFields = createPlayerNameFields(num);
+        for (int i = 0; i <  playerFields.size(); i++) {
+            field = playerFields.get(i);
+            gamePrepare2.getChildren().add(field);
+        }
+
+
+
+
 
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
-        gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name,player1Input,player2Input,player3Input,player4Input,startGameButton);
+        gamePrepare2.getChildren().addAll(gameTitle2,createASpacerForLayoutVBox(), Name ,startGameButton);
 
         Scene scene3 = new Scene(gamePrepare2, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -199,10 +233,32 @@ public class Game extends Application {
 
         //click on "START GAME" button, go to "main layout" Game scence
         startGameButton.setOnAction(e -> {
-            player1Name = player1Input.getText();
-            player2Name = player2Input.getText();
-            player3Name = player3Input.getText();
-            player4Name = player4Input.getText();
+//            player1Name = playerFields.get(0).getText();
+//            player2Name = playerFields.get(1).getText();
+//            player3Name = playerFields.get(2).getText();
+//            player4Name = playerFields.get(3).getText();
+            if(playerFields.size()==1){
+                try {
+                    throw new Exception("please enter the right number!");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            if (playerFields.size()==2){
+                player1Name = playerFields.get(0).getText();
+                player2Name = playerFields.get(1).getText();
+            } else if (playerFields.size()==3) {
+                player1Name = playerFields.get(0).getText();
+                player2Name = playerFields.get(1).getText();
+                player3Name = playerFields.get(2).getText();
+            } else if (playerFields.size()==4) {
+                player1Name = playerFields.get(0).getText();
+                player2Name = playerFields.get(1).getText();
+                player3Name = playerFields.get(2).getText();
+                player4Name = playerFields.get(3).getText();
+
+            }
+
             try {
                 gameScene = createGameScene();
             } catch (FileNotFoundException ex) {
@@ -212,6 +268,26 @@ public class Game extends Application {
             stage.setScene(gameScene);
         });
     }
+
+    /**
+     * create the playerNameFields to fix the imput text
+     *
+     */
+
+
+
+
+    private List<TextField> createPlayerNameFields(int number) {
+        List<TextField> playerFields = new ArrayList<>();
+
+        for (int i = 1; i <= number; i++) {
+            TextField playerInput = createTextField("PLAYER " + i, "\\s");
+            playerFields.add(playerInput);
+        }
+
+        return playerFields;
+    }
+
 
     /** @Authority: Gennie Nguyen, Morris
      * Create main Game GUI
@@ -763,7 +839,7 @@ public class Game extends Application {
         return fillInfo;
     }
     private StackPane populateRugBoard(String gameString) {
-        String boardString = gameString.substring(37, 183);
+        String boardString = gameString.substring(37, 184);
         String assamString = gameString.substring(32, 36);
 
         List<Character> colorList = new ArrayList<>();
