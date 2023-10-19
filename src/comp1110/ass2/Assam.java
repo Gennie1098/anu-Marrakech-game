@@ -22,7 +22,7 @@ public class Assam {
     public Assam() {
         this.x = 3;
         this.y = 3;
-        this.orientation = 'N';
+        this.orientation = 'S';
     }
 
     public Assam (String assamString) {
