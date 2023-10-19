@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.*;
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -27,6 +28,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.geometry.Insets;
+import javafx.util.Duration;
 
 import java.io.FileInputStream;
 
@@ -53,6 +55,7 @@ public class Game extends Application {
     private static Color red = Color.web("#E93119");
     private static Color purple = Color.web("#894FA5");
     private static Color lightYellow = Color.web("#FFE6A9");
+    private StackPane dice1, dice2, dice3, dice4;
 
     private GridPane board;
     private StackPane rugOneInBoard;
@@ -598,6 +601,7 @@ public class Game extends Application {
         square.setArcWidth(7.0);
         square.setArcHeight(7.0);
         diceFace.getChildren().add(square);
+        diceFace.setUserData(square);
 
         if (number > 0) {
             Circle center = new Circle(5, Color.web("#064B72"));
@@ -629,36 +633,8 @@ public class Game extends Application {
                 diceFace.getChildren().addAll(topRight, bottomLeft);
             }
         }
-
         diceFace.setEffect(createDropShadowEffect("#E8C777"));
         return diceFace;
-    }
-
-    private void rollDiceAnimation(StackPane diceFace) {
-        int animationDuration = 300; // Độ dài thời gian cho mỗi mặt xúc xắc (millisecond)
-        int totalDuration = 3000; // Tổng thời gian của animation (3 giây)
-
-        Timeline timeline = new Timeline();
-
-//        // Tạo hiệu ứng animation cho từng mặt của xúc xắc
-//        for (int i = 0; i < totalDuration / animationDuration; i++) {
-//            int finalI = i;
-//            KeyFrame keyFrame = new KeyFrame(Duration.millis(finalI * animationDuration), e -> {
-//                int face = finalI % 4 + 1; // Đảm bảo rằng nó sẽ hiển thị mặt từ 1 đến 4
-//                displayDiceFace(diceFace, face); // Một hàm để hiển thị mặt xúc xắc tương ứng
-//            });
-//
-//            timeline.getKeyFrames().add(keyFrame);
-//        }
-//
-//        // Sau khi animation hoàn thành, chọn một mặt xúc xắc ngẫu nhiên và hiển thị nó
-//        timeline.setOnFinished(e -> {
-//            int randomFace = new Random().nextInt(4) + 1;
-//            displayDiceFace(diceFace, randomFace);
-//            // TODO: Xử lý sau khi hoàn thành animation (nếu cần)
-//        });
-
-        timeline.play();
     }
 
     /**
@@ -1079,10 +1055,10 @@ public class Game extends Application {
         rollDice.setAlignment(Pos.CENTER_RIGHT);
 
         HBox dice = new HBox(10);
-        StackPane dice1 = createDiceFace(1);
-        StackPane dice2 = createDiceFace(2);
-        StackPane dice3 = createDiceFace(3);
-        StackPane dice4 = createDiceFace(4);
+        dice1 = createDiceFace(1);
+        dice2 = createDiceFace(2);
+        dice3 = createDiceFace(3);
+        dice4 = createDiceFace(4);
         dice.getChildren().addAll(dice1, dice2, dice3, dice4);
 
         amountOfSteps = new Label("ASSAM WILL MOVE \"X\" STEPS");
@@ -1190,6 +1166,10 @@ public class Game extends Application {
         setButtonDisable(rotateAssamToRightButton, true);
         setButtonDisable(rollDiceButton, true);
         setButtonDisable(payDirhamsButton, false);
+
+        // Create dice rolling animation
+        animateDiceRolling(() -> {
+
         int result = Marrakech.rollDie();
         String newAssam = Marrakech.moveAssam(assamString[0], result);
         amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
@@ -1219,11 +1199,55 @@ public class Game extends Application {
         assamStatus.getChildren().add(newAssamStatus);
 
         updateDirhams(gameString[0]);
+        });
 
         //TODO move to payDirhams button
         rugOneInBoard = createRugHalfOne(rugString[0]);
         rugTwoInBoard = createRugHalfTwo(rugString[0]);
     }
+
+    /**@Authority: Gennie
+     * Animation run through dice faces for roll dice effect
+     */
+    private void animateDiceRolling(Runnable onFinish) {
+        Timeline timeline = new Timeline();
+        Duration frameGap = Duration.millis(200); // Adjust as per the required speed
+        Duration currentDuration = Duration.ZERO;
+
+        StackPane[] dices = new StackPane[]{dice1, dice2, dice3, dice4};
+
+        for (int i = 0; i < dices.length; i++) {
+            final int index = i;
+
+            // Turn on the current dice by setting its fill to original color
+            KeyFrame keyFrameOn = new KeyFrame(currentDuration = currentDuration.add(frameGap), e -> {
+                Rectangle square = (Rectangle) dices[index].getUserData();
+                square.setFill(Color.web("#FFE6A9"));
+            });
+            timeline.getKeyFrames().add(keyFrameOn);
+
+            // Turn off the current dice by setting its fill to white
+            KeyFrame keyFrameOff = new KeyFrame(currentDuration = currentDuration.add(frameGap), e -> {
+                Rectangle square = (Rectangle) dices[index].getUserData();
+                square.setFill(Color.WHITE);
+                dices[index].setEffect(createDropShadowEffect("#E0E0E0"));
+            });
+            timeline.getKeyFrames().add(keyFrameOff);
+
+            // Turn on again
+            KeyFrame keyFrameReset = new KeyFrame(currentDuration = currentDuration.add(frameGap), e -> {
+                Rectangle square = (Rectangle) dices[index].getUserData();
+                square.setFill(Color.web("#FFE6A9"));
+                dices[index].setEffect(createDropShadowEffect("#E8C777"));
+            });
+            timeline.getKeyFrames().add(keyFrameReset);
+        }
+
+        timeline.setOnFinished(e -> onFinish.run());
+        timeline.setCycleCount(1);
+        timeline.play();
+    }
+
 
     private void handleRugPlacement() throws FileNotFoundException {
         Marrakech marrakech = new Marrakech();
@@ -1363,7 +1387,6 @@ public class Game extends Application {
         /**
          * Right Pane populating section
          */
-
         HBox moveAssamSection = createMoveAssamSection();
         HBox payDirhamsSection = createPayDirhamsSection("000");
         HBox placeRugSection = createPlaceRugSection(gameString[0], rugString[0]);
@@ -1586,14 +1609,12 @@ public class Game extends Application {
                 mainContent.getChildren().add(rankText);
             }
 
-
             root.setCenter(mainContent);
             String imageUrl = "file:assets/winnerBackground.png";
             root.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-position: center center; -fx-background-repeat: stretch;");
 
-
             Scene scene = new Scene(root, 1200, 700);
-            stage.setTitle("Congratulations Screen");
+            stage.setTitle("Congratulations!");
             stage.setScene(scene);
             stage.show();
         }
