@@ -1157,7 +1157,7 @@ public class Game extends Application {
     }
     private void handleRugPlacement() throws FileNotFoundException {
         Marrakech marrakech = new Marrakech();
-        String newGameString = Marrakech.makePlacement(gameString[0], rugString[0]);
+        String newGameString = marrakech.makePlacement(gameString[0], rugString[0]);
         gameString[0] = newGameString;
 
         board.getChildren().clear();
