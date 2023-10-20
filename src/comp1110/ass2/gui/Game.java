@@ -193,16 +193,17 @@ public class Game extends Application {
           }
         );
 
+        //TODO: (from Gennie to Terry) I fixed your code a bit here
+
         VBox playerNameInput = new VBox(5);
         playerNameInput.setAlignment(Pos.CENTER);
-
-        numOfPlayers = Integer.parseInt(numPlayerInput.getText());
         String numberofplayers = numPlayerInput.getText();
         int num = Integer.parseInt(numberofplayers);
         List<TextField> playerFields = createPlayerNameFields(num);
         for (int i = 0; i <  playerFields.size(); i++) {
             field = playerFields.get(i);
             playerNameInput.getChildren().add(field);
+//            gamePrepare2.getChildren().add(field);
         }
 
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
@@ -217,6 +218,7 @@ public class Game extends Application {
 
         //click on "NEXT" button, go to "Game Prepare 2" scence
         nextButton.setOnAction(e -> {
+            numOfPlayers = Integer.parseInt(numPlayerInput.getText());
             stage.setScene(scene3);
 
             Marrakech marrakech = new Marrakech(numOfPlayers);
@@ -228,7 +230,11 @@ public class Game extends Application {
 
         //click on "START GAME" button, go to "main layout" Game scence
         startGameButton.setOnAction(e -> {
-            if(playerFields.size()==1){
+//            player1Name = playerFields.get(0).getText();
+//            player2Name = playerFields.get(1).getText();
+//            player3Name = playerFields.get(2).getText();
+//            player4Name = playerFields.get(3).getText();
+            if(playerFields.size()==1&&playerFields.size()==0){
                 try {
                     throw new Exception("please enter the right number!");
                 } catch (Exception ex) {
@@ -247,6 +253,14 @@ public class Game extends Application {
                 player2Name = playerFields.get(1).getText();
                 player3Name = playerFields.get(2).getText();
                 player4Name = playerFields.get(3).getText();
+            }
+
+            if(player1Name==""||player2Name==""||player3Name==""||player4Name==""){
+                try {
+                    throw new Exception("please enter the name!");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
 
             try {
