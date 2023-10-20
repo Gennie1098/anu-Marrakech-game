@@ -39,7 +39,6 @@ import java.util.*;
 
 
 public class Game extends Application {
-    private Marrakech newGame;
     private final Group root = new Group();
     private static final int WINDOW_WIDTH = 1200;
     private static final int WINDOW_HEIGHT = 700;
@@ -66,7 +65,6 @@ public class Game extends Application {
     private Label amountOfSteps;
     private StackPane assamStatus;
     private StackPane assamInBoard;
-    private StackPane assamInPlaySection;
     private GridPane playersSection;
     private HBox moveAssamSection;
     private VBox rightPane;
@@ -84,12 +82,8 @@ public class Game extends Application {
     private Button payDirhamsButton;
     private String amountOwed;
     private int gameTurn = 1;
-    private TextField player1Input;
-    private TextField player2Input;
-    private TextField player3Input;
-    private TextField player4Input;
     private TextField numPlayerInput;
-
+    private List<TextField> playerFields = new ArrayList<>();
     private TextField field;
     private String player1Name;
     private String player2Name;
@@ -97,10 +91,6 @@ public class Game extends Application {
     private String player4Name;
     private Scene gameScene;
     private int numOfPlayers;
-    private int cyanScore;
-    private int yellowScore;
-    private int redScore;
-    private int purpleScore;
 
     private final String[] gameString = {""};
     private final String[] assamString = {""};
@@ -115,9 +105,7 @@ public class Game extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // FIXME Task 7 and 15
         this.stage = stage;
-
 
         /**@Authority: Gennie Nguyen (GUI), tong yuan xiong (function)
          * Staring game: Welcome scene,input number of players scene, input Player's name scene
@@ -151,15 +139,15 @@ public class Game extends Application {
         gameTitle1.setScaleX(0.5);
         gameTitle1.setScaleY(0.5);
 
-        Text numberOfPlayers = new Text("HOW MANY PLAYERS YOU HAVE?");
-        numberOfPlayers.setFont(font32);
+        Text numberOfPlayersText = new Text("HOW MANY PLAYERS YOU HAVE?");
+        numberOfPlayersText.setFont(font32);
 
         numPlayerInput = createTextField("ENTER A NUMBER FROM 2 TO 4", "\\d*");
-
+        numPlayerInput.setText("4");
 
         Button nextButton = createTextButton("NEXT", "#064B72", "#053C5B");
 
-        gamePrepare1.getChildren().addAll(gameTitle1, createASpacerForLayoutVBox(), numberOfPlayers, numPlayerInput, nextButton);
+        gamePrepare1.getChildren().addAll(gameTitle1, createASpacerForLayoutVBox(), numberOfPlayersText, numPlayerInput, nextButton);
 
         Scene scene2 = new Scene(gamePrepare1, WINDOW_WIDTH, WINDOW_HEIGHT);
 
@@ -176,35 +164,20 @@ public class Game extends Application {
         Text inputName = new Text("PLAYERS　NAME");
         inputName.setFont(font32);
 
-        numPlayerInput.setText("4");
         numPlayerInput.textProperty().addListener(new ChangeListener<String>() {
               @Override
               public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                   if("1".equals(newValue)){
                       numPlayerInput.setText("2");
-                  }
-
-                  if("2".equals(newValue) || "3".equals(newValue)){
+                  } else if ("2".equals(newValue) || "3".equals(newValue) || "4".equals(newValue)) {
                       numPlayerInput.setText(newValue);
                   }
-
               }
-
           }
         );
 
-        //TODO: (from Gennie to Terry) I fixed your code a bit here
-
         VBox playerNameInput = new VBox(5);
         playerNameInput.setAlignment(Pos.CENTER);
-        String numberofplayers = numPlayerInput.getText();
-        int num = Integer.parseInt(numberofplayers);
-        List<TextField> playerFields = createPlayerNameFields(num);
-        for (int i = 0; i <  playerFields.size(); i++) {
-            field = playerFields.get(i);
-            playerNameInput.getChildren().add(field);
-//            gamePrepare2.getChildren().add(field);
-        }
 
         Button startGameButton = createTextButton("START GAME", "#064B72", "#053C5B");
         gamePrepare2.getChildren().addAll(gameTitle2, createASpacerForLayoutVBox(), inputName, playerNameInput, startGameButton);
@@ -219,6 +192,12 @@ public class Game extends Application {
         //click on "NEXT" button, go to "Game Prepare 2" scence
         nextButton.setOnAction(e -> {
             numOfPlayers = Integer.parseInt(numPlayerInput.getText());
+
+            playerNameInput.getChildren().clear();
+            List<TextField> playerFields = createPlayerNameFields(numOfPlayers);
+            for (TextField field : playerFields) {
+                playerNameInput.getChildren().add(field);
+            }
             stage.setScene(scene3);
 
             Marrakech marrakech = new Marrakech(numOfPlayers);
@@ -230,10 +209,6 @@ public class Game extends Application {
 
         //click on "START GAME" button, go to "main layout" Game scence
         startGameButton.setOnAction(e -> {
-//            player1Name = playerFields.get(0).getText();
-//            player2Name = playerFields.get(1).getText();
-//            player3Name = playerFields.get(2).getText();
-//            player4Name = playerFields.get(3).getText();
             if(playerFields.size()==1&&playerFields.size()==0){
                 try {
                     throw new Exception("please enter the right number!");
@@ -273,22 +248,40 @@ public class Game extends Application {
         });
     }
 
+
     /**
      * create the playerNameFields to fix the imput text
-     *
      */
-
     private List<TextField> createPlayerNameFields(int number) {
-        List<TextField> playerFields = new ArrayList<>();
+        playerFields.clear(); // Clear the existing list
 
         for (int i = 1; i <= number; i++) {
             TextField playerInput = createTextField("PLAYER " + i, "\\s");
             playerFields.add(playerInput);
         }
-
         return playerFields;
     }
 
+    /**
+     * @Authority: Gennie Nguyen
+     * create a fill box for information input
+     */
+    private TextField createTextField (String promptText, String dataType) {
+        TextField fillInfo = new TextField();
+        fillInfo.setEditable(true);
+        fillInfo.setPromptText(promptText);
+        fillInfo.setMaxSize(360, 60);
+        fillInfo.setMinSize(360, 60);
+        fillInfo.setStyle("-fx-border-color: #D9D9D9; -fx-background-color: #D9D9D9; fx-prompt-text-fill: #9A9999;");
+
+        fillInfo.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(dataType)) { //only allow the data type set
+                fillInfo.setText(newValue.replaceAll(dataType, "")); //replace all the incorrect data type by blank
+            }
+        });
+
+        return fillInfo;
+    }
 
     /** @Authority: Gennie Nguyen, Morris
      * Create main Game GUI
@@ -816,27 +809,6 @@ public class Game extends Application {
         return marrakeckTilte;
     }
 
-    /**
-     * @Authority: Gennie Nguyen
-     * create a fill box for information input
-     *
-     */
-    private TextField createTextField (String promptText, String dataType) {
-        TextField fillInfo = new TextField();
-        fillInfo.setEditable(true);
-        fillInfo.setPromptText(promptText);
-        fillInfo.setMaxSize(360, 60);
-        fillInfo.setMinSize(360, 60);
-        fillInfo.setStyle("-fx-border-color: #D9D9D9; -fx-background-color: #D9D9D9; fx-prompt-text-fill: #9A9999;");
-
-        fillInfo.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches(dataType)) { //only allow the data type set
-                fillInfo.setText(newValue.replaceAll(dataType, "")); //replace all the incorrect data type by blank
-            }
-        });
-
-        return fillInfo;
-    }
     private StackPane populateRugBoard(String gameString) {
         String boardString = gameString.substring(37, 184);
         String assamString = gameString.substring(32, 36);
