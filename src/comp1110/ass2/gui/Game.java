@@ -1337,7 +1337,14 @@ public class Game extends Application {
             String abbBoardString = newBoard.getTile(assam.getX(), assam.getY());
 
             Player playerA = new Player(playerString[0]);
+
+            if (playerA.getNumberOfDirhams() < amountDirhamsToPay) {
+                amountDirhamsToPay = playerA.getNumberOfDirhams();
+            }
+
             int numDirhamSub = playerA.subDirhams(amountDirhamsToPay);
+            playerA.setNumberOfDirhams(numDirhamSub);
+
             playerA.setNumberOfDirhams(numDirhamSub);
 
             playerString[0] = playerA.getPlayerState();
