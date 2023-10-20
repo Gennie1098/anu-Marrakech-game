@@ -409,91 +409,76 @@ public class Marrakech {
      */
     public static char getWinner(String gameState) {
         //FIXME: Task 12
-
         // Parse the game state to get player and board information
-        String player1 = gameState.substring(0, 8);
-        String player2 = gameState.substring(8, 16);
-        String player3 = gameState.substring(16, 24);
-        String player4 = gameState.substring(24, 32);
-        String[] players = new String[4];
-        players[0] = player1;
-        players[1] = player2;
-        players[2] = player3;
-        players[3] = player4;
         String boardString = gameState.substring(32, 184);
 
-        // Initialize variables to keep track of player scores
-        int cyanScore = 0;
-        int yellowScore = 0;
-        int redScore = 0;
-        int purpleScore = 0;
+        // Define a Player class to store relevant information
+        class Player {
+            char color;
+            int dirhams;
+            int rugs;
+            boolean isOut;
 
-        // Calculate player scores based on their dirhams
-        // Player strings are in the format: P<color><dirhams><remaining rugs>i
-        for (int i = 0; i < 4; i++) {
-            String playerString = players[i];
-            char color = playerString.charAt(1);
-            int dirhams = Integer.parseInt(playerString.substring(2, 5));
+            public Player(String data) {
+                this.color = data.charAt(1);
+                this.dirhams = Integer.parseInt(data.substring(2, 5));
+                this.rugs = Integer.parseInt(data.substring(5, 7));
+                this.isOut = data.charAt(7) == 'o';
+            }
 
-            switch (color) {
-                case 'c':
-                    cyanScore = dirhams;
-                    break;
-                case 'y':
-                    yellowScore = dirhams;
-                    break;
-                case 'r':
-                    redScore = dirhams;
-                    break;
-                case 'p':
-                    purpleScore = dirhams;
-                    break;
+            int getTotalScore() {
+                int boardCount = 0;
+                for (char ch : boardString.toCharArray()) {
+                    if (ch == color) {
+                        boardCount++;
+                    }
+                }
+                return dirhams + boardCount;
             }
         }
 
-        // Calculate player scores based on the board information
-        // Board string is in the format: "n00<board_data>"
-        // Each character in <board_data> represents a square on the board
-        for (char square : boardString.toCharArray()) {
-            switch (square) {
-                case 'c':
-                    cyanScore++;
-                    break;
-                case 'y':
-                    yellowScore++;
-                    break;
-                case 'r':
-                    redScore++;
-                    break;
-                case 'p':
-                    purpleScore++;
-                    break;
+        // Extract player data from the gameState
+        Player[] players = new Player[] {
+                new Player(gameState.substring(0, 8)),
+                new Player(gameState.substring(8, 16)),
+                new Player(gameState.substring(16, 24)),
+                new Player(gameState.substring(24, 32))
+        };
+
+        int maxScore = Integer.MIN_VALUE;
+        Player maxPlayer = null;
+        for (Player player : players) {
+            if (!player.isOut && player.getTotalScore() > maxScore) {
+                maxScore = player.getTotalScore();
+                maxPlayer = player;
             }
         }
 
-        // Find the player with the highest score
-        char winner = 'n'; // Default: No winner
-        int maxScore = Math.max(Math.max(cyanScore, yellowScore), Math.max(redScore, purpleScore));
-
-        int count = 0;
-        if (maxScore == cyanScore) {count++;}
-        if (maxScore == yellowScore) {count++;}
-        if (maxScore == redScore) {count++;}
-        if (maxScore == purpleScore) {count++;}
-        if (count >= 2) {
-        } else if (cyanScore == maxScore) {
-            winner = 'c';
-        } else if (yellowScore == maxScore) {
-            winner = 'y';
-        } else if (redScore == maxScore) {
-            winner = 'r';
-        } else if (purpleScore == maxScore) {
-            winner = 'p';
-        } else if (maxScore==cyanScore && maxScore==yellowScore && redScore == maxScore && purpleScore == maxScore ) {
-            winner = 't';
+        int countPlayersWithMaxScore = 0;
+        for (Player player : players) {
+            if (player.getTotalScore() == maxScore) {
+                countPlayersWithMaxScore++;
+                if (maxPlayer.dirhams < player.dirhams) {
+                    maxPlayer = player;
+                }
+            }
         }
-        return winner;
+        if (countPlayersWithMaxScore > 1) {
+            if (maxPlayer == null) {
+                return 't'; // tie
+            } else {
+                return maxPlayer.color;
+            }
+        }
+
+        if (maxPlayer != null) {
+            return maxPlayer.color;
+        } else {
+            return 'n'; // game is not over
+        }
     }
+
+
 
 
     /**
