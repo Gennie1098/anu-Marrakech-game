@@ -410,6 +410,8 @@ public class Marrakech {
     public static char getWinner(String gameState) {
         //FIXME: Task 12
 
+        //FIXME: Task 12
+
         // Parse the game state to get player and board information
         String player1 = gameState.substring(0, 8);
         String player2 = gameState.substring(8, 16);
@@ -476,10 +478,10 @@ public class Marrakech {
         int maxScore = Math.max(Math.max(cyanScore, yellowScore), Math.max(redScore, purpleScore));
 
         int count = 0;
-        if (maxScore == cyanScore) count++;
-        if (maxScore == yellowScore) count++;
-        if (maxScore == redScore) count++;
-        if (maxScore == purpleScore) count++;
+        if (maxScore == cyanScore) {count++;}
+        if (maxScore == yellowScore) {count++;}
+        if (maxScore == redScore) {count++;}
+        if (maxScore == purpleScore) {count++;}
         if (count >= 2) {
             winner = 't';
         } else if (cyanScore == maxScore) {
