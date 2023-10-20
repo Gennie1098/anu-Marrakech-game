@@ -165,15 +165,15 @@ public class Game extends Application {
         inputName.setFont(font32);
 
         numPlayerInput.textProperty().addListener(new ChangeListener<String>() {
-              @Override
-              public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                  if("1".equals(newValue)){
-                      numPlayerInput.setText("2");
-                  } else if ("2".equals(newValue) || "3".equals(newValue) || "4".equals(newValue)) {
-                      numPlayerInput.setText(newValue);
-                  }
-              }
-          }
+                                                      @Override
+                                                      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                                                          if("1".equals(newValue)){
+                                                              numPlayerInput.setText("2");
+                                                          } else if ("2".equals(newValue) || "3".equals(newValue) || "4".equals(newValue)) {
+                                                              numPlayerInput.setText(newValue);
+                                                          }
+                                                      }
+                                                  }
         );
 
         VBox playerNameInput = new VBox(5);
@@ -1212,40 +1212,40 @@ public class Game extends Application {
         setButtonDisable(rotateAssamToLeftButton, true);
         setButtonDisable(rotateAssamToRightButton, true);
         setButtonDisable(rollDiceButton, true);
-        setButtonDisable(payDirhamsButton, false);
+
 
         // Create dice rolling animation
         animateDiceRolling(() -> {
 
-        int result = Marrakech.rollDie();
-        String newAssam = Marrakech.moveAssam(assamString[0], result);
-        amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
+            int result = Marrakech.rollDie();
+            String newAssam = Marrakech.moveAssam(assamString[0], result);
+            amountOfSteps.setText("ASSAM WILL MOVE \"" + result + "\" STEPS");
 
-        assamString[0] = newAssam;
+            assamString[0] = newAssam;
 
-        gameString[0] = gameString[0].substring(0, 32) + assamString[0] + gameString[0].substring(36, 184);
+            gameString[0] = gameString[0].substring(0, 32) + assamString[0] + gameString[0].substring(36, 184);
 
-        Assam Assam = new Assam(newAssam);
+            Assam Assam = new Assam(newAssam);
 
-        int assamX = Assam.getX();
-        int assamY = Assam.getY();
+            int assamX = Assam.getX();
+            int assamY = Assam.getY();
 
-        board.getChildren().remove(assamInBoard);
-        assamInBoard.getChildren().clear();
-        StackPane newAssamInBoard = updateAssamAppearance(playerString[0], assamString[0]);
-        assamInBoard.getChildren().add(newAssamInBoard);
-        board.add(assamInBoard, assamX, assamY);
+            board.getChildren().remove(assamInBoard);
+            assamInBoard.getChildren().clear();
+            StackPane newAssamInBoard = updateAssamAppearance(playerString[0], assamString[0]);
+            assamInBoard.getChildren().add(newAssamInBoard);
+            board.add(assamInBoard, assamX, assamY);
 
-        assamStatus.getChildren().clear();
-        StackPane newAssamStatus = updateAssamAppearance(playerString[0], assamString[0]);
+            assamStatus.getChildren().clear();
+            StackPane newAssamStatus = updateAssamAppearance(playerString[0], assamString[0]);
 
-        newAssamStatus.setStyle("-fx-background-color: #A7A7A7; -fx-background-radius: 7; -fx-border-radius: 7;");
-        newAssamStatus.setMinSize(70, 70);
-        newAssamStatus.setMaxSize(70, 70);
+            newAssamStatus.setStyle("-fx-background-color: #A7A7A7; -fx-background-radius: 7; -fx-border-radius: 7;");
+            newAssamStatus.setMinSize(70, 70);
+            newAssamStatus.setMaxSize(70, 70);
 
-        assamStatus.getChildren().add(newAssamStatus);
+            assamStatus.getChildren().add(newAssamStatus);
 
-        updateDirhams(gameString[0]);
+            updateDirhams(gameString[0]);
 
             if ((amountOwed == null) || (amountOwed.equals("0"))) {
                 setButtonDisable(rotateAssamToLeftButton, true);
@@ -1269,6 +1269,10 @@ public class Game extends Application {
                 rugTwoInBoard = createRugHalfTwo(rugString[0]);
                 board.add(rugOneInBoard, 3, 3);
                 board.add(rugTwoInBoard, 3, 2);
+                setButtonDisable(payDirhamsButton, true);
+            }
+            else {
+                setButtonDisable(payDirhamsButton, false);
             }
         });
     }
@@ -1814,6 +1818,5 @@ public class Game extends Application {
             rankedPlayers.add(playerColors[i] + scores[i]);
         }
         return rankedPlayers;
+    }
 }
-}
-
