@@ -230,6 +230,7 @@ public class Game extends Application {
                 player2Name = playerFields.get(1).getText();
                 player3Name = playerFields.get(2).getText();
                 player4Name = playerFields.get(3).getText();
+
             }
 
 
