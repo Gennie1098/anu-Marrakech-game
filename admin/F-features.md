@@ -8,5 +8,4 @@ of our project implements the following features:
  - A fully working game (Task 15)
  - Tests passing for Tasks 4, 6, 8, 9 (1110/6710)
  - Tests passing for Tasks 10-14 (1110/6710)
-
-additional features...
+ - Object-oriented game state representation is built from string representation (Task 3)
