@@ -219,24 +219,64 @@ public class Game extends Application {
             if (playerFields.size()==2){
                 player1Name = playerFields.get(0).getText();
                 player2Name = playerFields.get(1).getText();
+
             } else if (playerFields.size()==3) {
                 player1Name = playerFields.get(0).getText();
                 player2Name = playerFields.get(1).getText();
                 player3Name = playerFields.get(2).getText();
+
             } else if (playerFields.size()==4) {
                 player1Name = playerFields.get(0).getText();
                 player2Name = playerFields.get(1).getText();
                 player3Name = playerFields.get(2).getText();
                 player4Name = playerFields.get(3).getText();
+
             }
 
-            if(player1Name==""||player2Name==""||player3Name==""||player4Name==""){
-                try {
-                    throw new Exception("please enter the name!");
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
+
+            switch (numOfPlayers) {
+                case 2:
+                    if (player1Name.equals("") || player2Name.equals("")) {
+                        try {
+                            throw new Exception("please enter the name！");
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    break;
+                case 3:
+                    if (player1Name.equals("") || player2Name.equals("") || player3Name.equals("")) {
+                        try {
+                            throw new Exception("please enter the name");
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    break;
+                case 4:
+                    if (player1Name.equals("") || player2Name.equals("") || player3Name.equals("") || player4Name.equals("")) {
+                        try {
+                            throw new Exception("please enter the name");
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    break;
+                default:
+
             }
+
+
+//            if(player1Name==""||player2Name==""||player3Name==""||player4Name==""){
+//                try {
+//                    throw new Exception("please enter the name!");
+//                } catch (Exception ex) {
+//                    throw new RuntimeException(ex);
+//                }
+//            }
+
+
+
 
             try {
                 gameScene = createGameScene();
