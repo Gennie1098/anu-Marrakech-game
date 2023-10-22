@@ -928,7 +928,6 @@ public class Game extends Application {
     /**
      * @Authority: Gennie Nguyen
      * create one box for each player, have player name, color, number of rugs, number of dirhams
-     *
      */
     private VBox createPlayerBox (String playerNameInput, char playerColor, int numberOfDirhams, int numberOfRugs) {
         VBox playerBox = new VBox(0);
@@ -994,7 +993,6 @@ public class Game extends Application {
     /**
      * @Authority: Gennie Nguyen
      * create "Players" Section, all players
-     *
      */
     private GridPane createPlayerSection() {
         Marrakech marrakech = new Marrakech();
@@ -1022,56 +1020,6 @@ public class Game extends Application {
             playersSection.add(player, (i - 1) % 2, (i - 1) / 2); // Column and Row logic adjusted
         }
         return playersSection;
-    }
-
-    /** @Authority: Gennie Nguyen
-     * "Place rug" functions section
-     * buttons to change rug location (rotate and move)
-     * "place rug" button
-     * notice if the rug placement is invalid
-     */
-    private HBox createPlaceRugSection(String gameString, String rugString) throws FileNotFoundException {
-
-        HBox placeRugSection = new HBox();
-        placeRugSection.setStyle("-fx-background-color: #FFFCE1");
-        placeRugSection.setPrefHeight(140);
-        placeRugSection.setMaxWidth(Double.MAX_VALUE);
-        placeRugSection.setPadding(layoutPadding);
-        placeRugSection.setAlignment(Pos.CENTER);
-        placeRugButton = createTextButton("PLACE RUG","#9FD395","#7EA976" );
-
-        //group of (rotate to the left, rotate to the right)
-        VBox rotateRugButtons = new VBox(15);
-        rotateToLeftButton = createButtonImg("assets/rotateToLeft.png","#E66F51", "#AB513A");
-        rotateToRightButton = createButtonImg("assets/rotateToRight.png", "#E66F51", "#AB513A");
-
-        rotateRugButtons.getChildren().addAll(rotateToLeftButton, rotateToRightButton);
-        rotateRugButtons.setAlignment(Pos.CENTER);
-
-        //group of move rug buttons (rotate to the left, rotate to the right, up, down, left, right)
-        HBox moveRugs = new HBox(30);
-        //group of (up, down, left, right)
-        VBox upAndDownButtons = new VBox(15);
-
-        moveRugUp = createMoveButton(0.0);
-        moveRugDown = createMoveButton(180.0);
-
-        upAndDownButtons.getChildren().addAll(moveRugUp,moveRugDown);
-        upAndDownButtons.setAlignment(Pos.CENTER);
-
-        moveRugLeft = createMoveButton(270.0);
-        moveRugRight = createMoveButton(90.0);
-
-        HBox allMoveButtons = new HBox(10);
-
-        allMoveButtons.getChildren().addAll(moveRugLeft, upAndDownButtons, moveRugRight);
-        allMoveButtons.setAlignment(Pos.CENTER);
-
-        moveRugs.getChildren().addAll(rotateRugButtons, allMoveButtons);
-
-        placeRugSection.getChildren().addAll(moveRugs,createASpacerForLayoutHBox(), placeRugButton);
-
-        return placeRugSection;
     }
 
     /**@Authority: Gennie Nguyen
@@ -1120,62 +1068,6 @@ public class Game extends Application {
         moveAssamSection.getChildren().addAll(rotateAssam, createASpacerForLayoutHBox(), rollDice);
 
         return moveAssamSection;
-    }
-
-    private void handleRugMovement(String direction) {
-        board.getChildren().remove(rugTwoInBoard);
-        board.getChildren().remove(rugOneInBoard);
-
-        String newString = Marrakech.moveRug(rugString[0], direction);
-
-        rugString[0] = newString;
-        Rugs rugs = new Rugs(rugString[0]);
-
-        int halfOneX = rugs.getX2();
-        int halfTwoX = rugs.getX1();
-        int halfOneY = rugs.getY2();
-        int halfTwoY = rugs.getY1();
-
-        board.add(rugOneInBoard, halfOneX, halfOneY);
-        board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-
-        if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            setButtonDisable(placeRugButton, true);
-        }
-
-        if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            setButtonDisable(placeRugButton, false);
-        }
-    }
-    private void handleRugRotation(Boolean rotateLeft) {
-        board.getChildren().remove(rugTwoInBoard);
-        board.getChildren().remove(rugOneInBoard);
-
-        String newString;
-        if (rotateLeft) {
-            newString = Marrakech.rotateRug(rugString[0], true);
-        }
-        else {
-            newString = Marrakech.rotateRug(rugString[0], false);
-        }
-
-        rugString[0] = newString;
-        Rugs rugs = new Rugs(rugString[0]);
-
-        int halfOneX = rugs.getX2();
-        int halfTwoX = rugs.getX1();
-        int halfOneY = rugs.getY2();
-        int halfTwoY = rugs.getY1();
-
-        board.add(rugOneInBoard, halfOneX, halfOneY);
-        board.add(rugTwoInBoard, halfTwoX, halfTwoY);
-
-        if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            setButtonDisable(placeRugButton, true);
-        }
-        if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
-            setButtonDisable(placeRugButton, false);
-        }
     }
 
     private void handleAssamRotation(boolean rotateLeft) {
@@ -1315,6 +1207,112 @@ public class Game extends Application {
         timeline.play();
     }
 
+    /** @Authority: Gennie Nguyen
+     * "Place rug" functions section
+     * buttons to change rug location (rotate and move)
+     * "place rug" button
+     * notice if the rug placement is invalid
+     */
+    private HBox createPlaceRugSection(String gameString, String rugString) throws FileNotFoundException {
+
+        HBox placeRugSection = new HBox();
+        placeRugSection.setStyle("-fx-background-color: #FFFCE1");
+        placeRugSection.setPrefHeight(140);
+        placeRugSection.setMaxWidth(Double.MAX_VALUE);
+        placeRugSection.setPadding(layoutPadding);
+        placeRugSection.setAlignment(Pos.CENTER);
+        placeRugButton = createTextButton("PLACE RUG","#9FD395","#7EA976" );
+
+        //group of (rotate to the left, rotate to the right)
+        VBox rotateRugButtons = new VBox(15);
+        rotateToLeftButton = createButtonImg("assets/rotateToLeft.png","#E66F51", "#AB513A");
+        rotateToRightButton = createButtonImg("assets/rotateToRight.png", "#E66F51", "#AB513A");
+
+        rotateRugButtons.getChildren().addAll(rotateToLeftButton, rotateToRightButton);
+        rotateRugButtons.setAlignment(Pos.CENTER);
+
+        //group of move rug buttons (rotate to the left, rotate to the right, up, down, left, right)
+        HBox moveRugs = new HBox(30);
+        //group of (up, down, left, right)
+        VBox upAndDownButtons = new VBox(15);
+
+        moveRugUp = createMoveButton(0.0);
+        moveRugDown = createMoveButton(180.0);
+
+        upAndDownButtons.getChildren().addAll(moveRugUp,moveRugDown);
+        upAndDownButtons.setAlignment(Pos.CENTER);
+
+        moveRugLeft = createMoveButton(270.0);
+        moveRugRight = createMoveButton(90.0);
+
+        HBox allMoveButtons = new HBox(10);
+
+        allMoveButtons.getChildren().addAll(moveRugLeft, upAndDownButtons, moveRugRight);
+        allMoveButtons.setAlignment(Pos.CENTER);
+
+        moveRugs.getChildren().addAll(rotateRugButtons, allMoveButtons);
+
+        placeRugSection.getChildren().addAll(moveRugs,createASpacerForLayoutHBox(), placeRugButton);
+
+        return placeRugSection;
+    }
+
+    private void handleRugRotation(Boolean rotateLeft) {
+        board.getChildren().remove(rugTwoInBoard);
+        board.getChildren().remove(rugOneInBoard);
+
+        String newString;
+        if (rotateLeft) {
+            newString = Marrakech.rotateRug(rugString[0], true);
+        }
+        else {
+            newString = Marrakech.rotateRug(rugString[0], false);
+        }
+
+        rugString[0] = newString;
+        Rugs rugs = new Rugs(rugString[0]);
+
+        int halfOneX = rugs.getX2();
+        int halfTwoX = rugs.getX1();
+        int halfOneY = rugs.getY2();
+        int halfTwoY = rugs.getY1();
+
+        board.add(rugOneInBoard, halfOneX, halfOneY);
+        board.add(rugTwoInBoard, halfTwoX, halfTwoY);
+
+        if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            setButtonDisable(placeRugButton, true);
+        }
+        if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            setButtonDisable(placeRugButton, false);
+        }
+    }
+
+    private void handleRugMovement(String direction) {
+        board.getChildren().remove(rugTwoInBoard);
+        board.getChildren().remove(rugOneInBoard);
+
+        String newString = Marrakech.moveRug(rugString[0], direction);
+
+        rugString[0] = newString;
+        Rugs rugs = new Rugs(rugString[0]);
+
+        int halfOneX = rugs.getX2();
+        int halfTwoX = rugs.getX1();
+        int halfOneY = rugs.getY2();
+        int halfTwoY = rugs.getY1();
+
+        board.add(rugOneInBoard, halfOneX, halfOneY);
+        board.add(rugTwoInBoard, halfTwoX, halfTwoY);
+
+        if (!Marrakech.isRugValid(gameString[0], rugString[0]) || !Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            setButtonDisable(placeRugButton, true);
+        }
+
+        if (Marrakech.isRugValid(gameString[0], rugString[0]) && Marrakech.isPlacementValid(gameString[0], rugString[0])) {
+            setButtonDisable(placeRugButton, false);
+        }
+    }
 
     private void handleRugPlacement() throws FileNotFoundException {
         Marrakech marrakech = new Marrakech();
@@ -1429,7 +1427,9 @@ public class Game extends Application {
         board.add(rugTwoInBoard, 3, 2);
 
     }
+    private int turnCount = 0;
     private void newGameTurn() throws FileNotFoundException {
+        turnCount++;
         Marrakech.resetRotationState();
 
         gameTurn += 1;
@@ -1508,7 +1508,9 @@ public class Game extends Application {
                 throw new RuntimeException(e);
             }
         });
-        checkWinner(stage);
+        if (turnCount >= 5 || Marrakech.isGameOver(gameString[0])) {
+            checkWinner(stage);
+        }
     }
 
     /** @Authority: Gennie Nguyen
@@ -1613,7 +1615,7 @@ public class Game extends Application {
 
         return winnerDisplay;
     }
-    private void checkWinner(Stage stage) {
+    private void checkWinner(Stage finalStage) {
         if (Marrakech.isGameOver(gameString[0])) {
             char winnerChar = Marrakech.getWinner(gameString[0]);
             String winner = "";
@@ -1639,7 +1641,6 @@ public class Game extends Application {
 
             BorderPane root = new BorderPane();
             root.setStyle("-fx-background-color: white;");
-
 
             Font font48 = Font.loadFont("file:assets/JockeyOne-Regular.ttf", 48);
             Label congratsText2 = new Label();
@@ -1696,10 +1697,11 @@ public class Game extends Application {
             String imageUrl = "file:assets/winnerBackground.png";
             root.setStyle("-fx-background-image: url('" + imageUrl + "'); -fx-background-position: center center; -fx-background-repeat: stretch;");
 
+            this.stage = finalStage;
             Scene scene = new Scene(root, 1200, 700);
-            stage.setTitle("Congratulations!");
-            stage.setScene(scene);
-            stage.show();
+            finalStage.setTitle("Congratulations!");
+            finalStage.setScene(scene);
+            finalStage.show();
         }
     }
     private void updateGameStringPlayerString(String playerA, String playerB, String originalPlayerB) {

@@ -9,7 +9,7 @@ declaration: >-
 # State your contributions as integers out of 100. The total contribution should
 # be 100 or 99 (33/33/33 is fine).  (Remove entries if you have fewer than three
 # members).
-ontributions:
+contributions:
   - uid: u7616055
     contribution: 33
   - uid: u7649318
@@ -17,7 +17,7 @@ ontributions:
   - uid: u7733153
     contribution: 33
 
-# Sign *your* name and uids here. (Remove entries if you have fewer
+# Sign *your*cname and uids here. (Remove entries if you have fewer
 # than three members)
 signatures:
   - name: Gennie Nguyen
